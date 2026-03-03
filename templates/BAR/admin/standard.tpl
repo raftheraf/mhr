@@ -1,0 +1,20 @@
+<!-- Template BAR admin/standard.tpl -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+	{head}
+	</head>
+	<body class=mgmt_body>
+		{scripts}
+		{menu} <br>
+		<div align="center">{messages}</div>
+
+		<div class="page_title" align="center">{title}</div>
+
+		<div align="center">{logo}</div>
+
+		{content}
+
+		{generating_time}
+	</body>
+</html>

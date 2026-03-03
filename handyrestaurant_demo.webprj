@@ -1,0 +1,371 @@
+<!DOCTYPE webproject>
+<webproject>
+  <project usePreviewPrefix="0" previewPrefix="file:file%3A" type="Local" newfiles="-//w3c//dtd html 4.01 transitional//en" name="handyrestaurant_demo" encoding="iso 8859-1" >
+    <upload remote_host="ftp.fabiolinux.com" remote_port="21" remote_path="/handyrestaurant/demo/" remote_protocol="ftp" user="1075082@aruba.it" />
+    <author>kilyerd</author>
+    <email>public@fabiolinux.com</email>
+    <defaultDTD>-//w3c//dtd html 4.01 transitional//en</defaultDTD>
+    <item upload_time="" url="CVS/" uploadstatus="0" />
+    <item upload_time="1076846377" modified_time="1076846377" url="CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="CVS/Root" uploadstatus="0" />
+    <item upload_time="" url="admin/" uploadstatus="0" />
+    <item upload_time="" url="admin/CVS/" uploadstatus="0" />
+    <item upload_time="1076841906" modified_time="1076841906" url="admin/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1076841896" modified_time="1076841896" url="admin/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1076841896" modified_time="1076841896" url="admin/CVS/Root" uploadstatus="0" />
+    <item upload_time="1075165563" modified_time="1075165563" url="admin/admin_start.php" uploadstatus="0" />
+    <item upload_time="1075162760" modified_time="1075162760" url="admin/index.php" uploadstatus="0" />
+    <item upload_time="" url="conf/" uploadstatus="0" />
+    <item upload_time="" url="conf/CVS/" uploadstatus="0" />
+    <item upload_time="1076846377" modified_time="1076846377" url="conf/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="conf/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="conf/CVS/Root" uploadstatus="0" />
+    <item upload_time="1076841911" modified_time="1076841911" url="conf/config.constants.inc.php" uploadstatus="0" />
+    <item upload_time="1076842248" modified_time="1076842248" url="conf/config.inc.php" uploadstatus="0" />
+    <item upload_time="" url="docs/" uploadstatus="0" />
+    <item upload_time="" url="docs/CVS/" uploadstatus="0" />
+    <item upload_time="1076841912" modified_time="1076841912" url="docs/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="docs/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="docs/CVS/Root" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="docs/COPYING" uploadstatus="0" />
+    <item upload_time="1076841912" modified_time="1076841912" url="docs/INSTALL" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="docs/LICENSE" uploadstatus="0" />
+    <item upload_time="1076841912" modified_time="1076841912" url="docs/README" uploadstatus="0" />
+    <item upload_time="" url="images/" uploadstatus="0" />
+    <item upload_time="" url="images/CVS/" uploadstatus="0" />
+    <item upload_time="1077037608" modified_time="1077037608" url="images/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="images/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="images/CVS/Root" uploadstatus="0" />
+    <item upload_time="1076462541" modified_time="1076462541" url="images/agt_action_fail.png" uploadstatus="0" />
+    <item upload_time="1076462541" modified_time="1076462541" url="images/agt_action_success.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/down.png" uploadstatus="0" />
+    <item upload_time="1076461964" modified_time="1076461964" url="images/gohome.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/newclose.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/no.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/ok.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/print.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/source.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/trash.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/up.png" uploadstatus="0" />
+    <item upload_time="1076461090" modified_time="1076461090" url="images/yes.png" uploadstatus="0" />
+    <item upload_time="" url="lang/" uploadstatus="0" />
+    <item upload_time="" url="lang/CVS/" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="lang/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="lang/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="lang/CVS/Root" uploadstatus="0" />
+    <item upload_time="1074653682" modified_time="1074653682" url="lang/lang_en.php" uploadstatus="0" />
+    <item upload_time="1076841924" modified_time="1076841924" url="lang/lang_it.php" uploadstatus="0" />
+    <item upload_time="" url="manage/" uploadstatus="0" />
+    <item upload_time="" url="manage/CVS/" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/CVS/Entries" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="manage/CVS/Repository" uploadstatus="0" />
+    <item upload_time="1068819191" modified_time="1068819191" url="manage/CVS/Root" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/account.php" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/db.php" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/index.php" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/manage.php" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/mgmt_funs.php" uploadstatus="0" />
+    <item upload_time="1076841928" modified_time="1076841928" url="manage/mgmt_funs_account.php" uploadstatus="0" />
+    <item upload_time="1076841932" modified_time="1076841932" url="manage/mgmt_funs_database.php" uploadstatus="0" />
+    <item upload_time="1076841933" modified_time="1076841933" url="manage/mgmt_funs_other.php" uploadstatus="0" />
+    <item upload_time="1076841933" modified_time="1076841933" url="manage/mgmt_funs_printable.php" uploadstatus="0" />
+    <item upload_time="1076841933" modified_time="1076841933" url="manage/mgmt_funs_receipt.php" uploadstatus="0" />
+    <item upload_time="1075152192" modified_time="1075152192" url="manage/mgmt_funs_stock.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/mgmt_funs_supply.php" uploadstatus="0" />
+    <item upload_time="1068819192" modified_time="1068819192" url="manage/mgmt_funs_vat.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/mgmt_start.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/movement.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/printable.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/receipt.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/stock.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/supply.php" uploadstatus="0" />
+    <item upload_time="1068819192" modified_time="1068819192" url="manage/test.php" uploadstatus="0" />
+    <item upload_time="1076841941" modified_time="1076841941" url="manage/vat.php" uploadstatus="0" />
+    <item upload_time="1076844497" modified_time="1076844497" url="funs_common.php" uploadstatus="0" />
+    <item upload_time="1076841877" modified_time="1076841877" url="funs_install.php" uploadstatus="0" />
+    <item upload_time="1069076467" modified_time="1069076467" url="generic.js" uploadstatus="0" />
+    <item upload_time="1076841896" modified_time="1076841896" url="index.php" uploadstatus="0" />
+    <item upload_time="1076841896" modified_time="1076841896" url="install.php" uploadstatus="0" />
+    <item upload_time="" modified_time="1076841896" url="styles.css" uploadstatus="0" />
+    <templates>templates/</templates>
+    <toolbars>toolbars/</toolbars>
+    <item upload_time="" url="include/navbars_waiter.php" uploadstatus="0" />
+    <item url="images/personal.png" uploadstatus="0" />
+    <item url="drivers/" uploadstatus="0" />
+    <item url="fonts/" uploadstatus="0" />
+    <item url="fonts/CVS/" uploadstatus="0" />
+    <item url="fonts/CVS/Entries" uploadstatus="0" />
+    <item url="fonts/CVS/Repository" uploadstatus="0" />
+    <item url="fonts/CVS/Root" uploadstatus="0" />
+    <item url="fonts/Courier-Bold.afm" uploadstatus="0" />
+    <item url="fonts/Courier-BoldOblique.afm" uploadstatus="0" />
+    <item url="fonts/Courier-Oblique.afm" uploadstatus="0" />
+    <item url="fonts/Courier.afm" uploadstatus="0" />
+    <item url="fonts/Helvetica-Bold.afm" uploadstatus="0" />
+    <item url="fonts/Helvetica-BoldOblique.afm" uploadstatus="0" />
+    <item url="fonts/Helvetica-Oblique.afm" uploadstatus="0" />
+    <item url="fonts/Helvetica.afm" uploadstatus="0" />
+    <item url="fonts/Symbol.afm" uploadstatus="0" />
+    <item url="fonts/Times-Bold.afm" uploadstatus="0" />
+    <item url="fonts/Times-BoldItalic.afm" uploadstatus="0" />
+    <item url="fonts/Times-Italic.afm" uploadstatus="0" />
+    <item url="fonts/Times-Roman.afm" uploadstatus="0" />
+    <item url="fonts/ZapfDingbats.afm" uploadstatus="0" />
+    <item url="fonts/php_Courier-Bold.afm" uploadstatus="0" />
+    <item url="fonts/php_Courier-BoldOblique.afm" uploadstatus="0" />
+    <item url="fonts/php_Courier-Oblique.afm" uploadstatus="0" />
+    <item url="fonts/php_Courier.afm" uploadstatus="0" />
+    <item url="fonts/php_Helvetica-Bold.afm" uploadstatus="0" />
+    <item url="fonts/php_Helvetica-BoldOblique.afm" uploadstatus="0" />
+    <item url="fonts/php_Helvetica-Oblique.afm" uploadstatus="0" />
+    <item url="fonts/php_Helvetica.afm" uploadstatus="0" />
+    <item url="fonts/php_Symbol.afm" uploadstatus="0" />
+    <item url="fonts/php_Times-Bold.afm" uploadstatus="0" />
+    <item url="fonts/php_Times-BoldItalic.afm" uploadstatus="0" />
+    <item url="fonts/php_Times-Italic.afm" uploadstatus="0" />
+    <item url="fonts/php_Times-Roman.afm" uploadstatus="0" />
+    <item url="fonts/php_ZapfDingbats.afm" uploadstatus="0" />
+    <item url="fonts/php_a0100131.afm" uploadstatus="0" />
+    <item url="fonts/php_a010013l.afm" uploadstatus="0" />
+    <item url="templates/" uploadstatus="1" />
+    <item url="handyrestaurant_demo.webprj" uploadstatus="0" />
+    <item url="reset.php" uploadstatus="0" />
+    <item url="conf/index.php" uploadstatus="0" />
+    <item url="drivers/custom_sprints.php" uploadstatus="0" />
+    <item url="drivers/epson_tmu295.php" uploadstatus="0" />
+    <item url="drivers/star.php" uploadstatus="0" />
+    <item url="drivers/CVS/" uploadstatus="0" />
+    <item url="drivers/CVS/Entries" uploadstatus="0" />
+    <item url="drivers/CVS/Repository" uploadstatus="0" />
+    <item url="drivers/CVS/Root" uploadstatus="0" />
+    <item url="admin/checker.php" uploadstatus="0" />
+    <item upload_time="" url="drivers/manufacturer_model.php" uploadstatus="0" />
+    <item url="admin/translator.php" uploadstatus="0" />
+    <item url="manage/mgmt_funs_stats.php" uploadstatus="0" />
+    <item upload_time="" url="include/templates_class.php" uploadstatus="0" />
+    <item upload_time="" url="docs/templates" uploadstatus="0" />
+    <item url="templates/CVS/" uploadstatus="1" />
+    <item url="templates/CVS/Entries" uploadstatus="1" />
+    <item url="templates/CVS/Repository" uploadstatus="1" />
+    <item url="templates/CVS/Root" uploadstatus="1" />
+    <item url="templates/default/" uploadstatus="1" />
+    <item url="images/cm_fill.gif" uploadstatus="0" />
+    <item url="templates/default/CVS/" uploadstatus="1" />
+    <item url="templates/default/CVS/Entries" uploadstatus="1" />
+    <item url="templates/default/CVS/Repository" uploadstatus="1" />
+    <item url="templates/default/CVS/Root" uploadstatus="1" />
+    <item url="coolmenu.css" uploadstatus="0" />
+    <item url="coolmenus4.js" uploadstatus="0" />
+    <item upload_time="" url="include/menu_admin.php" uploadstatus="0" />
+    <item upload_time="" url="include/mysql_class.php" uploadstatus="0" />
+    <item upload_time="" url="include/conf_class.php" uploadstatus="0" />
+    <item url="includes.php" uploadstatus="0" />
+    <item upload_time="" url="admin/export_lang.php" uploadstatus="0" />
+    <item url="admin/export_db.php" uploadstatus="0" />
+    <item upload_time="" url="include/xml_class.php" uploadstatus="0" />
+    <item url="admin/compare_db.php" uploadstatus="0" />
+    <item url="admin/upgrade.php" uploadstatus="0" />
+    <item url="upgrade/" uploadstatus="0" />
+    <item url="upgrade/mhr_0000_0.8.3-beta6_0.8.3.sql" uploadstatus="0" />
+    <item upload_time="" url="docs/changelog" uploadstatus="0" />
+    <item url="upgrade/CVS/" uploadstatus="0" />
+    <item url="upgrade/CVS/Entries" uploadstatus="0" />
+    <item url="upgrade/CVS/Repository" uploadstatus="0" />
+    <item url="upgrade/CVS/Root" uploadstatus="0" />
+    <item url="upgrade/mhr_0001_0.8.3_0.8.3.1.sql" uploadstatus="0" />
+    <item upload_time="" url="admin/changelog.php" uploadstatus="0" />
+    <item upload_time="" url="include/orders_waiter_class.php" uploadstatus="0" />
+    <item upload_time="" url="waiter/" uploadstatus="0" />
+    <item upload_time="" url="waiter/waiter_start.php" uploadstatus="0" />
+    <item upload_time="" url="include/tables_waiter.php" uploadstatus="0" />
+    <item upload_time="" url="include/common_waiter.php" uploadstatus="0" />
+    <item upload_time="" url="waiter/index.php" uploadstatus="0" />
+    <item upload_time="" url="waiter/tables.php" uploadstatus="0" />
+    <item upload_time="" url="waiter/disconnect.php" uploadstatus="0" />
+    <item upload_time="" url="include/" uploadstatus="0" />
+    <item url="include/checker_admin.php" uploadstatus="0" />
+    <item url="include/databases_admin.php" uploadstatus="0" />
+    <item url="include/ingredients_admin.php" uploadstatus="0" />
+    <item url="include/printers_admin.php" uploadstatus="0" />
+    <item url="include/vatrates_admin.php" uploadstatus="0" />
+    <item upload_time="" url="include/translator_admin.php" uploadstatus="0" />
+    <item upload_time="" url="waiter/orders.php" uploadstatus="0" />
+    <item upload_time="" url="templates/default/orders.tpl" uploadstatus="1" />
+    <item url="include/categories_waiter.php" uploadstatus="0" />
+    <item url="templates/default/dishlist.tpl" uploadstatus="1" />
+    <item url="templates/default/tables.tpl" uploadstatus="1" />
+    <item url="templates/default/authentication.tpl" uploadstatus="1" />
+    <item url="include/orders_waiter.php" uploadstatus="0" />
+    <item url="templates/default/disconnect.tpl" uploadstatus="1" />
+    <item url="include/mods_waiter.php" uploadstatus="0" />
+    <item upload_time="" url="templates/default/modslist.tpl" uploadstatus="1" />
+    <item url="templates/default/edit.tpl" uploadstatus="1" />
+    <item url="templates/default/question.tpl" uploadstatus="1" />
+    <item upload_time="" url="include/bills_waiter.php" uploadstatus="0" />
+    <item url="include/printing_waiter.php" uploadstatus="0" />
+    <item url="templates/default/prints/" uploadstatus="1" />
+    <item url="templates/default/prints/bill.tpl" uploadstatus="1" />
+    <item url="templates/default/prints/invoice.tpl" uploadstatus="1" />
+    <item url="templates/default/prints/priority_go.tpl" uploadstatus="1" />
+    <item url="templates/default/prints/receipt.tpl" uploadstatus="1" />
+    <item url="templates/default/prints/ticket.tpl" uploadstatus="1" />
+    <item url="templates/default/printing.tpl" uploadstatus="1" />
+    <item url="include/drivers_waiter.php" uploadstatus="0" />
+    <item url="templates/default/bill_select.tpl" uploadstatus="1" />
+    <item url="include/discounts_waiter.php" uploadstatus="0" />
+    <item url="../" uploadstatus="0" />
+    <item url="images/little_trash.png" uploadstatus="0" />
+    <item url="templates/default/closed_table.tpl" uploadstatus="1" />
+    <item url="templates/default/template.tpl" uploadstatus="1" />
+    <item url="include/CVS/" uploadstatus="0" />
+    <item url="include/CVS/Entries" uploadstatus="0" />
+    <item url="include/CVS/Repository" uploadstatus="0" />
+    <item url="include/CVS/Root" uploadstatus="0" />
+    <item url="templates/default/prints/CVS/" uploadstatus="1" />
+    <item url="templates/default/prints/CVS/Entries" uploadstatus="1" />
+    <item url="templates/default/prints/CVS/Repository" uploadstatus="1" />
+    <item url="templates/default/prints/CVS/Root" uploadstatus="1" />
+    <item url="upgrade/mhr_0002_0.8.3.1_0.8.4-beta1.sql" uploadstatus="0" />
+    <item url="waiter/CVS/" uploadstatus="0" />
+    <item url="waiter/CVS/Entries" uploadstatus="0" />
+    <item url="waiter/CVS/Repository" uploadstatus="0" />
+    <item url="waiter/CVS/Root" uploadstatus="0" />
+    <item url="include/toplist_waiter.php" uploadstatus="0" />
+    <item url="templates/default/orders_takeaway.tpl" uploadstatus="1" />
+    <item url="include/takeaway_waiter.php" uploadstatus="0" />
+    <item url="include/customer_waiter.php" uploadstatus="0" />
+    <item url="templates/default/standard.tpl" uploadstatus="1" />
+    <item url="images/find.png" uploadstatus="0" />
+    <item url="images/new.png" uploadstatus="0" />
+    <item url="upgrade/mhr_0003_0.8.4-beta1_0.8.4-beta2.sql" uploadstatus="0" />
+    <item url="include/countries_class.php" uploadstatus="0" />
+    <item url="include/user_class.php" uploadstatus="0" />
+    <item url="admin/connect.php" uploadstatus="0" />
+    <item url="upgrade/mhr_0004_0.8.4-beta2_0.8.4-beta3.sql" uploadstatus="0" />
+    <item url="admin/admin.php" uploadstatus="0" />
+    <item url="images/mhr_logo.jpg" uploadstatus="0" />
+    <item url="include/autocalc_admin.php" uploadstatus="0" />
+    <item url="include/cache_class.php" uploadstatus="0" />
+    <item url="include/ezpdf_class_pdf.php" uploadstatus="0" />
+    <item url="include/ezpdf_class.php" uploadstatus="0" />
+    <item url="include/system_class.php" uploadstatus="0" />
+    <item url="jscalendar/" uploadstatus="0" />
+    <item url="jscalendar/CVS/" uploadstatus="0" />
+    <item url="jscalendar/CVS/Entries" uploadstatus="0" />
+    <item url="jscalendar/CVS/Repository" uploadstatus="0" />
+    <item url="jscalendar/CVS/Root" uploadstatus="0" />
+    <item url="jscalendar/lang/" uploadstatus="0" />
+    <item url="jscalendar/lang/CVS/" uploadstatus="0" />
+    <item url="jscalendar/lang/CVS/Entries" uploadstatus="0" />
+    <item url="jscalendar/lang/CVS/Repository" uploadstatus="0" />
+    <item url="jscalendar/lang/CVS/Root" uploadstatus="0" />
+    <item url="jscalendar/lang/calendar-en.js" uploadstatus="0" />
+    <item url="jscalendar/calendar-blue.css" uploadstatus="0" />
+    <item url="jscalendar/calendar.js" uploadstatus="0" />
+    <item url="jscalendar/calendar-setup.js" uploadstatus="0" />
+    <item url="jscalendar/calendar-setup_stripped.js" uploadstatus="0" />
+    <item url="jscalendar/calendar_stripped.js" uploadstatus="0" />
+    <item url="jscalendar/menuarrow2.gif" uploadstatus="0" />
+    <item url="jscalendar/menuarrow.gif" uploadstatus="0" />
+    <item url="jscalendar/README" uploadstatus="0" />
+    <item url="jscalendar/release-notes.html" uploadstatus="0" />
+    <item url="lang/lang_ar.php" uploadstatus="0" />
+    <item url="lang/lang_id.php" uploadstatus="0" />
+    <item url="lang/lang_ru.php" uploadstatus="0" />
+    <item url="manage/mgmt_start_new.php" uploadstatus="0" />
+    <item url="manage/newindex.php" uploadstatus="0" />
+    <item url="templates/default/admin/" uploadstatus="1" />
+    <item url="templates/default/admin/CVS/" uploadstatus="1" />
+    <item url="templates/default/admin/CVS/Entries" uploadstatus="1" />
+    <item url="templates/default/admin/CVS/Repository" uploadstatus="1" />
+    <item url="templates/default/admin/CVS/Root" uploadstatus="1" />
+    <item url="templates/default/admin/menu.tpl" uploadstatus="1" />
+    <item url="templates/default/admin/standard.tpl" uploadstatus="1" />
+    <item url="upgrade/mhr_0005_0.8.4-beta3_0.8.4-beta4.sql" uploadstatus="0" />
+    <item url="xtemplate/" uploadstatus="0" />
+    <item url="xtemplate/CVS/" uploadstatus="0" />
+    <item url="xtemplate/CVS/Entries" uploadstatus="0" />
+    <item url="xtemplate/CVS/Repository" uploadstatus="0" />
+    <item url="xtemplate/CVS/Root" uploadstatus="0" />
+    <item url="xtemplate/LICENSE_xtpl" uploadstatus="0" />
+    <item url="xtemplate/xtpl.php" uploadstatus="0" />
+    <item url="" uploadstatus="1" />
+    <item url="include/access_control.php" uploadstatus="0" />
+    <item url="include/categories_admin.php" uploadstatus="0" />
+    <item url="include/dishes_admin.php" uploadstatus="0" />
+    <item url="include/error_codes.php" uploadstatus="0" />
+    <item url="include/object_class_admin.php" uploadstatus="0" />
+    <item url="include/tables_admin.php" uploadstatus="0" />
+    <item url="error.log" uploadstatus="0" />
+    <item url="include/key_binds_waiter.php" uploadstatus="0" />
+    <item url="upgrade/mhr_0006_0.8.4-beta4_0.8.4.sql" uploadstatus="1" />
+    <item url="images/menu_arrow.gif" uploadstatus="1" />
+    <item url="myhandyrestaurant_account_complete.sql" uploadstatus="1" />
+    <item url="myhandyrestaurant_account_struct.sql" uploadstatus="1" />
+    <item url="myhandyrestaurant_common_complete.sql" uploadstatus="1" />
+    <item url="myhandyrestaurant_common_struct.sql" uploadstatus="1" />
+    <item url="include/matrix_class.php" uploadstatus="1" />
+    <item url="stock/index.php" uploadstatus="1" />
+    <item url="stock/" uploadstatus="1" />
+    <item url="stock/include/" uploadstatus="1" />
+    <item url="stock/include/stock_movement.php" uploadstatus="1" />
+    <item url="stock/include/stock_object.php" uploadstatus="1" />
+    <item url="stock/include/stock_matrix.php" uploadstatus="1" />
+    <item url="admin/restore.php" uploadstatus="1" />
+    <item url="templates/default/admin/menu_vertical.tpl" uploadstatus="1" />
+    <item url="include/search_class.php" uploadstatus="1" />
+    <item url="include/display_class.php" uploadstatus="1" />
+    <item url="stock/include/stock_dish.php" uploadstatus="1" />
+    <item url="stock/include/stock_ingredient_quantity.php" uploadstatus="1" />
+    <item url="stock/include/stock_ingredient_sample.php" uploadstatus="1" />
+    <item url="include/dish_ingredient_class.php" uploadstatus="1" />
+    <item url="upgrade/mhr_0007_0.8.4_0.8.5.sql" uploadstatus="1" />
+    <item url="drivers/epson_fp90.php" uploadstatus="1" />
+    <item url="templates/default/admin/dish_edit.tpl" uploadstatus="1" />
+    <item url="overlib/" uploadstatus="1" />
+    <item url="overlib/Mini/" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_anchor_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_centerpopup_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_crossframe_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_cssstyle_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_debug_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_exclusive_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_followscroll_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_hideform_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_setonoff_mini.js" uploadstatus="1" />
+    <item url="overlib/Mini/overlib_shadow_mini.js" uploadstatus="1" />
+    <item url="overlib/makemini.pl" uploadstatus="1" />
+    <item url="overlib/overlib414.zip" uploadstatus="1" />
+    <item url="overlib/overlib_anchor.js" uploadstatus="1" />
+    <item url="overlib/overlib_centerpopup.js" uploadstatus="1" />
+    <item url="overlib/overlib_crossframe.js" uploadstatus="1" />
+    <item url="overlib/overlib_cssstyle.js" uploadstatus="1" />
+    <item url="overlib/overlib_debug.js" uploadstatus="1" />
+    <item url="overlib/overlib_exclusive.js" uploadstatus="1" />
+    <item url="overlib/overlib_followscroll.js" uploadstatus="1" />
+    <item url="overlib/overlib_hideform.js" uploadstatus="1" />
+    <item url="overlib/overlib.js" uploadstatus="1" />
+    <item url="overlib/overlib_setonoff.js" uploadstatus="1" />
+    <item url="overlib/overlib_shadow.js" uploadstatus="1" />
+    <item url="templates/default/prints/ticket_takeaway.tpl" uploadstatus="1" />
+    <item url="trash/docs/0.8.5_release_notes" />
+    <item url="trash/docs/" />
+    <item url="trash/" />
+    <treestatus>
+      <openfolder url="admin" />
+      <openfolder url="conf" />
+      <openfolder url="docs" />
+      <openfolder url="docs/CVS" />
+      <openfolder url="drivers" />
+      <openfolder url="images" />
+      <openfolder url="include" />
+      <openfolder url="stock" />
+      <openfolder url="stock/include" />
+      <openfolder url="templates" />
+      <openfolder url="upgrade" />
+      <openfolder url="waiter" />
+    </treestatus>
+  </project>
+</webproject>

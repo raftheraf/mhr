@@ -1,0 +1,45 @@
+TODO:   Pensare di abbandonare le TMU-295 e fare stampare la fattura alle TM88.
+        Creare un comando di doppia stampa
+
+DANGER: Sistemare le formattzioni con le TM88 la funzione stri_replace causa alcune
+        cancellazioni di parti di codice che impediscono di inviare correttamente
+        le stringhe utilizzate dalle stampanti esc/pos.
+        Se la stringa è un array viene formattato in modo diverso.
+        Template di stampa ticket.tpl , priority_to_go.tpl e preconto.tpl
+        Funzioni printer_print_row , printing_orders_printed_category e ristampa_ordini
+
+TODO: Migliorare l'integrazione della Print-F nella zona Sistema->Stampanti
+      cercare di prendere i dati per l'utilizzo della stampante dal pannello
+      di configurazione (dal database). Al momento sono scritti nel template
+      e nel config.constants.inc.php
+
+TODO: Funzione UNISCI i TAVOLI per le prenotazioni
+TODO: Funzione UNISCI i conti di 2 o più TAVOLI
+
+================================================================================
+
+SISTEMARE I MEDODI DI PAGAMENTO CON LA PRINTF
+T1  pagamento contanti
+T2  pagamento con carte di credito
+T3  pagamento con assegni
+T4  pagamento non riscosso
+T5  pagamento 5 altri metodi
+T6  pagamento 6 (non utilizzato)
+T7  pagamento 7 (non utilizzato)
+T8  pagamento 8 (non utilizzato)
+T9  pagamento 9 (non utilizzato)
+T10 pagamento 10 (non utilizzato)
+
+form per inserimento dati in /include/bills_waiter.php cercare <LEGEND>CORRISPETTIVO</LEGEND>
+
+nel database contabilità modificare il nome della colonna da corrispettivo_non_pagato a tipo_corrispettivo e defalut = 0 e tipo di dati "TEXT" "default value = nothing"
+
+================================================================================
+COME ELIMINARE L’ERRORE 200 SU PHPMYADMIN: LA SOLUZIONE MIGLIORE
+“C:\xampp“) e successivamente aprire la directory phpMyAdmin. Esiste un file “config.inc.php” contenente le impostazioni di PhpMyAdmin. Aprendolo con un editor testuale (evita il blocco note di Windows per evitare di diventare matto, meglio Sublime Text o Scite) e scorrendo le varie istruzioni (mantenendosi comunque all’inizio del file), si può trovare la seguente dicitura PHP (o una equivalente con un valore assegnato).
+
+$cfg['Lang'] = 'it';
+Fate diventare la precedente assegnazione come scritto qua sotto.
+
+$cfg['Lang'] = 'en';
+===================================================

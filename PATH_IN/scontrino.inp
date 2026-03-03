@@ -1,0 +1,17 @@
+192.168.1.10:23
+=K
+=C1
+="/(SCONTRINO N.0007822026)
+=R5/$600/(  2 Coperto)
+=R5/$1200/(  1 Tagliatelle ASININA)
+=R5/$2000/(  2 Mariola cotta + pure)
+=R5/$1300/(  1 Spallotto Vitello)
+=R5/$1400/(  1 Vino da Carta)
+=R5/$1300/(  1 Vino da Carta)
+=R5/$300/(  2 Caffè)
+="/(Tavolo 38)
+="/(Cliente: Dante Bessi)
+="/(PAGAMENTO CARTE DI CREDITO)
+=S
+=V-/*100/(SCONTO IN EURO)
+=T3

@@ -1,0 +1,34 @@
+Templates available commands:
+Order Tickets:
+{takeaway}
+{customerdata} modulo per inserire dati cliente sul tavolo ed mettere un nome veloce
+{table}
+{waiter}
+{priority}
+{gonow}
+{orders}
+{barcode}
+{date}
+{destination}
+{page_cut}
+{warning}
+{letters}
+
+payment bills:
+{table}
+{orders}
+{discount}
+{total}
+{taxes}
+{receipt_id}
+{destination}
+
+administration section:
+{head}
+{scripts}
+{menu}
+{messages}
+{title}
+{content}
+{generating_time}
+{logo}

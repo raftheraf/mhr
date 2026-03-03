@@ -1,0 +1,68 @@
+/* Leftleft-sidebar per dispositivi mobili con menù esempio su https://www.w3schools.com/howto/howto_js_collapse_sidebar.asp */
+body {
+  font-family: "Lato", sans-serif;
+}
+/* The left-sidebar menu */
+.left_sidebar {
+  height: 100%; /* 100% Full-height */
+  width: 0;  /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0;
+  left: 0;
+  background-color: #111; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the left-sidebar */
+  padding-top: 90px; /* Place content 60px from the top */
+	padding-left: 0px;
+	text-align: left;
+}
+/* The left-sidebar links */
+.left_sidebar a {
+  padding: 8px 8px 8px 8px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.left_sidebar p {
+	padding: 8px 8px 8px 8px;
+	margin:auto;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  transition: 0.3s;
+}
+/* When you mouse over the navigation links, change their color */
+.left_sidebar a:hover {
+  color: #f1f1f1;
+}
+/* Position and style the close button (top right corner) */
+.left_sidebar .closebtn {
+  position: absolute;
+  top: 30px;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 0px;
+}
+/* The button used to open the left-sidebar */
+.openbtn {
+  font-size: 20px;
+  border: none;
+}
+
+.openbtn:hover {
+}
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s; /* If you want a transition effect */
+  padding: 16px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .leftsidebar {padding-top: 15px;}
+  .leftsidebar a {font-size: 18px;}
+}

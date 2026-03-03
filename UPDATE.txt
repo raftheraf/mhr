@@ -1,0 +1,30 @@
+IMPORTANTE PER AGGIORNAMENTI
+NON SOSTITUIRE MAI I FILE
+
+conf\config.constants.inc.php
+
+conf\config.inc.php
+
+templates\default\prints\receipt.tpl
+contiene l'indirizzo ip della stampante fiscale
+
+
+
+
+Data 8/2/2021
+
+1) tolto nel file /templates/default/prints/receipt.tpl
+
+="/(Cliente: {customer_name})
+
+===========================================
+
+2) include/orders_waiter.php
+riga 957
+
+$start_data['id']=$id;
+//orders_update ($start_data);
+//orders_edit ($start_data,$created);
+orders_list();
+
+===========================================

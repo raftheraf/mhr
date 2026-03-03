@@ -1,0 +1,21 @@
+Atom Bookmarks:
+add: alt-ctrl-f2
+viewNEXT: f2
+view previus: shift+f2
+view all: ctrl-f2
+delete aLL: ctrl-shift-f2
+--------------------------------------------------
+Richiamare valori nelle tabelle mhr_conf
+get_conf(__FILE__,__LINE__,"default_priority")
+
+if(access_allowed(USER_BIT_WAITER)){    }
+
+
+per abilitare all'admin sul smartphone i comandi e non ai camerieri
+if (!access_allowed(USER_BIT_WAITER) OR access_allowed(USER_BIT_CONFIG)) {    }
+
+
+stampare ora nel database
+date("Y-m-d H:i:s");
+
+if(table_is_takeaway($_SESSION['sourceid'])) {}

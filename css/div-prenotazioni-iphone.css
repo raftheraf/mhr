@@ -1,0 +1,11 @@
+#div-prenotazioni-iphone {
+  top: 0px;
+  left: 0;
+  height: max-content;
+  margin: 0 auto;
+  width: 100%;
+  z-index: auto;
+  background-color: lightblue;
+  display: none;
+  position: absolute;
+}

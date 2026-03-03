@@ -1,0 +1,11 @@
+{init}{inizio_comanda}
+{size_double}
+{table}{/size_double}
+{people}
+{waiter}
+{size_double}{highlight}
+{priority}{gonow}{/highlight}{/size_double}{warning}
+{orders}{highlight}
+{warning}{/highlight}
+{date}
+{destination}{page_cut}
