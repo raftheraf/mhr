@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Corregge URL malformate tipo:
+# /mhr/waiter/tables.phpmhr_tab_id=...
+# /mhr/pos/tables.phpmhr_tab_id=...
+RewriteRule ^(waiter|pos)/(.*)\.phpmhr_tab_id=([^/?&]+)$ $1/$2.php?mhr_tab_id=$3 [R=302,L,NE,QSA]

@@ -156,6 +156,24 @@ function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerCol
 function redir(url) {
   //aumenta il tempo di rendirizzamento
   //setTimeout(function(){document.location.href=url},100);
+
+  if (url && url.toLowerCase().indexOf(".phpmhr_tab_id=") !== -1) {
+    url = url.replace(/\.phpmhr_tab_id=/ig, ".php?mhr_tab_id=");
+  }
+  
+  // Aggiungi mhr_tab_id se disponibile (per celle della tabella, ecc.)
+  if (window.sessionStorage) {
+    var tabId = sessionStorage.getItem("mhr_tab_id");
+    if (tabId && url) {
+      // Controlla se l'URL ha già query parameters
+      var sep = (url.indexOf("?") === -1) ? "?" : "&";
+      // Evita di aggiungere il parametro due volte
+      if (url.indexOf("mhr_tab_id=") === -1) {
+        url += sep + "mhr_tab_id=" + encodeURIComponent(tabId);
+      }
+    }
+  }
+  
   document.location.href=url;
   myFunction();
 	return false;
@@ -252,93 +270,6 @@ function pagamento_carte_switch(){
 
 	return(false);
 }
-
-// Controllo per evitare finestre/schede duplicate nella sezione camerieri
-// Usa localStorage per avere una sola finestra attiva alla volta
-(function() {
-  // agisce solo sulle pagine della sezione waiter
-  try {
-    var path = window.location && window.location.pathname ? window.location.pathname : "";
-    if (path.indexOf("waiter/") === -1) {
-      return;
-    }
-  } catch (e) {
-    // se qualcosa va storto, non facciamo nulla
-    return;
-  }
-
-  // chiave unica per la sezione camerieri
-  var APP_KEY = "mhr_waiter_single_tab_lock";
-  var TAB_ID = String(new Date().getTime()) + "_" + String(Math.random());
-
-  function acquireLock() {
-    try {
-      if (!window.localStorage) {
-        return true; // browser troppo vecchio: non blocchiamo
-      }
-      var current = window.localStorage.getItem(APP_KEY);
-      if (!current) {
-        window.localStorage.setItem(APP_KEY, TAB_ID);
-        return true;
-      }
-      if (current === TAB_ID) {
-        return true;
-      }
-      // c'è già un'altra finestra attiva
-      return false;
-    } catch (e) {
-      return true;
-    }
-  }
-
-  function releaseLock() {
-    try {
-      if (!window.localStorage) {
-        return;
-      }
-      var current = window.localStorage.getItem(APP_KEY);
-      if (current === TAB_ID) {
-        window.localStorage.removeItem(APP_KEY);
-      }
-    } catch (e) {
-      // niente da fare
-    }
-  }
-
-  // esegue il controllo soltanto dopo che il DOM è pronto
-  function initSingleTabProtection() {
-    if (!acquireLock()) {
-      // scheda duplicata: la reindirizziamo a una pagina bloccata
-      window.location.href = "blocked.php";
-    }
-  }
-
-  if (window.addEventListener) {
-    window.addEventListener("beforeunload", releaseLock, false);
-    window.addEventListener("unload", releaseLock, false);
-    window.addEventListener("load", initSingleTabProtection, false);
-  } else if (window.attachEvent) {
-    window.attachEvent("onbeforeunload", releaseLock);
-    window.attachEvent("onunload", releaseLock);
-    window.attachEvent("onload", initSingleTabProtection);
-  } else {
-    // fallback
-    var oldOnload = window.onload;
-    window.onload = function() {
-      if (typeof oldOnload === "function") {
-        oldOnload();
-      }
-      initSingleTabProtection();
-    };
-    var oldOnUnload = window.onunload;
-    window.onunload = function() {
-      if (typeof oldOnUnload === "function") {
-        oldOnUnload();
-      }
-      releaseLock();
-    };
-  }
-})();
 
 function payment_activation(){
 	//alert("Funzione BEGIN");
@@ -852,3 +783,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // FINE Barra countdown colorata
+

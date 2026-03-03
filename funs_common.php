@@ -1016,6 +1016,308 @@ function head_line ($title) {
 	<link rel="stylesheet" href="'.CONF_CSS_URL.'" />
 	<meta http-equiv="Cache-Control" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />';
+
+	$output .= '
+	<script type="text/javascript">
+	(function () {
+		if (!window.localStorage || !window.sessionStorage) return;
+
+		function fixMalformedTabParam(url) {
+			if (!url || typeof url !== "string") return url;
+			return url.replace(/\.phpmhr_tab_id=/ig, ".php?mhr_tab_id=");
+		}
+
+		var currentUrl = window.location.href;
+		var fixedCurrentUrl = fixMalformedTabParam(currentUrl);
+		if (fixedCurrentUrl !== currentUrl) {
+			window.location.replace(fixedCurrentUrl);
+			return;
+		}
+
+		var path = (window.location.pathname || "").toLowerCase();
+		if (path.indexOf("/waiter/") === -1 && path.indexOf("/pos/") === -1) return;
+
+		var endpoint = "../tab_guard.php";
+		var duplicateRedirectUrl = "../multi_tab_error.php";
+		var ttlMs = 15000;
+		var heartbeatMs = 4000;
+		var lockTimer = null;
+		var checkTimer = null;
+		var blocked = false;
+
+		var tabId = sessionStorage.getItem("mhr_tab_id");
+		if (!tabId) {
+			tabId = "mhr_" + new Date().getTime() + "_" + Math.floor(Math.random() * 1000000);
+			sessionStorage.setItem("mhr_tab_id", tabId);
+		}
+
+		function hookHistoryMethod(methodName) {
+			if (!window.history || !window.history[methodName]) return;
+			var original = window.history[methodName];
+			try {
+				window.history[methodName] = function (state, title, url) {
+					if (typeof url === "string") {
+						url = fixMalformedTabParam(url);
+					}
+					return original.call(window.history, state, title, url);
+				};
+			} catch (e) {
+			}
+		}
+
+		hookHistoryMethod("replaceState");
+		hookHistoryMethod("pushState");
+
+		window.setInterval(function () {
+			try {
+				var nowUrl = window.location.href;
+				var fixedNowUrl = fixMalformedTabParam(nowUrl);
+				if (fixedNowUrl !== nowUrl && window.history && window.history.replaceState) {
+					window.history.replaceState({}, document.title, fixedNowUrl);
+				}
+			} catch (e) {
+			}
+		}, 500);
+
+		function getSessionCookie() {
+			var m = document.cookie.match(/(?:^|;\\s*)PHPSESSID=([^;]+)/);
+			return m && m[1] ? m[1] : "no_session";
+		}
+
+		var lockKey = "mhr_single_tab_lock_" + getSessionCookie();
+
+		function nowMs() {
+			return new Date().getTime();
+		}
+
+		function safeParse(raw) {
+			if (!raw) return null;
+			try {
+				return JSON.parse(raw);
+			} catch (e) {
+				return null;
+			}
+		}
+
+		function readLock() {
+			return safeParse(localStorage.getItem(lockKey));
+		}
+
+		function isAlive(lockObj) {
+			return !!(lockObj && lockObj.tab_id && lockObj.ts && (nowMs() - lockObj.ts) < ttlMs);
+		}
+
+		function writeOwnLock() {
+			localStorage.setItem(lockKey, JSON.stringify({ tab_id: tabId, ts: nowMs() }));
+		}
+
+		function clearOwnLock() {
+			var l = readLock();
+			if (l && l.tab_id === tabId) {
+				localStorage.removeItem(lockKey);
+			}
+		}
+
+		function redirectDuplicate() {
+			window.location.replace(appendParam(duplicateRedirectUrl, "mhr_tab_id", tabId));
+		}
+
+		function callServer(action, callback) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", endpoint, true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState !== 4) return;
+				if (typeof callback !== "function") return;
+				var data = null;
+				try {
+					data = JSON.parse(xhr.responseText);
+				} catch (e) {
+					data = null;
+				}
+				callback(data);
+			};
+			xhr.send("action=" + encodeURIComponent(action) + "&tab_id=" + encodeURIComponent(tabId));
+		}
+
+		function sendRelease() {
+			var body = "action=release&tab_id=" + encodeURIComponent(tabId);
+			if (navigator.sendBeacon) {
+				try {
+					var blob = new Blob([body], { type: "application/x-www-form-urlencoded; charset=UTF-8" });
+					navigator.sendBeacon(endpoint, blob);
+					return;
+				} catch (e) {
+				}
+			}
+			try {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", endpoint, false);
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+				xhr.send(body);
+			} catch (e) {
+			}
+		}
+
+		function setBlocked(value) {
+			blocked = !!value;
+			if (blocked) redirectDuplicate();
+		}
+
+		function startHeartbeat() {
+			if (lockTimer) return;
+			lockTimer = window.setInterval(function () {
+				if (blocked) return;
+				writeOwnLock();
+				callServer("heartbeat");
+				if (bc) bc.postMessage({ type: "heartbeat", tab_id: tabId, ts: nowMs() });
+			}, heartbeatMs);
+		}
+
+		function stopHeartbeat() {
+			if (!lockTimer) return;
+			window.clearInterval(lockTimer);
+			lockTimer = null;
+		}
+
+		function appendParam(url, key, value) {
+			if (!url) return url;
+			url = fixMalformedTabParam(url);
+			var hash = "";
+			var hashPos = url.indexOf("#");
+			if (hashPos !== -1) {
+				hash = url.substring(hashPos);
+				url = url.substring(0, hashPos);
+			}
+
+			var re = new RegExp("([?&])" + key + "=[^&]*");
+			if (re.test(url)) {
+				url = url.replace(re, "$1" + key + "=" + encodeURIComponent(value));
+			} else {
+				url += (url.indexOf("?") === -1 ? "?" : "&") + key + "=" + encodeURIComponent(value);
+			}
+			return url + hash;
+		}
+
+		function normalizeNavigation() {
+if (window.history && window.history.replaceState) {
+try {
+var updated = appendParam(window.location.href, "mhr_tab_id", tabId);
+window.history.replaceState({}, document.title, updated);
+} catch (e) {
+}
+}
+}
+
+		function enhanceForms() {
+			document.addEventListener("submit", function (e) {
+				var f = e.target;
+				if (!f || !f.tagName || f.tagName.toLowerCase() !== "form") return;
+				var input = f.querySelector("input[name=\"mhr_tab_id\"]");
+				if (!input) {
+					input = document.createElement("input");
+					input.type = "hidden";
+					input.name = "mhr_tab_id";
+					f.appendChild(input);
+				}
+				input.value = tabId;
+			}, true);
+		}
+
+		function enhanceLinks() {
+			document.addEventListener("click", function (e) {
+				var el = e.target;
+				while (el && el.tagName && el.tagName.toLowerCase() !== "a") {
+					el = el.parentNode;
+				}
+				if (!el || !el.getAttribute) return;
+				var href = el.getAttribute("href");
+				if (!href) return;
+				var lhref = href.toLowerCase();
+				if (lhref.indexOf("javascript:") === 0 || lhref.indexOf("mailto:") === 0 || lhref.charAt(0) === "#") return;
+				if (href.indexOf("http://") === 0 || href.indexOf("https://") === 0) {
+					if (href.indexOf(window.location.origin) !== 0) return;
+				}
+				el.setAttribute("href", appendParam(href, "mhr_tab_id", tabId));
+			}, true);
+		}
+
+		function attemptClaim() {
+			var lock = readLock();
+			if (isAlive(lock) && lock.tab_id !== tabId) {
+				setBlocked(true);
+				stopHeartbeat();
+				return;
+			}
+
+			writeOwnLock();
+			callServer("claim", function (data) {
+				if (data && data.allowed) {
+					setBlocked(false);
+					startHeartbeat();
+				} else {
+					setBlocked(true);
+					stopHeartbeat();
+				}
+			});
+		}
+
+		var bc = null;
+		if (window.BroadcastChannel) {
+			try {
+				bc = new BroadcastChannel("mhr_single_tab_guard");
+				bc.onmessage = function (ev) {
+					var d = ev && ev.data ? ev.data : null;
+					if (!d || d.tab_id === tabId) return;
+					if (d.type === "heartbeat") {
+						var lock = readLock();
+						if (isAlive(lock) && lock.tab_id !== tabId) {
+							setBlocked(true);
+							stopHeartbeat();
+						}
+					}
+				};
+			} catch (e) {
+				bc = null;
+			}
+		}
+
+		window.addEventListener("storage", function (ev) {
+			if (!ev || ev.key !== lockKey) return;
+			var lock = safeParse(ev.newValue);
+			if (isAlive(lock) && lock.tab_id !== tabId) {
+				setBlocked(true);
+				stopHeartbeat();
+			}
+		});
+
+		window.addEventListener("beforeunload", function () {
+			clearOwnLock();
+			sendRelease();
+		});
+		window.addEventListener("pagehide", function () {
+			clearOwnLock();
+			sendRelease();
+		});
+
+		document.addEventListener("visibilitychange", function () {
+			if (!document.hidden) attemptClaim();
+		});
+
+		enhanceForms();
+		enhanceLinks();
+		normalizeNavigation();
+		attemptClaim();
+
+		checkTimer = window.setInterval(function () {
+			if (!blocked) return;
+			var lock = readLock();
+			if (!isAlive(lock) || lock.tab_id === tabId) {
+				attemptClaim();
+			}
+		}, 1500);
+	})();
+	</script>';
 	$tpl -> assign("head", $output);
 
 	//inserisce nei templates .tpl in {scripts} il codice sotto
@@ -1081,9 +1383,9 @@ function request($name){
 
 function redirectJS($url){
 $msg = '
-	<script type="text/javascript">
-	document.location.href="'.$url.'";
-	</script>
+<script type="text/javascript">
+document.location.href="'.$url.'";
+</script>
 ';
 return $msg;
 }
@@ -1101,17 +1403,12 @@ function redirect_manage($url) {
 }
 
 function redirect_timed($url,$millitime) {
-	$msg = '
-		<script type="text/javascript">
-		setTimeout("redirect(\''.$url.'\')", '.$millitime.');
-		function redirect()
-		{
-		location.href ="'.$url.'";
-		}
-		</script>
-	';
-
-	return $msg;
+$msg = '
+<script type="text/javascript">
+setTimeout("document.location.href=\''.$url.'\'", '.$millitime.');
+</script>
+';
+return $msg;
 }
 
 function unset_session_vars(){
@@ -1383,3 +1680,10 @@ function elapsed_time($inizio,$fine){
 }
 
 ?>
+
+
+
+
+
+
+

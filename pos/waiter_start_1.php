@@ -59,6 +59,13 @@ if(!$header_printed){
 		$start_data=$_REQUEST['data'];
 	} else $start_data = array();
 
+	if (isset($_SESSION['userid']) && $_SESSION['userid'] && isset($_REQUEST['mhr_tab_id']) && $_REQUEST['mhr_tab_id']) {
+		if (!mhr_tab_guard_validate_request($_REQUEST['mhr_tab_id'])) {
+			header('Location: '.ROOTDIR.'/multi_tab_error.php?reason=duplicate_tab');
+			die();
+		}
+	}
+
 	if(!$dont_display_menu) {
 		$menu = new menu();
 		$tmp = $menu -> main ();

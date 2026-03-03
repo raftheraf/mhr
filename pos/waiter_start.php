@@ -173,6 +173,13 @@
 	unset($res);
 	unset($arr);
 
+	if (isset($_SESSION['userid']) && $_SESSION['userid'] && isset($_REQUEST['mhr_tab_id']) && $_REQUEST['mhr_tab_id']) {
+		if (!mhr_tab_guard_validate_request($_REQUEST['mhr_tab_id'])) {
+			header('Location: '.ROOTDIR.'/multi_tab_error.php?reason=duplicate_tab');
+			die();
+		}
+	}
+
 	/*
 	The next if contains a primitive access control
 	to avoid that 2 waiters simultaneously work on the same table

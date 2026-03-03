@@ -35,6 +35,7 @@ require_once(ROOTDIR."/waiter/waiter_start.php");
 
 switch ($command){
 	case 'destroy':
+		mhr_tab_guard_release(); // schede duplicate
 		$user = new user ($_SESSION['userid']);
 		$user->disconnect_waiter();
 		break;

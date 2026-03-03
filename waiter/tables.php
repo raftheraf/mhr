@@ -2,6 +2,8 @@
 $inizio=microtime();			//has to be before start.php requirement!!!
 session_start();
 
+
+
 define('ROOTDIR','..');
 $dont_get_session_sourceid=true;
 $dont_redirect_to_menu=true;
@@ -82,3 +84,5 @@ $output = $tpl->getOutput();
 echo $output;
 if(CONF_DEBUG_PRINT_PAGE_SIZE) echo $tpl -> print_size();
 ?>
+
+

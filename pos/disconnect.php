@@ -34,6 +34,7 @@ require_once(ROOTDIR."/includes.php");
 require_once(ROOTDIR."/pos/waiter_start.php");
 
 switch ($command){
+	mhr_tab_guard_release(); // schede duplicate
 	case 'destroy':
 		$user = new user ($_SESSION['userid']);
 		$user->disconnect_waiter();

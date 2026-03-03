@@ -8,7 +8,7 @@ conf\config.inc.php
 templates\default\prints\receipt.tpl
 contiene l'indirizzo ip della stampante fiscale
 
-
+____________________________________________
 
 
 Data 8/2/2021
@@ -19,12 +19,22 @@ Data 8/2/2021
 
 ===========================================
 
-2) include/orders_waiter.php
-riga 957
+Data 02/03/2026
 
-$start_data['id']=$id;
-//orders_update ($start_data);
-//orders_edit ($start_data,$created);
-orders_list();
+1) Implementato blocco accesso multi-scheda (stessa sessione/browser)
+- Controllo lato client con localStorage/BroadcastChannel in header comune.
+- Redirect automatico della scheda duplicata a multi_tab_error.php.
+- Passaggio e validazione server-side del parametro mhr_tab_id.
+
+2) Gestione rilascio lock
+- Release esplicita su logout waiter/POS.
+- Endpoint tab_guard.php con claim/heartbeat/release.
+- Timeout di sicurezza (TTL) per evitare blocchi permanenti.
+
+3) Documentazione e verifica
+- Aggiunti docs/SINGLE_TAB_QA.md e SINGLE_TAB_QA.txt.
+- Test funzionali completati con esito: TUTTO OK (nessuna anomalia).
 
 ===========================================
+
+

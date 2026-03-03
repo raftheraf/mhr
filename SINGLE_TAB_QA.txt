@@ -1,0 +1,83 @@
+QA BLOCCO MULTI-SCHEDA - MY HANDY RESTAURANT
+Data: 02/03/2026
+Ambito: modulo WAITER + POS
+
+PRECONDIZIONI
+- Browser moderno con JavaScript attivo.
+- Credenziali utente valide.
+- Sessione pulita (consigliato: finestra in incognito).
+
+--------------------------------------------------
+TEST 1 - ACCESSO NORMALE (1 SOLA SCHEDA)
+PASSI
+1) Apri waiter/connect.php
+2) Esegui login
+3) Naviga tra tables.php, orders.php, booking.php
+
+RISULTATO ATTESO
+- Nessun redirect a pagina errore
+- Funzionamento regolare
+--------------------------------------------------
+
+TEST 2 - APERTURA SCHEDA DUPLICATA
+PASSI
+1) Tieni aperta la scheda A già autenticata
+2) Apri la stessa applicazione in scheda B
+3) In B prova a navigare/ricaricare
+
+RISULTATO ATTESO
+- Scheda B va su multi_tab_error.php
+- Scheda A resta operativa
+--------------------------------------------------
+
+TEST 3 - CHIUSURA SCHEDA PRINCIPALE E RECUPERO
+PASSI
+1) Lascia A attiva e B in errore duplicato
+2) Chiudi A
+3) Attendi 2-5 secondi
+4) In B premi "Ricarica"
+
+RISULTATO ATTESO
+- B diventa operativa
+- Nessun blocco permanente
+--------------------------------------------------
+
+TEST 4 - LOGOUT E RILASCIO LOCK
+PASSI
+1) Login in A
+2) Logout da disconnect.php
+3) Apri nuova scheda C e fai login
+
+RISULTATO ATTESO
+- C entra senza blocco duplicato
+--------------------------------------------------
+
+TEST 5 - VERIFICA MODULO POS
+PASSI
+1) Ripeti test 1-4 usando pos/connect.php
+
+RISULTATO ATTESO
+- Comportamento identico al modulo waiter
+--------------------------------------------------
+
+TEST 6 - RESILIENZA (CHIUSURA FORZATA)
+PASSI
+1) Login in A
+2) Chiudi forzatamente tab/browser (simulazione crash)
+3) Riapri app in nuova scheda dopo alcuni secondi
+
+RISULTATO ATTESO
+- Nuova scheda operativa (release/TTL)
+--------------------------------------------------
+
+CHECK ESITO
+[ ] Test 1 OK
+[ ] Test 2 OK
+[ ] Test 3 OK
+[ ] Test 4 OK
+[ ] Test 5 OK
+[ ] Test 6 OK
+
+NOTE OPERATIVE
+- In caso di anomalia annotare: browser, ora, URL, sequenza passi.
+- Se il blocco persiste oltre il previsto, chiudere tutte le schede dell'app e riaprire dopo 20 secondi.
