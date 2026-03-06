@@ -259,16 +259,40 @@ function discount_switch(){
 function pagamento_carte_switch(){
 
 	if(document.form_type.tipo_corrispettivo[0].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=true;
+		document.form_type.pagato_carte_di_credito.disabled=false;
+		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
+		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='';
 	} else if (document.form_type.tipo_corrispettivo[1].checked==true){
 		document.form_type.pagato_carte_di_credito.disabled=false;
+		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='';
+		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
 	} else if (document.form_type.tipo_corrispettivo[2].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=true;
-	} else if (document.form_type.tipo_corrispettivo[4].checked==true){
 		document.form_type.pagato_carte_di_credito.disabled=false;
+		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
+		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
+	} else if (document.form_type.tipo_corrispettivo[4].checked==true){
+		document.form_type.pagato_carte_di_credito.disabled=true;
+		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='';
+		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
+	} else {
+		document.form_type.pagato_carte_di_credito.disabled=true;
+		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
+		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
 	}
 
 	return(false);
+}
+
+function invia_pos_popup(linkEl){
+	var url = linkEl.getAttribute('data-pos-url');
+	var amount = linkEl.getAttribute('data-pos-amount') || '';
+	if(!url) return false;
+	fetch(url).then(function(){
+		alert('Comando inviato al POS.\nImporto: ' + amount + ' €');
+	}).catch(function(){
+		alert('Errore invio comando POS.');
+	});
+	return false;
 }
 
 function payment_activation(){

@@ -31,6 +31,9 @@ define('CONF_PRINT_JAVAPOS_RECEIPT', false);	      // if true prints the receipt
 define('CONF_PRINT_JAVAPOS_ADDRESS', '127.0.0.1');	// hostname or IP address of the fabioPOS server
 define('CONF_PRINT_JAVAPOS_PORT',    9999);	       // port number of the fabioPOS server
 
+// Terminale POS (Nexi/Ingenico) - indirizzo e porta per integrazione LAN
+define('POS_HOST', '192.168.1.206');
+define('POS_PORT', 8000);
 
 define('CONF_PRINT_TICKETS_ONE_PAGE_PER_TABLE', true);	 // if true prints all the priorities on one ticket per table
 define('CONF_PRINT_TICKET_ID',                  true);	 // if true prints the ticket ID at the end of each ticket
