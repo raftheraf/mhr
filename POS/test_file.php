@@ -31,6 +31,17 @@
  * ------------------------------------------------------------
  */
 
+$configFile = __DIR__ . '/config.php';
+if (file_exists($configFile)) {
+    require_once $configFile;
+}
+if (!defined('POS_HOST')) {
+    define('POS_HOST', getenv('POS_HOST') !== false ? getenv('POS_HOST') : '192.168.1.206');
+}
+if (!defined('POS_PORT')) {
+    define('POS_PORT', (int) (getenv('POS_PORT') !== false ? getenv('POS_PORT') : 8000));
+}
+
 // Modalità debug: mostra errori PHP solo se definito o con ?debug=1 (per test)
 define('TEST_POS_DEBUG', getenv('TEST_POS_DEBUG') === '1' || (isset($_REQUEST['debug']) && $_REQUEST['debug'] === '1'));
 if (TEST_POS_DEBUG) {
@@ -43,9 +54,8 @@ if (TEST_POS_DEBUG) {
     ini_set('display_startup_errors', 0);
 }
 
-$POS_HOST = getenv('POS_HOST') !== false ? getenv('POS_HOST') : '192.168.1.206';
-$POS_PORT = (int) (getenv('POS_PORT') !== false ? getenv('POS_PORT') : 8000);
-$POS_PORT = max(1, min(65535, $POS_PORT));
+$POS_HOST = POS_HOST;
+$POS_PORT = max(1, min(65535, (int) POS_PORT));
 $timeout  = isset($_REQUEST['timeout']) ? max(1, min(60, (int)$_REQUEST['timeout'])) : 10;
 
 // Validazione importo: 0.01 - 99999.99 EUR, 2 decimali

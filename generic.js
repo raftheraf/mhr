@@ -257,30 +257,48 @@ function discount_switch(){
 }
 
 function pagamento_carte_switch(){
+	var radios = document.form_type.tipo_corrispettivo;
+	var idx = -1;
+	if (radios[0].checked) idx = 0;   // CONTANTI (T1)
+	else if (radios[1].checked) idx = 1;   // CARTE (T3)
+	else if (radios[2].checked) idx = 2;   // ASSEGNI (T2)
+	else if (radios[3].checked) idx = 3;   // NON-PAGATO (T4)
+	else if (radios[4] && radios[4].checked) idx = 4;   // ALTRI (T5)
 
-	if(document.form_type.tipo_corrispettivo[0].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=false;
-		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
-		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='';
-	} else if (document.form_type.tipo_corrispettivo[1].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=false;
-		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='';
-		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
-	} else if (document.form_type.tipo_corrispettivo[2].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=false;
-		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
-		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
-	} else if (document.form_type.tipo_corrispettivo[4].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=true;
-		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='';
-		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
-	} else {
-		document.form_type.pagato_carte_di_credito.disabled=true;
-		if(document.getElementById('wrap_link_pos')) document.getElementById('wrap_link_pos').style.display='none';
-		if(document.getElementById('wrap_parziale_carta')) document.getElementById('wrap_parziale_carta').style.display='none';
+	var wrapLinkPos = document.getElementById('wrap_link_pos');
+	var wrapParziale = document.getElementById('wrap_parziale_carta');
+	var wrapPagatoPos = document.getElementById('wrap_pagato_con_pos');
+	var inputCarta = document.form_type.pagato_carte_di_credito;
+
+	inputCarta.disabled = (idx === 3 || idx === 4 || idx === -1);
+	if (wrapLinkPos) wrapLinkPos.style.display = (idx === 1) ? '' : 'none';
+	if (wrapParziale) wrapParziale.style.display = (idx === 0) ? '' : 'none';
+	if (wrapPagatoPos) wrapPagatoPos.style.display = 'none';
+
+	if (idx === 0 && typeof pagato_carta_pos_toggle === 'function') {
+		pagato_carta_pos_toggle(inputCarta);
 	}
 
-	return(false);
+	return false;
+}
+
+function pagato_carta_pos_toggle(inputEl){
+	var wrap = document.getElementById('wrap_pagato_con_pos');
+	var btn = document.getElementById('btn_pagato_con_pos');
+	if(!wrap || !btn) return;
+	var raw = (inputEl && inputEl.value) ? String(inputEl.value).trim().replace(',', '.') : '';
+	var amount = parseFloat(raw, 10);
+	if(raw !== '' && !isNaN(amount) && amount >= 0.01){
+		var baseUrl = btn.getAttribute('data-pos-base-url') || '';
+		var url = baseUrl + encodeURIComponent(amount.toFixed(2));
+		btn.setAttribute('data-pos-url', url);
+		btn.setAttribute('data-pos-amount', amount.toFixed(2));
+		wrap.style.display = '';
+	} else {
+		wrap.style.display = 'none';
+		btn.setAttribute('data-pos-url', '');
+		btn.setAttribute('data-pos-amount', '');
+	}
 }
 
 function invia_pos_popup(linkEl){

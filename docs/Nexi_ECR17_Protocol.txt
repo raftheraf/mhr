@@ -1,295 +1,291 @@
 ================================================================================
-DOCUMENTATION FOR TRADITIONAL POS - NEXI (ECR17 STANDARD)
+MANUALE PROTOCOLLO POS TRADIZIONALE NEXI - DETTAGLIO COMPLETO COMANDI API
 ================================================================================
+Il protocollo di comunicazione prevede che la comunicazione sia sempre avviata dalla cassa (ECR). 
+I messaggi sono in formato testo in chiaro e includono un byte di controllo LRC (calcolato tramite OR esclusivo su tutti i byte con base 0x7F).
 
-1. OVERVIEW AND CONFIGURATIONS
+Formato base del pacchetto applicativo:
+Pos | Nome campo      | Valore | Tipo   | Lunghezza (byte)
+1   | Start of text   | 0x02   | Binario| 1
+2..N| App message     | -      | Binario| N
+N+1 | End of Text     | 0x03   | Binario| 1
+N+2 | LRC             | -      | Binario| 1
+
 --------------------------------------------------------------------------------
-Traditional POS documentation includes the description of the protocol, derived from the Italian standard ECR17, supported by Nexi Group terminals for local connection with Merchant systems in order to integrate electronic payment services[cite: 2].
-
-Traditional terminals are offered in the following configurations[cite: 3]:
-* Desktop with Pin Pad: connected via Ethernet to the shop lan, can be used as a standalone terminal or integrated with the cash register[cite: 4].
-* Cordless+: can be connected via Ethernet through a charge and connectivity cradle and directly via Wi-Fi, to the shop's LAN, allowing the merchant to accept payments even outside the cradle's coverage range[cite: 5]. Cordless terminals are suitable for integrated solutions at the checkout via LAN[cite: 6].
-* Portable: equipped with a 4G SIM, allow the Merchant to accept payments in shop where there is no LAN option or outside[cite: 7]. In this case, there is no integration option available and, if required, you must choose a SmartPOS solution[cite: 8].
-* Retail Pin Pad: devices without printer that are connected via Ethernet to the shop LAN and always require an integration with the cash register[cite: 9].
-
-2. LAN INTEGRATION
+1. STATO TERMINALE (Terminal Status)
 --------------------------------------------------------------------------------
-LAN integration allows the Merchant to activate the POS directly from the ECR, sending a message from the ECR to the IP address of the POS[cite: 10, 11]. For new EFTPOS based with Linux OS is required a port over 1024[cite: 12].
+Questo comando garantisce e verifica la connessione tra ECR e EFT-POS.
 
-* The POS interacts with the Cardholder reading the payment card and send the authorization request to NEXI[cite: 14].
-* After the completion of the payment, the POS sends a response message to the ECR in synchronous way[cite: 15].
-* Is up to you to define if the POS prints the payment receipts at the end of the transaction or to integrate the payment receipts in the tax receipts printed by ECR[cite: 16].
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID (00000000-99999999)
+9   | 1     | A    | Riservato – fisso a '0' (0x30)
+10  | 1     | A    | Codice messaggio: 's' (0x73)
 
-Basic Integration & Payment[cite: 26, 30]:
-* Terminal Status: ECR verifies Eft-POS status by Terminal Status command to guarantee connection[cite: 27, 28, 29].
-* Basic Payment: ECR requests a Payment EFT-POS by command Payment, the payment amount is filled[cite: 31, 32]. EFT-POS will process transaction and response with the transaction Result ('P' or 'X' commands)[cite: 33].
+Risposta (da POS):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID (00000000-99999999)
+9   | 1     | A    | Riservato – fisso a '0' (0x30)
+10  | 1     | N    | Codice messaggio: 's' (0x73)
+11  | 10    | N    | Riservato – fisso a '0' (0x30)
+21  | 10    | N    | Data e ora del terminale nel formato "DDMMYYhhmm"
+31  | 1     | N    | Stato del terminale: '0' = Non configurato; '1' = Configurato, no DLL; '2' = Operativo; '3' = Non allineato; '4' = Chiave corrotta; '5' = DLL in attesa; '6' = Richiesta aggiornamento SW in attesa.
+32  | N*8   | AN   | Release SW del Terminale.
 
-3. COMMUNICATION PROTOCOL
 --------------------------------------------------------------------------------
-Communication is always started by the ECR, which sends the transaction request message to the terminal[cite: 156, 158].
-* All messages are exchanged in plain text[cite: 160].
-* All messages include a LRC control byte (exclusive OR of any message byte, using as base value 0x7F)[cite: 161].
-* Validation may fail for protocol error, parity error, or LRC error[cite: 162, 163, 164, 165]. If validation fails, a NAK is sent to the ECR[cite: 166]. Message transmission is repeated up to 3 times on timeout or NAK[cite: 167, 168, 169].
-
-Application packet format[cite: 171]:
-Pos  | Field name       | Value | Type   | Length
-1    | Start of text    | 0x02  | Binary | 1 [cite: 183]
-2..N | App message      |       | Binary | N [cite: 183]
-N+1  | End of Text      | 0x03  | Binary | 1 [cite: 183]
-N+2  | LRC              |       | Binary | 1 [cite: 183]
-
-Procedure progress update packet format[cite: 185]:
-Pos  | Field name       | Value | Type   | Length
-1    | Start of heading | 0x01  | Binary | 1 [cite: 189]
-2    | Message          |       | Binary | 20 [cite: 189]
-22   | End of trans.    | 0x04  | Binary | 1 [cite: 189]
-
-Confirmation/refusal packets[cite: 190]:
-* ACK: ACK (0x06) + ETX (0x03) + LRC [cite: 192, 193]
-* NAK: NAK (0x15) + ETX (0x03) + LRC [cite: 194, 195]
-
-
-4. API COMMANDS SPECIFICATIONS
+2. PAGAMENTO BASE (Payment)
 --------------------------------------------------------------------------------
+L'ECR richiede un pagamento inviando l'importo da transare.
 
---------------------------------------------------
-[s] TERMINAL STATUS
---------------------------------------------------
-Request (from ECR)[cite: 197]:
-Pos|Len|Type|Content
-1  | 8 | N  | Terminal ID (00000000-99999999) [cite: 198]
-9  | 1 | A  | Reserved - fixed to '0' (0x30) [cite: 198]
-10 | 1 | A  | Message code: 's' (0x73) [cite: 198]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID (00000000-99999999)
+9   | 1     | A    | Riservato – fisso a '0' (0x30)
+10  | 1     | A    | Codice messaggio: 'P' (0x50)
+11  | 8     | N    | Cash register ID (ID Cassa)
+19  | 1     | N    | Presenza messaggio con dati aggiuntivi GT: '0'=no, '1'=sì
+20  | 2     | N    | Riservato – fisso a '0' (0x30)
+22  | 1     | N    | Partenza transazione: '0'=carta non inserita, '1'=carta già inserita
+23  | 1     | N    | Tipo pagamento: '0'=automatico, '1'=solo debito, '2'=solo credito, '3'=altre carte
+24  | 8     | N    | Importo transazione, allineato a destra, fillato con '0'. Espresso in centesimi (es. 650 = 6,50)
+32  | 128   | AN   | Testo da stampare (Codice contratto) a fine scontrino. Allineato a destra con spazi (0x20).
+160 | 8     | N    | Riservato – fisso a '0' (0x30)
 
-Response (from Terminal)[cite: 198]:
-Pos|Len|Type|Content
-1  | 8 | N  | Terminal ID [cite: 198]
-9  | 1 | A  | Reserved - fixed to '0' [cite: 198]
-10 | 1 | N  | Message code: 's' (0x73) [cite: 198]
-11 | 10| N  | Reserved - fixed to '0' [cite: 198]
-21 | 10| N  | Terminal date and time "DDMMYYhhmm" [cite: 198]
-31 | 1 | N  | Terminal status (0=Not config, 1=Config no DLL, 2=Operative, 3=Not aligned, 4=Key corrupted, 5=DLL pending, 6=SW updated request) [cite: 198, 199]
-32 |N*8| AN | Terminal SW release [cite: 199]
+Risposta (da POS) - Esito Positivo ("00"):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID
+9   | 1     | A    | Riservato – fisso a '0' (0x30)
+10  | 1     | A    | Codice messaggio: 'E' (0x45)
+11  | 2     | N    | Risultato transazione: "00" = OK
+13  | 19    | N    | PAN Carta, allineato a destra con '0' a sinistra
+32  | 3     | A    | Tipo transazione: "ICC", "MAG", "MAN", "CLM", "CLI"
+35  | 6     | A    | Codice autorizzazione ricevuto dall'host
+41  | 7     | A    | Data e ora (DDDHHMM) ricevute dall'host
+48  | 1     | N    | Tipo carta: '1'=Bancomat, '2'=Credito, '3'=Altra
+49  | 11    | N    | Acquirer ID
+60  | 6     | N    | STAN (Sequence number)
+66  | 6     | N    | ID online
 
+Risposta (da POS) - Esito Negativo ("01"):
+I campi dalla pos 13 alla 47 cambiano in caso di errore:
+13  | 24    | A    | Descrizione del risultato (motivo del rifiuto in ASCII).
+37  | 11    | N    | Riservato – fisso a '0' (0x30)
 
---------------------------------------------------
-[P] PAYMENT
---------------------------------------------------
-Request (from ECR)[cite: 201]:
-Pos|Len|Type|Content
-1  | 8 | N  | Terminal ID [cite: 202]
-9  | 1 | A  | Reserved - fixed to '0' [cite: 202]
-10 | 1 | A  | Message code: 'P' (0x50) [cite: 202]
-11 | 8 | N  | Cash register ID [cite: 202]
-19 | 1 | N  | Additional data for GT (0=not present, 1=present) [cite: 202]
-20 | 2 | N  | Reserved - fixed to '0' [cite: 202]
-22 | 1 | N  | Start with card present (0=not inserted, 1=inserted) [cite: 202]
-23 | 1 | N  | Payment type (0=auto, 1=debit only, 2=credit only, 3=other) [cite: 202]
-24 | 8 | N  | Amount in cents, right aligned (e.g., 650 = 6,50) [cite: 203]
-32 |128| AN | Text to be print (Code contract) at receipt end [cite: 203]
-160| 8 | N  | Reserved - fixed to '0' [cite: 203]
+(Nota: Se la transazione prevede Cambio Valuta/DCC, il codice messaggio di risposta è 'V' e include campi aggiuntivi per tasso di cambio e importi in valuta estera dalla posizione 72 alla 117 ).
 
-Response without currency exchange (from Terminal)[cite: 203]:
-Pos|Len|Type|Content
-1  | 8 | N  | Terminal ID [cite: 203]
-9  | 1 | A  | Reserved - fixed to '0' [cite: 203]
-10 | 1 | A  | Message code: 'E' (0x45) [cite: 203]
-11 | 2 | N  | Transaction result: "00"=OK, "01"=KO, "05"=card not present, "09"=unknown Tag [cite: 203]
--- If OK (00):
-13 | 19| N  | Card PAN [cite: 205]
-32 | 3 | A  | Transaction type: ICC, MAG, MAN, CLM, CLI [cite: 205]
-35 | 6 | A  | Authorization code [cite: 205]
-41 | 7 | A  | Transaction date and time (DDDHHMM) [cite: 205]
--- If KO (01):
-13 | 24| A  | Result description (reason of denial) [cite: 205]
-37 | 11| N  | Reserved - fixed to '0' [cite: 205]
--- Common to any response:
-48 | 1 | N  | Card type (1=Bancomat, 2=Credit, 3=Other) [cite: 205, 206]
-49 | 11| N  | Acquirer ID [cite: 206]
-60 | 6 | N  | STAN [cite: 206]
-66 | 6 | N  | ID online [cite: 206]
+--------------------------------------------------------------------------------
+3. PAGAMENTO CON RISULTATO ESTESO (Payment with extended result)
+--------------------------------------------------------------------------------
+Fornisce gli stessi dati del pagamento base ma restituisce un risultato più dettagliato.
 
+Richiesta (da ECR): 
+Identica al comando di Pagamento Base, ma il Codice Messaggio alla pos. 10 è: 'X' (0x58).
 
---------------------------------------------------
-[X] PAYMENT WITH EXTENDED RESULT
---------------------------------------------------
-Request (from ECR)[cite: 212]:
-Pos|Len|Type|Content
-(Same as 'P' command, but Message code is 'X' 0x58 at Pos 10) [cite: 213, 214]
+Risposta (da POS): 
+Identica alla risposta del Pagamento Base (Codice 'E' 0x45), ma aggiunge sempre 3 campi finali:
+72  | 3     | N    | Action code relativo al pagamento corrente
+75  | 8     | N    | Importo transazione ricevuto dall'host (in centesimi)
+83  | 10    | N    | Riservato – fisso a '0' (0x30)
 
-Response (from Terminal)[cite: 214]:
-Pos|Len|Type|Content
-(Same format as 'P' response with message code 'E' 0x45) [cite: 214, 216]
--- Additional fields for Extended Response (Common to any response):
-72 | 3 | N  | Action code related to current payment [cite: 217]
-75 | 8 | N  | Transaction amount received by host [cite: 217]
-83 | 10| N  | Reserved - fixed to '0' [cite: 217]
+--------------------------------------------------------------------------------
+4. STORNO (Reversal)
+--------------------------------------------------------------------------------
+Annulla l'ultima transazione effettuata (es. per importo errato).
 
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID
+9   | 1     | A    | Riservato – fisso a '0' (0x30)
+10  | 1     | A    | Codice messaggio: 'S' (0x53)
+11  | 8     | N    | Cash register ID
+19  | 6     | N    | STAN della transazione da stornare (000000 = nessun controllo)
+25  | 1     | N    | Presenza dati aggiuntivi per GT ('0'=no, '1'=sì)
+26  | 1     | N    | Riservato – fisso a '0' (Richiede la stessa carta della transazione)
 
---------------------------------------------------
-[S] REVERSAL (Storno)
---------------------------------------------------
-Request (from ECR)[cite: 219]:
-Pos|Len|Type|Content
-1  | 8 | N  | Terminal ID [cite: 220]
-9  | 1 | A  | Reserved - fixed to '0' [cite: 220]
-10 | 1 | A  | Message code: 'S' (0x53) [cite: 220]
-11 | 8 | N  | Cash register ID [cite: 220]
-19 | 6 | N  | STAN of the transaction to be reversed (000000 for no check) [cite: 220]
-25 | 1 | N  | Additional data for GT (0=no, 1=yes) [cite: 220]
-26 | 1 | N  | Reserved - fixed to '0' [cite: 220]
+Risposta (da POS):
+Utilizza il formato di risposta 'E' (0x45) standard, includendo l'Action code alla posizione 72.
 
-Response (from Terminal)[cite: 220]:
-Pos|Len|Type|Content
-(Standard response structure with Message code 'E' 0x45 and Action code at Pos 72) [cite: 220, 226, 261]
+--------------------------------------------------------------------------------
+5. PRE-AUTORIZZAZIONE (Pre-Authorization Request)
+--------------------------------------------------------------------------------
+Blocca il plafond della carta (usato tipicamente in hotel/noleggi).
 
+Richiesta (da ECR):
+Uguale al Pagamento, ma il Codice messaggio alla posizione 10 è: 'p' (0x70) e l'importo alla posizione 24 è l'importo stimato da bloccare.
 
---------------------------------------------------
-[p] PRE-AUTHORIZATION REQUEST
---------------------------------------------------
-Request (from ECR)[cite: 263]:
-Pos|Len|Type|Content
-(Similar to Payment, Message code 'p' 0x70) [cite: 264]
+Risposta (da POS) - Esito Positivo:
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'e' (0x65)
+11  | 2     | N    | Risultato: "00" = OK
+13  | 19    | N    | PAN Carta
+32  | 3     | A    | Tipo transazione (ICC, MAG, MAN, CLM, CLI)
+35  | 6     | A    | Codice autorizzazione
+41  | 8     | N    | Importo pre-autorizzato dall'Host (in centesimi)
+49  | 9     | N    | Identificatore univoco della pre-autorizzazione (Preauthorization Code)
+58  | 3     | N    | Action Code
+61  | 7     | N    | Parametri temporali (DDDHHMM)
+68  | 3     | N    | Riservato – fisso a '0' (0x30)
+(I campi dal 48 in poi mantengono le informazioni su Tipo carta, Acquirer ID e STAN come nel pagamento base, scalati in posizione ).
 
-Response (from Terminal)[cite: 265]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'e' (0x65) [cite: 265]
--- If OK (00) specific fields:
-41 | 8 | N  | Amount pre-authorized by Host [cite: 266]
-49 | 9 | N  | Unique identifier of pre-authorization (Preauthorization Code) [cite: 266]
-58 | 3 | N  | Action Code [cite: 266]
-61 | 7 | N  | Temporal parameters (DDDHHMM) [cite: 266]
-68 | 3 | N  | Reserved [cite: 267]
+--------------------------------------------------------------------------------
+6. AUTORIZZAZIONE INCREMENTALE (Incremental Authorization)
+--------------------------------------------------------------------------------
+Blocca un importo aggiuntivo per un servizio in corso.
 
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'i' (0x69)
+24  | 8     | N    | Importo dell'autorizzazione (in centesimi)
+160 | 9     | N    | Identificatore univoco (Original Preathorization Code) ricevuto prima.
 
---------------------------------------------------
-[i] INCREMENTAL AUTHORIZATION
---------------------------------------------------
-Request (from ECR)[cite: 271]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'i' (0x69) [cite: 272]
-24 | 8 | N  | Authorization transaction amount [cite: 272]
-160| 9 | N  | Unique identifier of pre-auth (Original Preathorization Code) [cite: 272]
+Risposta (da POS):
+Risponde con Codice messaggio: 'i' (0x69). Include PAN, Codice Autorizzazione, STAN e Data.
 
+--------------------------------------------------------------------------------
+7. CHIUSURA PRE-AUTORIZZAZIONE (Pre-authorization closure)
+--------------------------------------------------------------------------------
+Addebita l'importo finale.
 
---------------------------------------------------
-[c] PRE-AUTHORIZATION CLOSURE
---------------------------------------------------
-Request (from ECR)[cite: 277]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'c' (0x63) [cite: 278]
-24 | 8 | N  | Authorization transaction amount [cite: 278]
-160| 9 | N  | Unique identifier of pre-auth (Original Preathorization Code) [cite: 278]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'c' (0x63)
+24  | 8     | N    | Importo finale da addebitare (in centesimi)
+160 | 9     | N    | Identificatore univoco (Original Preathorization Code).
 
+Risposta (da POS):
+Risponde con Codice messaggio: 'c' (0x63). Struttura identica alla risposta del Pagamento, aggiunge l'Action Code alla posizione 72.
 
---------------------------------------------------
-[H] CARD VERIFICATION
---------------------------------------------------
-Request (from ECR)[cite: 374]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'H' (0x48) [cite: 375]
-22 | 1 | N  | '0' = standard card verification [cite: 375]
+--------------------------------------------------------------------------------
+8. VERIFICA CARTA (Card verification)
+--------------------------------------------------------------------------------
+Valida la carta senza addebiti.
 
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'H' (0x48)
+22  | 1     | N    | '0' = verifica carta standard
+23  | 1     | N    | Tipo pagamento (0=auto, 1=debito, 2=credito, 3=altro)
 
---------------------------------------------------
-[U] ADDITIONAL DATA FOR GT
---------------------------------------------------
-Request (from ECR)[cite: 442]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'U' (0x55) [cite: 443]
-11 | 6 | N  | Payment Type: "0" = Standard payment [cite: 443, 444]
-17 | 2 | N  | ISO field number (Currently set at "62") [cite: 444]
-19 | 8 | A  | TAG number (Currently fixed at 'DF8D01') [cite: 444]
-28 | 4 | N  | Exclusive TAG index [cite: 444]
-37 |100| A  | Privative TAG content. Max 100 characters [cite: 445]
+Risposta (da POS):
+Identica alla risposta di Pagamento, con Codice Messaggio 'E' (0x45).
 
+--------------------------------------------------------------------------------
+9. DATI AGGIUNTIVI DA O PER HOST (Additional data / TAGs)
+--------------------------------------------------------------------------------
+Invia dati aggiuntivi, usati ad esempio per la Tokenizzazione.
 
---------------------------------------------------
-[C] CLOSE SESSION
---------------------------------------------------
-Request (from ECR)[cite: 463]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'C' (0x43) [cite: 464]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+1   | 8     | N    | Terminal ID
+10  | 1     | A    | Codice messaggio: 'U' (0x55)
+11  | 6     | N    | Tipo Pagamento: "0" = Pagamento standard
+17  | 2     | N    | Numero campo ISO (Attualmente "62")
+19  | 8     | A    | Numero TAG (Attualmente 'DF8D01')
+27  | 1     | N    | Riservato a '0'
+28  | 4     | N    | Indice TAG esclusivo
+32  | 5     | N    | Riservato a '0'
+37  | 100-V | A    | Contenuto TAG. Max 100 caratteri. Termina con 01B hex.
 
-Response (from Terminal)[cite: 464]:
-Pos|Len|Type|Content
--- If OK (00):
-13 | 16| N  | EFT-POS Total amount [cite: 465]
-29 | 16| N  | Host Total amount [cite: 465]
+Risposta (da POS):
+Codice messaggio 'U' (0x55). Restituisce i dati richiesti da GT alla posizione 20.
 
+--------------------------------------------------------------------------------
+10. CHIUSURA SESSIONE (Close session)
+--------------------------------------------------------------------------------
+Azzera i totali e chiude il lotto contabile.
 
---------------------------------------------------
-[T] TERMINAL TOTALS
---------------------------------------------------
-Request (from ECR)[cite: 467]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'T' (0x54) [cite: 468]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'C' (0x43)
+11  | 8     | N    | Cash register ID
 
-Response (from Terminal)[cite: 468]:
-Pos|Len|Type|Content
--- If OK (00):
-13 | 16| N  | EFT-POS Total amount [cite: 469]
+Risposta (da POS) - Esito Positivo:
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'C' (0x43)
+11  | 2     | N    | Risultato: "00" = OK
+13  | 16    | N    | Importo Totale EFT-POS (in centesimi)
+29  | 16    | N    | Importo Totale Host (in centesimi)
 
+--------------------------------------------------------------------------------
+11. TOTALI TERMINALE (Terminal totals)
+--------------------------------------------------------------------------------
+Recupera i totali senza chiudere la sessione.
 
---------------------------------------------------
-[G] SEND LAST RESULT (Receipt reprint request)
---------------------------------------------------
-Request (from ECR)[cite: 476]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'G' (0x47) [cite: 477]
-The feedback message is exactly the same as the last RESULT message saved[cite: 479].
+Richiesta (da ECR):
+10  | 1     | A    | Codice messaggio: 'T' (0x54)
 
+Risposta (da POS):
+Se OK ("00"), riporta l'Importo Totale EFT-POS (16 byte) alla posizione 13.
 
---------------------------------------------------
-[E] ENABLE/DISABLE PRINTING RECEIPT ON ECR
---------------------------------------------------
-Request (from ECR)[cite: 491]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'E' (0x45) [cite: 492]
-11 | 1 | N  | Enable disable printing flag: '0'=Disable, '1'=Enable (sent via 'S' command) [cite: 492]
+--------------------------------------------------------------------------------
+12. INVIA ULTIMO RISULTATO (Send last result)
+--------------------------------------------------------------------------------
+Recupera l'esito dell'ultima transazione in caso di disconnessione o timeout.
 
+Richiesta (da ECR):
+10  | 1     | A    | Codice messaggio: 'G' (0x47)
 
---------------------------------------------------
-[S] SEND TICKET (Receipt data to ECR)
---------------------------------------------------
-Message (from Terminal)[cite: 506]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'S' (0x53) [cite: 507]
-11 |200| A  | Lines to be printed. [cite: 507]
-Special chars: 0x7D (new line), 0x7F (double height bold), 0x1B (ticket end)[cite: 509, 511, 522].
+Risposta (da POS):
+Il POS risponde inviando l'esatta copia dell'ultimo messaggio di risposta salvato in memoria (es. un pacchetto 'E' o 'V').
 
+--------------------------------------------------------------------------------
+13. ABILITA/DISABILITA STAMPA SCONTRINO SU ECR (Enable/disable printing)
+--------------------------------------------------------------------------------
+Richiede al POS di inviare il testo dello scontrino alla cassa invece di stamparlo.
 
---------------------------------------------------
-[R] REPRINT TICKET
---------------------------------------------------
-Request (from ECR)[cite: 529]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: 'R' (0x52) [cite: 530]
-11 | 1 | N  | Enable print on ECR flag (0=disable, 1=enable) [cite: 530]
-12 | 1 | N  | Ticket type (0=last financial, 1=last service) [cite: 530]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'E' (0x45)
+11  | 1     | N    | Flag abilitazione: '0' = Disabilita (stampa il POS), '1' = Abilita (invia lo scontrino all'ECR via comando "S")
 
+--------------------------------------------------------------------------------
+14. INVIA SCONTRINO (Send ticket)
+--------------------------------------------------------------------------------
+Invia fisicamente le righe di testo da stampare dal POS all'ECR.
 
---------------------------------------------------
-[K] VAS REQUEST (APM: Alipay, WeChat, BancomatPay)
---------------------------------------------------
-Request (from ECR)[cite: 536]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: "K" (75 hex) [cite: 537]
-23 | 4 | N  | Vas Request Length [cite: 537]
-27 |1024|A  | Vas Request (XML Format) [cite: 537]
+Messaggio (dal POS):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'S' (0x53)
+11  | 1-200 | A    | Righe da stampare, formattate a 12, 14 o 42 caratteri.
+Caratteri speciali formattazione (Campo 11):
+0x7D = Nuova riga (CR+LF)
+0x7F = Inizio caratteri in grassetto doppia altezza
+0x1B = Fine dello scontrino (inviato nell'ultimo pacchetto 'S')
 
-Response (from Terminal)[cite: 537]:
-Pos|Len|Type|Content
-10 | 1 | A  | Message code: "K" (75 hex) [cite: 547, 548]
-15 | 1 | N  | Concatenation Flag (0=last message, 1=more messages) [cite: 555, 556, 557]
-16 | 3 | N  | ID message [cite: 561]
-27 |1024|A  | Vas Response (XML Format) [cite: 570, 571]
+--------------------------------------------------------------------------------
+15. RISTAMPA SCONTRINO (Reprint ticket)
+--------------------------------------------------------------------------------
+Richiede la copia dell'ultimo scontrino.
 
-XML Payload Examples (VAS)[cite: 597, 608]:
-* Payment via QrCode Request: <ecrreq><p k="ECRVASID">BPAY_QR</p>... [cite: 599, 600]
-* Last operation status: <ecrreq><p k="ECRVASID">BPAY_INQUIRY</p>... [cite: 619, 620]
-* Refund: <ecrreq><p k="ECRVASID">BPAY_REFUND</p>... [cite: 640, 641]
-* Daily Totals: <ecrreq><p k="ECRVASID">BPAY_TOTAL</p>... [cite: 660, 661]
-* Accounting Closure: <ecrreq><p k="ECRVASID">BPAY_CHIUSURA</p>... [cite: 681, 682]
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: 'R' (0x52)
+11  | 1     | N    | Flag abilita stampa su ECR: '0' = no, '1' = sì
+12  | 1     | N    | Tipo scontrino: '0' = ultimo finanziario, '1' = ultimo di servizio
+
+--------------------------------------------------------------------------------
+16. RICHIESTA VAS E APM (Metodi di Pagamento Alternativi)
+--------------------------------------------------------------------------------
+Gestisce servizi per Alipay, WeChat, BancomatPay. Usa XML come payload.
+
+Richiesta (da ECR):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: "K" (0x4B)
+23  | 4     | N    | Lunghezza della richiesta XML
+27  | 1-1024| A    | Richiesta VAS in formato XML
+
+Risposta (da POS):
+Pos | Lungh | Tipo | Contenuto
+10  | 1     | A    | Codice messaggio: "K" (0x4B)
+15  | 1     | N    | Flag concatenazione: '0' = ultimo messaggio, '1' = seguono altri messaggi
+16  | 3     | N    | ID messaggio (es. "001")
+27  | 1-1024| A    | Risposta VAS in formato XML
+
+Esempi di Payload XML (dentro il campo 27):
+* Pagamento QR: `<ecrreq><p k="ECRVASID">BPAY_QR</p><p k="SUBSMPARAMS"><p k="AMOUNT">10</p><p k="PRINTER">ECR</p></p></ecrreq>`
+* Verifica esito: `<ecrreq><p k="ECRVASID">BPAY_INQUIRY</p>...`
+* Rimborso: `<ecrreq><p k="ECRVASID">BPAY_REFUND</p>...`
+* Totali Giornalieri: `<ecrreq><p k="ECRVASID">BPAY_TOTAL</p></ecrreq>`
+* Chiusura: `<ecrreq><p k="ECRVASID">BPAY_CHIUSURA</p></ecrreq>`
 
 ================================================================================

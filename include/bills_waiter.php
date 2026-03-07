@@ -1635,30 +1635,32 @@ function bill_type_selection($sourceid){
 	$totale_pos = round($totale_pos, 2);
 	$totale_pos = max(0.01, $totale_pos);
 	$pos_url = ROOTDIR . '/POS/ingenico.php?amount=' . urlencode(sprintf('%0.2f', $totale_pos)) . '&from=waiter';
+	$pos_base_url = ROOTDIR . '/POS/ingenico.php?from=waiter&amount=';
 
 	$output .= '
 	<br><br>
 	<FIELDSET>
 	<LEGEND><b>CORRISPETTIVO</b></LEGEND>
 		<table>
-			<tr><td></td>
-				<td><input type="radio" name="tipo_corrispettivo" '.$check1.' value="T1" class="radio" onclick="JavaScript:pagamento_carte_switch();">CONTANTI</td>
-				<td id="wrap_parziale_carta" '.($check1 === 'checked' ? '' : ' style="display:none"').'> + PARZIALE CON CARTA <input type="text" name="pagato_carte_di_credito" size="8" maxlength="8" disabled></td>
+			<tr align="left">
+				<td align="left"><input type="radio" name="tipo_corrispettivo" '.$check1.' value="T1" class="radio" onclick="JavaScript:pagamento_carte_switch();">CONTANTI</td>
+				<td width="250px" id="wrap_parziale_carta" '.($check1 === 'checked' ? '' : ' style="display:none"').'> + CARTA <input type="text" name="pagato_carte_di_credito" id="pagato_carte_di_credito" size="8" maxlength="8" disabled placeholder="0.00" oninput="pagato_carta_pos_toggle(this);"> <span id="wrap_pagato_con_pos" style="display:none"><button type="button" id="btn_pagato_con_pos" onclick="invia_pos_popup(this);" data-pos-base-url="'.htmlspecialchars($pos_base_url).'" data-pos-url="" data-pos-amount="" title="Invia importo parziale al POS">POS</button></span></td>
 			</tr>
 
-			<tr><td></td>
-				<td><input type="radio" name="tipo_corrispettivo" '.$check3.' value="T3" class="radio" onclick="JavaScript:pagamento_carte_switch();">CARTE</td>
-				<td id="wrap_link_pos" '.($check3 === 'checked' ? '' : ' style="display:none"').'><button type="button" id="link_invia_pos" onclick="invia_pos_popup(this);" data-pos-url="'.htmlspecialchars($pos_url).'" data-pos-amount="'.htmlspecialchars(sprintf('%0.2f', $totale_pos)).'" title="Invia importo al terminale POS">Invia a POS ('.sprintf('%0.2f', $totale_pos).' &euro;)</button></td>
-
+			<tr align="left">
+				<td align="left"><input type="radio" name="tipo_corrispettivo" '.$check3.' value="T3" class="radio" onclick="JavaScript:pagamento_carte_switch();">CARTE</td>	
+				<td width="250px" id="wrap_link_pos" '.($check3 === 'checked' ? '' : ' style="display:none"').'><button type="button" id="link_invia_pos" onclick="invia_pos_popup(this);" data-pos-url="'.htmlspecialchars($pos_url).'" data-pos-amount="'.htmlspecialchars(sprintf('%0.2f', $totale_pos)).'" title="Invia importo al terminale POS">Invia a POS ('.sprintf('%0.2f', $totale_pos).' &euro;)</button></td>
+				
 			</tr>
 
-			<tr><td></td>
-				<td><input type="radio" name="tipo_corrispettivo" '.$check2.' value="T2" class="radio" onclick="JavaScript:pagamento_carte_switch();">ASSEGNI</td>
-				<td></td>
+			<tr align="left">
+				<td align="left"><input type="radio" name="tipo_corrispettivo" '.$check2.' value="T2" class="radio" onclick="JavaScript:pagamento_carte_switch();">ASSEGNI</td>
+				<td width="250px"></td>
+				
 			</tr>
-			<tr><td></td>
-				<td><input type="radio" name="tipo_corrispettivo" '.$check4.' value="T4" class="radio" onclick="JavaScript:pagamento_carte_switch();">NON-PAGATO</td>
-				<td></td>
+			<tr align="left">
+				<td align="left"><input type="radio" name="tipo_corrispettivo" '.$check4.' value="T4" class="radio" onclick="JavaScript:pagamento_carte_switch();">NON-PAGATO</td>
+				<td width="250px"></td>
 			</tr>';
 	//PAGAMENTO con altri metodi per il momento non utilizzato
 	/*
