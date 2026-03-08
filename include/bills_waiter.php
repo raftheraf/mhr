@@ -1644,7 +1644,7 @@ function bill_type_selection($sourceid){
 		<table>
 			<tr align="left">
 				<td align="left"><input type="radio" name="tipo_corrispettivo" '.$check1.' value="T1" class="radio" onclick="JavaScript:pagamento_carte_switch();">CONTANTI</td>
-				<td width="250px" id="wrap_parziale_carta" '.($check1 === 'checked' ? '' : ' style="display:none"').'> + CARTA <input type="text" name="pagato_carte_di_credito" id="pagato_carte_di_credito" size="8" maxlength="8" disabled placeholder="0.00" oninput="pagato_carta_pos_toggle(this);"> <span id="wrap_pagato_con_pos" style="display:none"><button type="button" id="btn_pagato_con_pos" onclick="invia_pos_popup(this);" data-pos-base-url="'.htmlspecialchars($pos_base_url).'" data-pos-url="" data-pos-amount="" title="Invia importo parziale al POS">POS</button></span></td>
+				<td width="250px" id="wrap_parziale_carta" '.($check1 === 'checked' ? '' : ' style="display:none"').'><button type="button" id="btn_aggiungi_importo_carta" onclick="mostra_importo_carta(this);" title="Aggiungi importo pagato con carta">Aggiungi importo in carta</button> <span id="wrap_importo_carta" style="display:none">+ CARTA <input type="text" name="pagato_carte_di_credito" id="pagato_carte_di_credito" size="8" maxlength="8" disabled placeholder="0.00" oninput="pagato_carta_pos_toggle(this);"> <span id="wrap_pagato_con_pos" style="display:none"><button type="button" id="btn_pagato_con_pos" onclick="invia_pos_popup(this);" data-pos-base-url="'.htmlspecialchars($pos_base_url).'" data-pos-url="" data-pos-amount="" title="Invia importo parziale al POS">POS</button></span></span></td>
 			</tr>
 
 			<tr align="left">

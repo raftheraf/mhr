@@ -267,6 +267,8 @@ function pagamento_carte_switch(){
 
 	var wrapLinkPos = document.getElementById('wrap_link_pos');
 	var wrapParziale = document.getElementById('wrap_parziale_carta');
+	var wrapImportoCarta = document.getElementById('wrap_importo_carta');
+	var btnAggiungiCarta = document.getElementById('btn_aggiungi_importo_carta');
 	var wrapPagatoPos = document.getElementById('wrap_pagato_con_pos');
 	var inputCarta = document.form_type.pagato_carte_di_credito;
 
@@ -275,11 +277,25 @@ function pagamento_carte_switch(){
 	if (wrapParziale) wrapParziale.style.display = (idx === 0) ? '' : 'none';
 	if (wrapPagatoPos) wrapPagatoPos.style.display = 'none';
 
-	if (idx === 0 && typeof pagato_carta_pos_toggle === 'function') {
-		pagato_carta_pos_toggle(inputCarta);
+	if (idx === 0) {
+		if (btnAggiungiCarta) btnAggiungiCarta.style.display = '';
+		if (wrapImportoCarta) wrapImportoCarta.style.display = 'none';
+		if (typeof pagato_carta_pos_toggle === 'function') pagato_carta_pos_toggle(inputCarta);
+	} else {
+		if (btnAggiungiCarta) btnAggiungiCarta.style.display = '';
+		if (wrapImportoCarta) wrapImportoCarta.style.display = 'none';
 	}
 
 	return false;
+}
+
+function mostra_importo_carta(btnEl){
+	var wrap = document.getElementById('wrap_importo_carta');
+	var btn = document.getElementById('btn_aggiungi_importo_carta');
+	if (btn) btn.style.display = 'none';
+	if (wrap) wrap.style.display = '';
+	var inputCarta = document.form_type && document.form_type.pagato_carte_di_credito;
+	if (inputCarta && typeof pagato_carta_pos_toggle === 'function') pagato_carta_pos_toggle(inputCarta);
 }
 
 function pagato_carta_pos_toggle(inputEl){
