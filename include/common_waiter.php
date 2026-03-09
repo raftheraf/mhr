@@ -28,18 +28,13 @@
 */
 
 function find_accounting_db() {
-	$found_accounting_db = false;
-	$query = "SELECT * FROM `#prefix#accounting_dbs`";
-	$res = common_query($query, __FILE__, __LINE__);
-	if (!$res) return false;
+	$query="SELECT * FROM `#prefix#accounting_dbs`";
+	$res=common_query($query,__FILE__,__LINE__);
+	if(!$res) return 0;
 
-	while ($arr = mysql_fetch_array($res)) {
-		$db_escaped = mysql_real_escape_string($arr['db']);
-		$tquery = "SHOW TABLES FROM `" . $db_escaped . "`";
-		$tres = common_query($tquery, __FILE__, __LINE__);
-		if ($tres && mysql_num_rows($tres) > 0) {
-			$found_accounting_db = true;
-			break;
+	while($arr=mysql_fetch_array($res)) {
+		if(mysql_list_tables($arr['db'])) {
+			$found_accounting_db=true;
 		}
 	}
 	unset($res);
@@ -49,58 +44,54 @@ function find_accounting_db() {
 }
 
 function common_allowed_ip($host) {
-	// IP-based access control: only IPs in allowed_clients may proceed.
-	// If the table is empty, any host is allowed.
+	// next is an IP-based access control
+	// reads IPs from the allowed_clients table
+	// and only allows IPs present in that table to go on
+	// if the table is empty, any host is allowed
 
-	$query = "SELECT 1 FROM `#prefix#allowed_clients` LIMIT 1";
-	$res = common_query($query, __FILE__, __LINE__);
-	if (!$res) return false;
-	if (mysql_num_rows($res) == 0) return true;
+	$query="SELECT * FROM `#prefix#allowed_clients`";
+	$res=common_query($query,__FILE__,__LINE__);
+	if(!$res) return 0;
+	// table is empty, everyone is allowed
+	if(mysql_num_rows($res)==0) return true;
 
-	$host = trim($host);
-	if ($host === '') return false;
-	$host_escaped = mysql_real_escape_string($host);
-	$query = "SELECT 1 FROM `#prefix#allowed_clients` WHERE `host`='" . $host_escaped . "' LIMIT 1";
-	$res = common_query($query, __FILE__, __LINE__);
-	if (!$res) return false;
+	//$host=sprintf("%u",ip2long($host));
 
-	return (mysql_num_rows($res) > 0);
+	$query="SELECT * FROM `#prefix#allowed_clients` WHERE `host`='".$host."'";
+	$res=common_query($query,__FILE__,__LINE__);
+	if(!$res) return 0;
+
+	return mysql_num_rows($res);
 }
 
 // RTR START allowed_user_host
 // funzione controllo accesso dalla tabella users con ip assegnato
-// Restituisce true solo se esiste esattamente un utente con user_host = IP dato.
 function allowed_user_host($user_host) {
-	// Validazione: deve essere un IPv4 o IPv6 valido (riduce rischio se il parametro cambiasse in futuro)
-	$user_host = trim($user_host);
-	if ($user_host === '') return false;
-	// Tabella vuota: nessun utente può fare login per IP
-	$query = "SELECT 1 FROM `#prefix#users` LIMIT 1";
-	$res = common_query($query, __FILE__, __LINE__);
-	if (!$res) return false;
-	if (mysql_num_rows($res) == 0) return false;
-	// Escape per sicurezza (REMOTE_ADDR è di solito affidabile, ma non concatenare mai input utente)
-	$user_host_escaped = mysql_real_escape_string($user_host);
-	$query = "SELECT COUNT(*) AS n FROM `#prefix#users` WHERE `user_host`='" . $user_host_escaped . "'";
-	$res = common_query($query, __FILE__, __LINE__);
-	if (!$res) return false;
-	$row = mysql_fetch_assoc($res);
-	$count = (int) $row['n'];
-	// Un solo utente con questo IP: login per IP consentito
-	return ($count === 1);
+// legge IPs from the user table user_host
+// solo se un ip present corrisponde ad un utente accede come utente specificato
+$query="SELECT * FROM `#prefix#users` ";
+$res=common_query($query,__FILE__,__LINE__);
+if(!$res) return 0;
+// table is empty, everyone is allowed
+if(mysql_num_rows($res)==0) return true;
+//$user_host=sprintf("%u",ip2long($user_host));
+$query="SELECT * FROM `#prefix#users` WHERE `user_host`='".$user_host."'";
+$res=common_query($query,__FILE__,__LINE__);
+if(!$res) return 0;
+return mysql_num_rows($res);
 }
 
-function redirect($url, $tempo = FALSE) {
-	if (!headers_sent() && $tempo === FALSE) {
-		header('Location: ' . $url);
-	} elseif (!headers_sent() && $tempo !== FALSE) {
-		header('Refresh: ' . $tempo . ';' . $url);
-	} else {
-		if ($tempo === FALSE) {
-			$tempo = 0;
-		}
-		echo '<meta http-equiv="refresh" content="' . $tempo . ';' . $url . '">';
-	}
+function redirect($url,$tempo = FALSE ){
+ if(!headers_sent() && $tempo == FALSE ){
+  header('Location:' . $url);
+ }elseif(!headers_sent() && $tempo != FALSE ){
+  header('Refresh:' . $tempo . ';' . $url);
+ }else{
+  if($tempo == FALSE ){
+    $tempo = 0;
+  }
+echo '<meta http-equiv="refresh" content="'. $tempo . ';' . $url . '">';
+  }
 }
 
 // RTR END

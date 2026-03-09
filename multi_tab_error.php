@@ -11,8 +11,8 @@ $msg .= '<div style="max-width:720px;margin:40px auto;padding:20px;text-align:ce
 $msg .= '<h1>Sessione già aperta in un\'altra scheda</h1>';
 $msg .= '<p>Questa finestra è stata bloccata per evitare sovrascritture o perdita di dati.</p>';
 $msg .= '<p>Chiudi l\'altra scheda oppure attendi alcuni secondi, poi ricarica questa pagina.</p>';
-
-$msg .= '<a href="waiter/connect.php"><h1>Torna al login</h1></a>';
+$msg .= '<p><a href="javascript:window.location.reload();"><b>Ricarica</b></a></p>';
+$msg .= '<p><a href="waiter/connect.php">Torna al login</a></p>';
 $msg .= '</div>';
 
 $msg .= common_bottom();

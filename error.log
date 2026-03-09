@@ -31199,3 +31199,124 @@ query: UPDATE `mhr_orders` SET `id`='343666',`quantity`='1',`nota_ordine`='Princ
 1/3/2026 14:49:58 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
 1/3/2026 15:27:47 Table: 04 User: 7 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
 1/3/2026 18:51:01 Table: 01 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+4/3/2026 12:13:54 Table: 36 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+4/3/2026 12:48:35 Table: 33 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+4/3/2026 13:16:56 Table: 39 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+5/3/2026 12:23:21 Table: 33 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+5/3/2026 12:47:26 Table: 31 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+5/3/2026 12:58:42 Table: 35 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+5/3/2026 13:06:18 Table: 39 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+5/3/2026 13:23:50 Table: 32 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+6/3/2026 12:26:59 Table: 32 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+6/3/2026 13:03:34 Table: 11 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+6/3/2026 13:08:09 Table: 33 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:13:59 Table: 36 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:32:00 Table: 37 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:37:06 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:37:56 Table: 33 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:38:35 Table: 31 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:42:51 Table: 01 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:49:02 Table: 39 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:54:42 Table: 37 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 12:58:20 Table: 08 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:00:00 Table: 12 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:00:15 Table: 35 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:01:15 Table: 03 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:01:36 Table: 02 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:03:49 Table: 38 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:04:24 Table: 31 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:05:39 Table: 34 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:13:34 Table: 05 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:15:47 Table: 10 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:18:13 Table: 54 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:19:43 Table: 36 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:20:53 Table: 06 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:21:16 Table: 11 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:21:22 Table: 32 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:23:18 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:27:38 Table: 04 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:39:28 Table: 10 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:40:01 Table: 33 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:49:36 Table: 32 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:50:37 Table: 55 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 13:54:26 Table: 53 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 14:14:35 Table: 33 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 14:42:04 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 18:18:34 Table: 01 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 19:01:46 Table: 01 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 19:27:21 Table: 37 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 19:56:18 Table: 32 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 20:00:09 Table: 34 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 20:13:38 Table: 31 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 20:26:36 Table: 33 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 20:38:20 Table: 11 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+7/3/2026 21:17:19 Table: 33 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 11:11:56 Table: BAR 2 User: 7 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 11:59:28 Table: 51 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 11:59:37 Table: TV 41 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:04:17 Table: 56 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:06:10 Table: 32 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:07:33 Table: TV 47 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:09:28 Table: TV 48 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:11:47 Table: 02 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:12:58 Table: 54 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:15:09 Table: 05 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:16:20 Table: 53 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:16:28 Table: 33 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:20:15 Table: TV 43 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:21:38 Table: 32 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:22:36 Table: TV 45 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:22:57 Table: TV 46 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:23:31 Table: 36 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:24:02 Table: TV 50 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:24:30 Table: TV 42 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:25:25 Table: TV 49 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:30:54 Table: 06 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:31:39 Table: 01 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:35:34 Table: 04 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:35:40 Table: TV 40 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:36:21 Table: 34 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:41:21 Table: 37 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:42:28 Table: 08 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:42:42 Table: 38 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:45:13 Table: TV 44 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:48:45 Table: 31 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 12:51:59 Table: 03 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:02:18 Table: 35 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:04:50 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:12:27 Table: 55 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:17:09 Table: TV 48 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:18:50 Table: 56 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:22:20 Table: 12 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:26:25 Table: 52 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:28:05 Table: 53 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:28:25 Table: 39 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:38:42 Table: 38 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:42:43 Table: 51 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:43:31 Table: 54 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:43:40 Table: 36 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:43:40 Table: 09 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:51:00 Table: 08 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:53:54 Table: 33 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:56:40 Table: 05 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 13:59:49 Table: TV 44 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:00:09 Table: TV 49 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:01:30 Table: 32 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:02:02 Table: 09 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:04:17 Table: 02 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:04:26 Table: TV 50 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:04:56 Table: 06 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:08:23 Table: TV 47 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:18:48 Table: TV 41 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:25:19 Table: 04 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:25:54 Table: 07 Centrale User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:26:00 Table: 31 User: 30 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:28:53 Table: 11 User: 12 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:31:37 Table: TV 41 User: 32 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:37:08 Table: 33 User: 26 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 14:51:09 Table: 12 User: 13 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+8/3/2026 19:05:50 Table: 01 User: 33 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+9/3/2026 11:59:05 Table: 01 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+9/3/2026 11:59:23 Table: 01 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+9/3/2026 15:20:00 Table: 01 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0
+9/3/2026 15:20:04 Table: 01 User: 6 - C:\Apache\htdocs\mhr\include\printing_waiter.php line: 946 - Printing error: 0

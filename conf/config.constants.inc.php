@@ -31,9 +31,6 @@ define('CONF_PRINT_JAVAPOS_RECEIPT', false);	      // if true prints the receipt
 define('CONF_PRINT_JAVAPOS_ADDRESS', '127.0.0.1');	// hostname or IP address of the fabioPOS server
 define('CONF_PRINT_JAVAPOS_PORT',    9999);	       // port number of the fabioPOS server
 
-// Terminale POS (Nexi/Ingenico) - indirizzo e porta per integrazione LAN
-define('POS_HOST', '192.168.1.206');
-define('POS_PORT', 8000);
 
 define('CONF_PRINT_TICKETS_ONE_PAGE_PER_TABLE', true);	 // if true prints all the priorities on one ticket per table
 define('CONF_PRINT_TICKET_ID',                  true);	 // if true prints the ticket ID at the end of each ticket
@@ -41,8 +38,8 @@ define('CONF_MINUTES_BEFORE_PRINTING_TAKEAWAY', 5);	    // number of minutes to 
 define('CONF_PRINT_ONLY_HIGH_PRIORITY_NUMBER',  false);	// if true prints the ticket ID at the end of each ticket
 
 																										// Mette un Pallino davanti al piatto stmapato
-define('CONF_COLOUR_PRINTED',								on);			// if on the user can see the elapsed time from the printing of the order ticket as a linear color.
-define('CONF_COLOUR_PRINTED_COLOUR',				'red');	// possible values: red, green, blue, magenta, yellow, cyan, grey. default: yellow
+define('CONF_COLOUR_PRINTED',				true);			// if on the user can see the elapsed time from the printing of the order ticket as a linear color.
+define('CONF_COLOUR_PRINTED_COLOUR',		'red');	// possible values: red, green, blue, magenta, yellow, cyan, grey. default: yellow
 define('CONF_COLOUR_PRINTED_MAX_TIME',       60);	  // after how much time in mins should the max colour be reached
 define('CONF_TIME_SINCE_PRINTED',            1);	  // if on the elapsed time since printing will be written aside the dish name in the orders list
 define('CONF_ENCRYPT_PASSWORD',              false);// if true the passwords will be encrypted with the best available method, otherwise a MD5 checksum will be prepared

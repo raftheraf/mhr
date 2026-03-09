@@ -12,7 +12,7 @@ Otherwise use the install.php page.
 
 $cfgserver='localhost';
 $cfguser='root';
-$cfgpassword='';
+$cfgpassword='aaaaaa';
 
 $db_common='myhandyrestaurant';
 
