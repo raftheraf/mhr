@@ -852,7 +852,7 @@ function print_line($destid,$msg){
 
 
 	//Se però il tuo $msg/$tosend è in realtà UTF‑8 (tipico con PHP moderni, pagine text/html; charset=utf-8, DB in utf8, ecc.), iconv lo interpreta come ISO‑8859‑1 e gli accenti vengono rovinati.
-	$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
+	//$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
 
 
 	//per non rovinare gli accenti provare a usare il seguente codice
