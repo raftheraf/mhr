@@ -848,8 +848,17 @@ function print_line($destid,$msg){
 
 		//NEL CASO DI UTILIZZO DEL PROGRAMMA MULTIDRIVER
 	  //configurare il programma per leggere lo scontrino dalla directory ../PATH_IN/
-		$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
-		file_put_contents(PATH_SCONTRINO_INP, $tosend);
+		
+
+
+	//Se però il tuo $msg/$tosend è in realtà UTF‑8 (tipico con PHP moderni, pagine text/html; charset=utf-8, DB in utf8, ecc.), iconv lo interpreta come ISO‑8859‑1 e gli accenti vengono rovinati.
+	$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
+
+
+	//per non rovinare gli accenti provare a usare il seguente codice
+	$tosend = iconv("UTF-8", "WINDOWS-1252//TRANSLIT", $tosend); 
+	
+	  file_put_contents(PATH_SCONTRINO_INP, $tosend);
 
 		//Righe per eseguire il programma MULTIDRIVER in windows
 		if (!file_exists(PATH_MULTIDRIVER)){ return ("Percorso errato applicazione MULTIDRIVER_APP.exe"); }

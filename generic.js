@@ -259,16 +259,160 @@ function discount_switch(){
 function pagamento_carte_switch(){
 
 	if(document.form_type.tipo_corrispettivo[0].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=true;
-	} else if (document.form_type.tipo_corrispettivo[1].checked==true){
 		document.form_type.pagato_carte_di_credito.disabled=false;
+	} else if (document.form_type.tipo_corrispettivo[1].checked==true){
+		document.form_type.pagato_carte_di_credito.disabled=true;
 	} else if (document.form_type.tipo_corrispettivo[2].checked==true){
 		document.form_type.pagato_carte_di_credito.disabled=true;
+	} else if (document.form_type.tipo_corrispettivo[3].checked==true){
+		document.form_type.pagato_carte_di_credito.disabled=true;
 	} else if (document.form_type.tipo_corrispettivo[4].checked==true){
-		document.form_type.pagato_carte_di_credito.disabled=false;
+		document.form_type.pagato_carte_di_credito.disabled=true;
+	}
+
+	// ogni cambio di tipo corrispettivo azzera l'importo carta
+	if (document.form_type && document.form_type.pagato_carte_di_credito) {
+		document.form_type.pagato_carte_di_credito.value = '';
+	}
+
+	var wrapBtn = document.getElementById('wrap_btn_pos_totale');
+	if (wrapBtn) {
+		if (document.form_type.tipo_corrispettivo[1].checked==true){
+			wrapBtn.style.display='';
+		} else {
+			wrapBtn.style.display='none';
+		}
+	}
+
+	// mostra il pulsante "+ CARTA" solo con CONTANTI, altrimenti nasconde tutto il blocco carta
+	var spanCarta = document.getElementById('wrap_importo_carta');
+	var btnCarta  = document.getElementById('btn_mostra_importo_carta');
+
+	if (document.form_type.tipo_corrispettivo[0].checked==true) {
+		// CONTANTI: mostra il pulsante (se non è già stato cliccato)
+		if (btnCarta) {
+			btnCarta.style.display='';
+		}
+		// non tocco spanCarta: se l'utente ha già aperto l'importo, rimane visibile
+	} else {
+		// altri tipi pagamento: nasconde sia pulsante che importo carta
+		if (btnCarta) {
+			btnCarta.style.display='none';
+		}
+		if (spanCarta) {
+			spanCarta.style.display='none';
+		}
 	}
 
 	return(false);
+}
+
+function mostra_importo_carta(){
+	var span = document.getElementById('wrap_importo_carta');
+	var btn  = document.getElementById('btn_mostra_importo_carta');
+
+	if(span){
+		span.style.display='';
+	}
+	if(btn){
+		btn.style.display='none';
+	}
+
+	if(document.form_type && document.form_type.pagato_carte_di_credito){
+		document.form_type.pagato_carte_di_credito.disabled=false;
+		try{
+			document.form_type.pagato_carte_di_credito.focus();
+			if(document.form_type.pagato_carte_di_credito.select){
+				document.form_type.pagato_carte_di_credito.select();
+			}
+		}catch(e){}
+	}
+
+	return false;
+}
+
+function invia_pos_totale(el){
+	var url = el.getAttribute('data-pos-url');
+	var amount = el.getAttribute('data-pos-amount');
+
+	if(!url || !amount){
+		alert('Impossibile inviare al POS: dati mancanti.');
+		return false;
+	}
+
+	try{
+		if(window.fetch){
+			fetch(url, { method: 'GET', cache: 'no-store' })
+				.then(function(){
+					alert('Comando inviato al POS.\nImporto: ' + amount + ' €');
+				})
+				.catch(function(){
+					alert('Errore durante l\'invio al POS.');
+				});
+		} else {
+			var img = new Image();
+			img.onload = img.onerror = function(){
+				alert('Comando inviato al POS.\nImporto: ' + amount + ' €');
+			};
+			img.src = url;
+		}
+	} catch(e){
+		alert('Errore durante l\'invio al POS.');
+	}
+
+	return false;
+}
+
+function invia_pos_carta(){
+	var input = document.form_type && document.form_type.pagato_carte_di_credito
+		? document.form_type.pagato_carte_di_credito
+		: null;
+	var btn   = document.getElementById('btn_pos_carta');
+
+	if (!input || !btn) {
+		alert('Impossibile inviare al POS: campo importo non trovato.');
+		return false;
+	}
+
+	var rawVal = (input.value || '').replace(',', '.').trim();
+	var amountNum = parseFloat(rawVal);
+
+	if (isNaN(amountNum) || amountNum <= 0) {
+		alert('Inserisci un importo carta valido (maggiore di zero).');
+		input.focus();
+		return false;
+	}
+
+	// arrotonda a 2 decimali
+	amountNum = Math.round(amountNum * 100) / 100;
+	var amount = amountNum.toFixed(2);
+
+	var baseUrl = btn.getAttribute('data-pos-base-url') || '../POS/ingenico.php?from=waiter';
+
+	var sep = (baseUrl.indexOf('?') === -1) ? '?' : '&';
+	var url = baseUrl + sep + 'amount=' + encodeURIComponent(amount);
+
+	try{
+		if(window.fetch){
+			fetch(url, { method: 'GET', cache: 'no-store' })
+				.then(function(){
+					alert('Comando inviato al POS.\nImporto carta: ' + amount + ' €');
+				})
+				.catch(function(){
+					alert('Errore durante l\'invio al POS.');
+				});
+		} else {
+			var img = new Image();
+			img.onload = img.onerror = function(){
+				alert('Comando inviato al POS.\nImporto carta: ' + amount + ' €');
+			};
+			img.src = url;
+		}
+	} catch(e){
+		alert('Errore durante l\'invio al POS.');
+	}
+
+	return false;
 }
 
 function payment_activation(){
