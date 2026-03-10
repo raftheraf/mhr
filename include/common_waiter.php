@@ -33,7 +33,7 @@ function find_accounting_db() {
 	if(!$res) return 0;
 
 	while($arr=mysql_fetch_array($res)) {
-		if(mysql_list_tables($arr['db'])) {
+		if(mysql_query('SHOW TABLES IN `'.$arr['db'].'`')) {
 			$found_accounting_db=true;
 		}
 	}

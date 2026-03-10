@@ -1186,7 +1186,11 @@ function find_last_receipt($db,$type,$year){
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="SELECT * FROM $table WHERE `type`='$type' AND `internal_id`!='' AND `date`>='$timestart'";
 	// CRYPTO
-	$res=mysql_db_query($db,$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($db)) {
+		mysql_select_db($db);
+	}
+	$res=mysql_query($query);
 
 	if(mysql_num_rows($res)){
 		while($row=mysql_fetch_array($res)){
@@ -1238,10 +1242,14 @@ function receipt_insert($accountdb, $type, $customer_id, $takeaway_surname, $tav
     // creates the new receipt voice in management db, to be next filled
     // with actual amount values
 
-    $table=$GLOBALS['table_prefix'].'account_mgmt_main';
-    $query="INSERT INTO $table (`description`,`who`,`internal_id`,`type`,`waiter_income`,`customer_id`,`takeaway_surname`,`tavolo_numero`,`tipo_corrispettivo`)
+   $table=$GLOBALS['table_prefix'].'account_mgmt_main';
+   $query="INSERT INTO $table (`description`,`who`,`internal_id`,`type`,`waiter_income`,`customer_id`,`takeaway_surname`,`tavolo_numero`,`tipo_corrispettivo`)
 	VALUES ('".ucfirst(phr('INCOME')).": $internal_id','.','$internal_id','$type','1','$customer_id','$takeaway_surname','$tavolo_numero','$tipo_corrispettivo')";
-    $res=mysql_db_query($accountdb,$query);
+   // Use mysql_query instead of deprecated mysql_db_query
+   if (!empty($accountdb)) {
+	   mysql_select_db($accountdb);
+   }
+   $res=mysql_query($query);
     $receipt_id=mysql_insert_id();
     return $receipt_id;
 }
@@ -1251,7 +1259,11 @@ function receipt_delete($accountdb,$receipt_id){
 	// deletes the receipt voice in management db
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="DELETE FROM $table WHERE `id`='".$receipt_id."'";
-	$res=mysql_db_query($accountdb,$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($accountdb)) {
+		mysql_select_db($accountdb);
+	}
+	$res=mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -1273,7 +1285,11 @@ function receipt_update_amounts($accountdb,$total,$receipt_id){
 
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="UPDATE $table SET `waiter_income` = '1',`cash_amount` = '$total_total',`cash_taxable_amount` = '$taxable',`cash_vat_amount` = '$vat' WHERE `id` = '$receipt_id'";
-	$res = mysql_db_query($accountdb,$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($accountdb)) {
+		mysql_select_db($accountdb);
+	}
+	$res = mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";

@@ -71,7 +71,7 @@
 	we check at least to have some tables in each db
 	otherwise we stop execution and report an error
 	*/
-	$tmp['tableslist'] = mysql_list_tables ($_SESSION['common_db'],$link);
+	$tmp['tableslist'] = mysql_query('SHOW TABLES IN `'.$_SESSION['common_db'].'`', $link);
 	$tmp['numtables'] = mysql_num_rows ($tmp['tableslist']);
 	if($tmp['numtables']==0) die(GLOBALMSG_DB_NO_TABLES_ERROR);
 	unset($tmp);

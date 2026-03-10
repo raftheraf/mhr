@@ -327,7 +327,6 @@ class menu {
 		$res=common_query($query,__FILE__,__LINE__);
 		if(!$res) return 0;
 
-		$cat->id=0;
 		$this -> output.="\t\toM.makeMenu('m$i','$parent','".ucphr('ALL')."','".ROOTDIR."/admin/admin.php?class=dish&data[category]=0');\n";
 		$i++;
 
@@ -356,7 +355,6 @@ class menu {
 		$res=common_query($query,__FILE__,__LINE__);
 		if(!$res) return 0;
 
-		$cat->id=0;
 		$this -> output.="\t\toM.makeMenu('m$i','$parent','".ucphr('ALL')."','".ROOTDIR."/admin/admin.php?class=ingredient&data[category]=0');\n";
 		$i++;
 
@@ -498,26 +496,29 @@ class menu {
 		if(!$res_dbs) return mysql_errno();
 
 		while($arr_dbs=mysql_fetch_array($res_dbs)) {
-			if(mysql_list_tables($arr_dbs['db'])) {
+			// verifica che il database esista ed abbia almeno una tabella
+			$res_tables = mysql_query('SHOW TABLES IN `'.$arr_dbs['db'].'`');
+			if(!$res_tables || !mysql_num_rows($res_tables)) {
+				continue;
+			}
 
-				$table=$GLOBALS['table_prefix'].'account_accounts';
-				$query="SELECT * FROM `$table`";
-				$res2 = mysql_db_query ($arr_dbs['db'],$query);
-				if($errno=mysql_errno()) {
-					$msg="Error in ".__FUNCTION__." - ";
-					$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
-					$msg.='query: '.$query."\n";
-					error_msg(__FILE__,__LINE__,$msg);
-					echo nl2br($msg)."\n";
-					return $errno;
-				}
+			$table=$GLOBALS['table_prefix'].'account_accounts';
+			$query="SELECT * FROM `".$arr_dbs['db']."`.`".$table."`";
+			$res2 = mysql_query($query);
+			if($errno=mysql_errno()) {
+				$msg="Error in ".__FUNCTION__." - ";
+				$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
+				$msg.='query: '.$query."\n";
+				error_msg(__FILE__,__LINE__,$msg);
+				echo nl2br($msg)."\n";
+				return $errno;
+			}
 
-				while($arr=mysql_fetch_array($res2)){
-					$this -> output.="\t\toM.makeMenu('m$i','$parent','".ucfirst($arr['name'])."','".ROOTDIR."/manage/account.php?command=movement_list&id=".$arr['id']."');\n";
-					$this -> links[$i]['name']=ucphr('ACCOUNT_MAIN_LEGEND').': '.ucphr('ACCOUNT_MOVEMENT_LIST').':'.ucfirst($arr['name']);
-					$this -> links[$i]['link']=ROOTDIR.'/manage/account.php?command=movement_list&id='.$arr['id'];
-					$i++;
-				}
+			while($arr=mysql_fetch_array($res2)){
+				$this -> output.="\t\toM.makeMenu('m$i','$parent','".ucfirst($arr['name'])."','".ROOTDIR."/manage/account.php?command=movement_list&id=".$arr['id']."');\n";
+				$this -> links[$i]['name']=ucphr('ACCOUNT_MAIN_LEGEND').': '.ucphr('ACCOUNT_MOVEMENT_LIST').':'.ucfirst($arr['name']);
+				$this -> links[$i]['link']=ROOTDIR.'/manage/account.php?command=movement_list&id='.$arr['id'];
+				$i++;
 			}
 		}
 

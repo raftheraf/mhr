@@ -68,7 +68,11 @@ function write_log_discount($discount_value,$receipt_id){
 	$query.=")";
 
 	// CRYPTO
-	$res = mysql_db_query ($_SESSION['account'],$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($_SESSION['account'])) {
+		mysql_select_db($_SESSION['account']);
+	}
+	$res = mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";

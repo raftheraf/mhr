@@ -164,8 +164,12 @@ function convert_units ($eq, $dest_unit='') {
 }
 
 function common_set_error_reporting () {
-	if (CONF_DEBUG_REPORT_NOTICES) error_reporting (E_ALL);
-	else error_reporting (E_ALL ^ E_NOTICE);
+	// Hide E_DEPRECATED to avoid mysql_* deprecation warnings on PHP 5.5
+	if (CONF_DEBUG_REPORT_NOTICES) {
+		error_reporting (E_ALL & ~E_DEPRECATED);
+	} else {
+		error_reporting ((E_ALL ^ E_NOTICE) & ~E_DEPRECATED);
+	}
 
 	return 0;
 }
@@ -844,7 +848,12 @@ function get_db_data($file,$line,$db,$table,$field,$id){
 
 	$table=$GLOBALS['table_prefix'].$table;
 	$query="SELECT * FROM `$table` WHERE id='$id'";
-	$res = mysql_db_query ($db,$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($db)) {
+		// Ensure we are using the desired database
+		mysql_select_db($db);
+	}
+	$res = mysql_query($query);
 	if($errno=mysql_errno()){
 		$errdesc=mysql_error();
 		error_msg($file,$line,"ERROR get_db_data - mysql - ".$errno." - ".$errdesc);
@@ -883,7 +892,7 @@ function common_find_first_db($db_wanted='') {
 		if(!$res) return 0;
 
 		$arr=mysql_fetch_array($res);
-		if(mysql_list_tables($arr['db']))
+		if(mysql_query('SHOW TABLES IN `'.$arr['db'].'`'))
 			return $arr['db'];
 	}
 
@@ -892,7 +901,7 @@ function common_find_first_db($db_wanted='') {
 	if(!$res) return 0;
 
 	while($arr=mysql_fetch_array($res)) {
-		if(mysql_list_tables($arr['db']))
+		if(mysql_query('SHOW TABLES IN `'.$arr['db'].'`'))
 			return $arr['db'];
 	}
 }

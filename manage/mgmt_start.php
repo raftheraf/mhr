@@ -52,7 +52,8 @@ if(!$header_printed){
 	otherwise we stop execution and report an error
 	TODO: link to db installation page in the error msg
 	*/
-	$tableslist = mysql_list_tables ($db_common,$link);
+	// Avoid deprecated mysql_list_tables, use SHOW TABLES instead
+	$tableslist = mysql_query('SHOW TABLES IN `'.$db_common.'`', $link);
 	$numtables = mysql_num_rows ($tableslist);
 	if($numtables==0) die(GLOBALMSG_DB_NO_TABLES_ERROR);
 
@@ -64,7 +65,11 @@ if(!$header_printed){
 
 	$table=$GLOBALS['table_prefix'].'accounting_dbs';
 	$query="SELECT * FROM `$table`";
-	$res = mysql_db_query ($_SESSION['common_db'],$query);
+	// Avoid deprecated mysql_db_query, select db explicitly then query
+	if (!empty($_SESSION['common_db'])) {
+		mysql_select_db($_SESSION['common_db']);
+	}
+	$res = mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." array - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error();
@@ -73,7 +78,8 @@ if(!$header_printed){
 		return 1;
 	}
 	while($arr=mysql_fetch_array($res)) {
-		if(mysql_list_tables($arr['db'])) {
+		// Avoid deprecated mysql_list_tables, use SHOW TABLES instead
+		if(mysql_query('SHOW TABLES IN `'.$arr['db'].'`')) {
 			$found_accounting_db=true;
 		}
 	}

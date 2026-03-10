@@ -108,8 +108,12 @@ other - mysql error number
     $query = substr ($query, 0, strlen($query)-1);
     $query.=")";
 
-    // CRYPTO
-    $res = mysql_db_query ($_SESSION['account'],$query);
+   // CRYPTO
+   // Use mysql_query instead of deprecated mysql_db_query
+   if (!empty($_SESSION['account'])) {
+       mysql_select_db($_SESSION['account']);
+   }
+   $res = mysql_query($query);
     if($errno=mysql_errno()) {
         $msg="Error in ".__FUNCTION__." - ";
         $msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -1061,7 +1065,11 @@ function bill_print_total($receipt_id,$destid) {
 
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="SELECT * FROM $table WHERE `id`='$receipt_id'";
-	$res=mysql_db_query($_SESSION['account'],$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($_SESSION['account'])) {
+		mysql_select_db($_SESSION['account']);
+	}
+	$res=mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -1092,7 +1100,11 @@ function bill_print_taxes($receipt_id,$destid) {
 
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="SELECT * FROM $table WHERE `id`='$receipt_id'";
-	$res=mysql_db_query($_SESSION['account'],$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($_SESSION['account'])) {
+		mysql_select_db($_SESSION['account']);
+	}
+	$res=mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -1128,7 +1140,11 @@ function bill_print_receipt_id($receipt_id,$destid) {
 
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="SELECT * FROM $table WHERE `id`='$receipt_id'";
-	$res=mysql_db_query($_SESSION['account'],$query);
+	// Use mysql_query instead of deprecated mysql_db_query
+	if (!empty($_SESSION['account'])) {
+		mysql_select_db($_SESSION['account']);
+	}
+	$res=mysql_query($query);
 	if($errno=mysql_errno()) {
 		$msg="Error in ".__FUNCTION__." - ";
 		$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -1739,7 +1755,7 @@ function bill_type_selection($sourceid){
 	//if(!$res) return '';
 
 	while($arr=mysql_fetch_array($res)) {
-		if(mysql_list_tables($arr['db'])) {
+		if(mysql_query('SHOW TABLES IN `'.$arr['db'].'`')) {
 			$checked='';
 			if($account==$arr['db'])
 				$checked = "checked";
@@ -1884,7 +1900,7 @@ function bill_reset($sourceid) {
 	return 0;
 }
 // calcola il totale a persona
-function totale_a_persona($sourceid) {
+function totale_a_persona($sourceid = null) {
 	
 	$sourceid = $_SESSION['sourceid'];
 	$separated=$_SESSION['separated'];
