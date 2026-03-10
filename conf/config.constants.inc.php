@@ -1,9 +1,9 @@
 <?php
-define('CONF_DEBUG',                                    0);	     // In production set to 0, prints all debug info in the relative file and some debug data on screen
+define('CONF_DEBUG',                                    1);	     // In production set to 0, prints all debug info in the relative file and some debug data on screen
 define('CONF_DEBUG_PRINT_GENERATING_TIME',              0);	     // In production set to 0, allows printing of the generating time
-define('CONF_DEBUG_REPORT_NOTICES',                     0);	     // In production set to 0, uses E_ALL php error reporting
+define('CONF_DEBUG_REPORT_NOTICES',                     1);	     // In production set to 0, uses E_ALL php error reporting
 define('CONF_DEBUG_LANG_DISABLED',                      0);	     // disables the language functions (both db and xml)
-define('CONF_DEBUG_PRINT_GENERATING_TIME_ONLY_IF_HIGH', 0);	     // stampa tempo generazione pagnina solo se maggiore del valore sotto
+define('CONF_DEBUG_PRINT_GENERATING_TIME_ONLY_IF_HIGH', 1);	     // stampa tempo generazione pagnina solo se maggiore del valore sotto
 define('CONF_DEBUG_PRINT_GENERATING_TIME_TRESHOLD',     0.25);   // tempo massimo di generazione pagina in secondi 0.25 (valore standard)
 define('CONF_DEBUG_DONT_DELETE',                        0);	     // if active the order will never be deleted
 define('CONF_DEBUG_DONT_SET_PRINTED',                   0);	     // if the flag is active, the flag printed in orders table won't be set

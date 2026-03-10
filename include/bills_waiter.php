@@ -360,17 +360,21 @@ other - mysql error number
 	}
 	$tpl_print -> assign("orders", $output['orders']);
 
-	if($_SESSION['discount']['type']=="amount"
-	or $_SESSION['discount']['type']=="percent") {
-		$output['discount']=bill_print_discount($receipt_id,$destid);
-		$tpl_print->assign("discount", $output['discount']);
-		$tpl_print->assign("discount_printf", $output['discount_printf']);
-	}
+	// Sconti e aggiornamento ricevuta solo per documenti fiscali (type > 2) con receipt_id valido
+	if (isset($_SESSION['type']) && $_SESSION['type'] > 2 && isset($receipt_id)) {
+		if (isset($_SESSION['discount']['type']) &&
+			($_SESSION['discount']['type']=="amount" || $_SESSION['discount']['type']=="percent")) {
+			$output['discount'] = bill_print_discount($receipt_id,$destid);
+			$tpl_print->assign("discount", $output['discount']);
+			// discount_printf potrebbe non essere impostato: usa stringa vuota come default
+			$tpl_print->assign("discount_printf", isset($output['discount_printf']) ? $output['discount_printf'] : '');
+		}
 
-	$total = bill_calc_vat();
-	$total_discounted = bill_calc_discount($total);
-	// updates the receipt value, has to be before print totals!
-	receipt_update_amounts($_SESSION['account'],$total_discounted,$receipt_id);
+		$total = bill_calc_vat();
+		$total_discounted = bill_calc_discount($total);
+		// updates the receipt value, has to be before print totals!
+		receipt_update_amounts($_SESSION['account'],$total_discounted,$receipt_id);
+	}
 
 
 //RTR prende il totale del preconto dagli ordini e non dal database mhr_accont_log che risulterebbe zero
@@ -380,17 +384,23 @@ other - mysql error number
 	$output['discount']=bill_print_discount_preconto();
  } else {
 //rtr
-	$output['total'] = bill_print_total($receipt_id,$destid);
+	if (isset($receipt_id)) {
+		$output['total'] = bill_print_total($receipt_id,$destid);
+	} else {
+		$output['total'] = '';
+	}
 //RTR
 	}
 //rtr
+	if (!isset($output['discount'])) $output['discount'] = '';
+	if (!isset($output['discount_printf'])) $output['discount_printf'] = '';
 	$tpl_print -> assign("total", $output['total']);
 	$tpl_print -> assign("discount", $output['discount']);
 	$output_page .= "
 	</tbody>
 	</table>";
 
-	$output['receipt_id'] = bill_print_receipt_id ($receipt_id,$destid);
+	$output['receipt_id'] = isset($receipt_id) ? bill_print_receipt_id ($receipt_id,$destid) : '';
 	$tpl_print -> assign ("receipt_id", $output['receipt_id']);
 
 // RTR stampa la data sui ticket
@@ -461,9 +471,10 @@ other - mysql error number
 
 
 //RTR stampa la voce corrispettivo Pagato oppure non pagato
-
+if (isset($receipt_id)) {
 	$output['taxes'] = bill_print_taxes ($receipt_id,$destid);
 	$tpl_print -> assign("taxes", $output['taxes']);
+}
 
 	if($err = $tpl_print -> parse ()) {
 		$msg="Error in ".__FUNCTION__." - ";
@@ -483,7 +494,9 @@ other - mysql error number
 	if($printing_enabled) {
 		if($err = print_line($arr['id'],$msg)) {
 			// the process is stopped so we delete the created receipt
-			receipt_delete($_SESSION['account'],$receipt_id);
+			if (isset($receipt_id)) {
+				receipt_delete($_SESSION['account'],$receipt_id);
+			}
 			return $err;
 		}
 	}
@@ -491,11 +504,13 @@ other - mysql error number
 	ksort($_SESSION['separated']);
 
 	// sets the log
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		if($err_logger=bill_logger($key,$receipt_id)){
-			debug_msg(__FILE__,__LINE__,__FUNCTION__.' - receipt_id: '.$receipt_id.' - logger return code: '.$err_logger);
-		} else {
-			debug_msg(__FILE__,__LINE__,__FUNCTION__.' - receipt_id: '.$receipt_id.' - logged');
+	if (isset($receipt_id)) {
+		for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+			if($err_logger=bill_logger($key,$receipt_id)){
+				debug_msg(__FILE__,__LINE__,__FUNCTION__.' - receipt_id: '.$receipt_id.' - logger return code: '.$err_logger);
+			} else {
+				debug_msg(__FILE__,__LINE__,__FUNCTION__.' - receipt_id: '.$receipt_id.' - logged');
+			}
 		}
 	}
 
@@ -800,20 +815,25 @@ function bill_print_discount($receipt_id,$destid) {
 
 	$dest_language=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dests',"language",$destid);
 
-	$msg="";
-	$class=COLOR_ORDER_PRINTED;
+	$msg = "";
+	$class = COLOR_ORDER_PRINTED;
+	$total = 0;
 
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+	for (reset($_SESSION['separated']); list($key, $value) = each($_SESSION['separated']); ) {
+		$total += $_SESSION['separated'][$key]['finalprice'];
 	}
 
-	if($_SESSION['discount']['type']=="amount") {
+	// Se lo sconto non è definito o non ha un tipo valido, non stampare nulla
+	if (!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || $_SESSION['discount']['type'] === '') {
+		return $msg;
+	}
+
+	if ($_SESSION['discount']['type'] == "amount") {
 		$discount_value=$_SESSION['discount']['amount'];
 		$total_discounted=$total+$discount_value;
 		$discount_label="";
 		$discount_number=-$_SESSION['discount']['amount'];
-	}
-	elseif($_SESSION['discount']['type']=="percent") {
+	} elseif ($_SESSION['discount']['type'] == "percent") {
 		$discount_value=$total/100*$_SESSION['discount']['percent'];
 		$total_discounted=$total-$discount_value;
 		$discount_label=$_SESSION['discount']['percent'].'%';
@@ -881,6 +901,13 @@ function bill_calc_vat() {
 			$tax=$taxable*$vat_rate;
 
 			// creates the vat array with tax, taxable and total divided per vat type
+			if (!isset($_SESSION['vat'][$vat_rate_id])) {
+				$_SESSION['vat'][$vat_rate_id] = array(
+					'taxable' => 0,
+					'tax'     => 0,
+					'total'   => 0,
+				);
+			}
 			$_SESSION['vat'][$vat_rate_id]['taxable']+=$taxable;
 			$_SESSION['vat'][$vat_rate_id]['tax']+=$tax;
 			$_SESSION['vat'][$vat_rate_id]['total']+=$taxable+$tax;
@@ -898,6 +925,7 @@ function bill_calc_vat() {
 	// prepares the return array
 	$ret['taxable']=0;
 	$ret['tax']=0;
+	$ret['total']=0;
 
 
 	for (reset ($_SESSION['vat']); list ($key, $value) = each ($_SESSION['vat']); ) {
@@ -920,20 +948,24 @@ function bill_calc_discount($total) {
 	if($total['taxable']) $mean_vat_rate=$total['total']/$total['taxable']-1;
 	else $mean_vat_rate=0;
 
-	// assign the total discount amount
-	if($_SESSION['discount']['type']=="amount") {
+	// assign the total discount amount (guard: discount may be unset)
+	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || $_SESSION['discount']['type']===''){
+		$disc_total=0;
+		$disc_taxable=0;
+		$disc_tax=0;
+	} elseif($_SESSION['discount']['type']=="amount") {
 		$disc_total=$_SESSION['discount']['amount'];
-	}
-	elseif($_SESSION['discount']['type']=="percent") {
+		$disc_taxable=$disc_total/($mean_vat_rate+1);
+		$disc_tax=$disc_total-$disc_taxable;
+	} elseif($_SESSION['discount']['type']=="percent") {
 		$disc_total=$total['total']/100*$_SESSION['discount']['percent'];
+		$disc_taxable=$disc_total/($mean_vat_rate+1);
+		$disc_tax=$disc_total-$disc_taxable;
 	} else {
 		$disc_total=0;
-		//return $total;
+		$disc_taxable=0;
+		$disc_tax=0;
 	}
-
-	// assigns taxes on the discount
-	$disc_taxable=$disc_total/($mean_vat_rate+1);
-	$disc_tax=$disc_total-$disc_taxable;
 
 
 	for (reset ($_SESSION['vat']); list ($key, $value) = each ($_SESSION['vat']); ) {
@@ -987,8 +1019,7 @@ $msg = '';
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
 	$descrizione_totale="Totale";
 	$total_discounted= $total;
-	}
-	if($_SESSION['discount']['type']=="amount") {
+	} elseif($_SESSION['discount']['type']=="amount") {
 		$total_discounted=$total+$_SESSION['discount']['amount'];
 		$descrizione_totale="Totale";
 	} elseif($_SESSION['discount']['type']=="percent") {
@@ -1016,6 +1047,9 @@ $total = 0;
 		$total+=$_SESSION['separated'][$key]['finalprice'];
 	}
 
+	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
+		return $msg;
+	}
 	if($_SESSION['discount']['type']=="amount") {
 		$discount_value=$_SESSION['discount']['amount'];
 		$total_discounted=$total+$discount_value;
@@ -1266,6 +1300,9 @@ function bill_method_selector(){
 	$table->fetch_data(true);
 	$data=dati_prenotazione($_SESSION['sourceid']);
 
+	$output = '';
+	$tmp = '';
+
 	if($cust_id=$table->data['customer']) {
 		$cust = new customer ($cust_id);
 		$tmp = '<a href="orders.php?command=customer_search"><img src="'.IMAGE_FIND.'" alt="CAMBIA CLIENTE" border=0 align="absmiddle" width="32px" height="32px"></a>';
@@ -1349,7 +1386,7 @@ function bill_show_list(){
 	gets the sourceid var from start.php
 	*/
 
-	$output .= '';
+	$output = '';
 	$output .= '<table bgcolor="'.COLOR_TABLE_GENERAL.'" width="100%">';
 	// RTR riepilogo ordine prima della stampa
 	$output .= '<thead>
@@ -1551,6 +1588,7 @@ function bill_type_selection($sourceid){
 
 	// Next is a micro-form to set a discount in percent value
 
+	$output = '';
 	$output .= '
 	<FIELDSET>
 	<LEGEND><B>STAMPA IL CONTO</B></LEGEND>
@@ -1564,7 +1602,8 @@ function bill_type_selection($sourceid){
 
 	$output .= '<table border="0" cellspacing="0" cellpadding="5">';
 
-	$codice_lotteria = $_SESSION['codice_lotteria'];
+	// Codice lotteria: usa stringa vuota se non ancora impostato
+	$codice_lotteria = isset($_SESSION['codice_lotteria']) ? $_SESSION['codice_lotteria'] : '';
   // Codice Lotteria scontrini
 	$output .= '<tr><td align="center"><FIELDSET>
 																				<LEGEND><B>Codice lotteria</B></LEGEND>
@@ -1607,12 +1646,21 @@ function bill_type_selection($sourceid){
 	$output .= '</table>';
 
 // RTR sistemare la funzione if era pensata solo per corrispettivo=1 oppure zero un casino!!!
-	if (!$_SESSION['tipo_corrispettivo']) { $check1='checked'; }
-	if ($_SESSION['tipo_corrispettivo']=='T1') { $check1='checked'; }
-	if ($_SESSION['tipo_corrispettivo']=='T2') { $check2='checked'; }
-	if ($_SESSION['tipo_corrispettivo']=='T3') { $check3='checked'; }
-	if ($_SESSION['tipo_corrispettivo']=='T4') { $check4='checked'; }
-	if ($_SESSION['tipo_corrispettivo']=='T5') { $check5='checked'; }
+// Inizializza le variabili dei radio button
+$check1 = $check2 = $check3 = $check4 = $check5 = '';
+
+// Valore di default: T1 (CONTANTI) se non è ancora stato scelto nulla
+if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] === '' || $_SESSION['tipo_corrispettivo'] === 'T1') {
+	$check1 = 'checked';
+} elseif ($_SESSION['tipo_corrispettivo'] === 'T2') {
+	$check2 = 'checked';
+} elseif ($_SESSION['tipo_corrispettivo'] === 'T3') {
+	$check3 = 'checked';
+} elseif ($_SESSION['tipo_corrispettivo'] === 'T4') {
+	$check4 = 'checked';
+} elseif ($_SESSION['tipo_corrispettivo'] === 'T5') {
+	$check5 = 'checked';
+}
 
 
 	//$chk1[$tipo_corrispettivo] = 'checked';
@@ -1853,11 +1901,13 @@ function bill_total_controllo_totale_negativo(){
 	$total = 0;
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total+=$_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 
 
-	if(!isset($_SESSION['discount']) or !isset($_SESSION['discount']['type']) or empty($_SESSION['discount']['type'])) return $output;
+	if(!isset($_SESSION['discount']) or !isset($_SESSION['discount']['type']) or empty($_SESSION['discount']['type'])) return 0;
 
 	if($_SESSION['discount']['type']=="amount") {
 		$total_discounted=$total+$_SESSION['discount']['amount'];
@@ -1901,21 +1951,23 @@ function bill_reset($sourceid) {
 }
 // calcola il totale a persona
 function totale_a_persona($sourceid = null) {
-	
-	$sourceid = $_SESSION['sourceid'];
-	$separated=$_SESSION['separated'];
-	
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+	$sourceid = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : $sourceid;
+	$separated = isset($_SESSION['separated']) && is_array($_SESSION['separated']) ? $_SESSION['separated'] : array();
+
+	$total = 0;
+	for (reset($separated); list($key, $value) = each($separated); ) {
+		if (isset($separated[$key]['finalprice'])) {
+			$total += $separated[$key]['finalprice'];
+		}
 	}
-	
-	if($_SESSION['discount']['type']=="amount") {
-		$total_discounted=$total+$_SESSION['discount']['amount'];
-		$totale_tavolo = $total_discounted;
-	} elseif($_SESSION['discount']['type']=="percent") {
-		$total_discounted=$total-$total/100*$_SESSION['discount']['percent'];
-		$totale_tavolo = $total_discounted;
-	} else {$totale_tavolo = $total;
+
+	$totale_tavolo = $total;
+	if (isset($_SESSION['discount']) && isset($_SESSION['discount']['type']) && $_SESSION['discount']['type'] !== '') {
+		if ($_SESSION['discount']['type'] == "amount" && isset($_SESSION['discount']['amount'])) {
+			$totale_tavolo = $total + $_SESSION['discount']['amount'];
+		} elseif ($_SESSION['discount']['type'] == "percent" && isset($_SESSION['discount']['percent'])) {
+			$totale_tavolo = $total - $total / 100 * $_SESSION['discount']['percent'];
+		}
 	}
 
 	$query = "
@@ -1927,12 +1979,15 @@ function totale_a_persona($sourceid = null) {
 	if(!$res) return 0;
 	if($arr = mysql_fetch_array ($res)) $totale_coperti = $arr['numero_coperti'];
 	if(!$totale_coperti) $totale_coperti = 0;
-	
-	$totale_a_persona = $totale_tavolo/$totale_coperti;
-	
-	//if (!$_SESSION['separated']){
+
+	if ($totale_coperti > 0) {
+		$totale_a_persona = $totale_tavolo / $totale_coperti;
+	} else {
+		$totale_a_persona = 0;
+	}
+
+	$output = '';
 	$output .= ' <tr bgcolor="white"><td colspan="6">Costo a persona Euro '.sprintf("%0.2f",$totale_a_persona).'</td></tr>';
 	return $output;
-	//}
 }
 ?>

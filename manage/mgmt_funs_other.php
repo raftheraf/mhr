@@ -221,6 +221,7 @@ function main_header($to_page="index.php"){
 	<td align="left">
 <?php
 
+	$account = isset($_GET['mgmt_db_number']) ? $_GET['mgmt_db_number'] : (isset($_SESSION['mgmt_db']) ? $_SESSION['mgmt_db'] : '');
 	$table=$GLOBALS['table_prefix'].'accounting_dbs';
 	$query="SELECT * FROM `$table`";
 	$res = mysql_db_query ($_SESSION['common_db'],$query);
@@ -264,6 +265,8 @@ function vat_report(){
 	$res=mysql_db_query($_SESSION['mgmt_db'],$query);
 	if(!mysql_num_rows($res)) return 1;
 
+	$vat_total = 0;
+	$vat_total_with_debit = 0;
 	while($row=mysql_fetch_array($res)){
 		$vat_total+=$row['cash_vat_amount'];
 		$vat_total+=$row['bank_vat_amount'];

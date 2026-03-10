@@ -181,12 +181,17 @@ function discount_edit($discount_id,$amount){
 function discount_form_javascript($sourceid){
 	$output = '';
 
-	if(isset($_SESSION['discount'])){
-		$percent=$_SESSION['discount']['percent'];
-		$amount=-1*$_SESSION['discount']['amount'];
-	} else {
-		$percent=0;
-		$amount=0;
+	// Valori di default
+	$percent = 0;
+	$amount  = 0;
+
+	if (isset($_SESSION['discount'])) {
+		if (isset($_SESSION['discount']['percent'])) {
+			$percent = $_SESSION['discount']['percent'];
+		}
+		if (isset($_SESSION['discount']['amount'])) {
+			$amount = -1 * $_SESSION['discount']['amount'];
+		}
 	}
 
 	if(!isset($_SESSION['discount']) ||

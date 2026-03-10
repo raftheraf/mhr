@@ -48,11 +48,19 @@ class order {
 		$destid=$arr['destid'];
 		$menufisso=$arr['menufisso'];
 
+		// Inizializza la priorità per evitare Notice e avere un valore sensato
+		if (isset($input_data['priority']) && $input_data['priority'] !== '') {
+			$priority = $input_data['priority'];
+		} else {
+			$priority = get_conf(__FILE__, __LINE__, "default_priority");
+		}
+
 		if ($dishid==SERVICE_ID) {
 			$printed='0000-00-00 00:00:00';
 			$priority='0';
+		} else {
+			$printed=NULL;
 		}
-		 else $printed=NULL;
 
 
 		$new_arr=array(

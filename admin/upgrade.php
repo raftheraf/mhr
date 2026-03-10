@@ -49,7 +49,7 @@ if(!access_allowed(USER_BIT_CONFIG)) $command='access_denied';
 
 set_time_limit(120);
 
-if($start_data['redirected']) {
+if(!empty($start_data['redirected'])) {
 	$tmp = '<font color="red">'.ucphr('REDIRECTED_FOR_UPGRADE_EXPLAIN').'</font><br>';
 	$tpl -> append ("messages", $tmp);
 }

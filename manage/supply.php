@@ -200,6 +200,7 @@ switch($command) {
 		}
 		break;
 	case "list":
+		$orderby = '';
 		if(isset($_GET['orderby'])){
 			$orderby=$_GET['orderby'];
 		} elseif(isset($_POST['orderby'])){
@@ -209,6 +210,7 @@ switch($command) {
 		table_supplier($orderby);
 		break;
 	case "list_by_type":
+		$orderby = '';
 		if(isset($_GET['orderby'])){
 			$orderby=$_GET['orderby'];
 			$_SESSION['orderby']=$orderby;
@@ -218,6 +220,7 @@ switch($command) {
 		} elseif(isset($_SESSION['orderby'])){
 			$orderby=$_SESSION['orderby'];
 		}
+		$supplier_type = '';
 		if(isset($_GET['supplier_type'])){
 			$supplier_type=$_GET['supplier_type'];
 			$_SESSION['supplier_type']=$supplier_type;
@@ -232,6 +235,7 @@ switch($command) {
 		table_general($orderby,"list_by_type",3,$supplier_type);
 		break;
 	default:
+		$orderby = '';
 		if(isset($_GET['orderby'])){
 			$orderby=$_GET['orderby'];
 		} elseif(isset($_POST['orderby'])){

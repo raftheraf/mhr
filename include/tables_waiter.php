@@ -677,6 +677,11 @@ function table_people_number_line ($sourceid) {
 	if ($arr=mysql_fetch_array ($res)) {
 		$_SESSION['tablenum']=$arr['name'];
 
+		// Inizializza i flag per evitare Notice su variabili non definite
+		$toprint_2 = false;
+		$toprint_3 = false;
+		$toprint_4 = false;
+
 		if(categories_orders_present ($sourceid,2) && !categories_printed ($sourceid,2)) $toprint_2=true;
 		if(categories_orders_present ($sourceid,3) && !categories_printed ($sourceid,3)) $toprint_3=true;
 		if(categories_orders_present ($sourceid,4) && !categories_printed ($sourceid,4)) $toprint_4=true;
@@ -933,11 +938,12 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 
 	if(!$therearerecords) return '';
 
+	$idTabella = '';
 	switch($show) {
 	case 0:
 		//if(access_allowed(USER_BIT_WAITER))
 		$output .= '<a id="Tuttiitavoli">Tutti i tavoli</a>';
-		$idTabella= ' id="tabella_tutti_i_tavoli" ';
+		$idTabella = ' id="tabella_tutti_i_tavoli" ';
 		//aggiorna la pagina tables.php con un hyperlink
 		//$output .= '<a href="tables.php">Tutti i tavoli</a>';
 		if(access_allowed(USER_BIT_WAITER)){
@@ -1048,8 +1054,10 @@ function tables_list_cell($row){
 	$scontrinato=$row['scontrinato'];
 	$paid=$row['paid'];
 	$takeaway_surname=$row['takeaway_surname'];
-	$utente_abilitato=$row['$utente_abilitato'];
-	$se_unito=$row['unito'];
+	// Utente abilitato (può non essere presente in tutte le query)
+	$utente_abilitato = isset($row['utente_abilitato']) ? $row['utente_abilitato'] : null;
+	// Flag tavolo unito (non sempre selezionato nelle query)
+	$se_unito = isset($row['unito']) ? $row['unito'] : 0;
 	$totale_coperti_per_tavolo =  totale_coperti_per_tavolo($sourceid);
 	$ora_prenotazione = $row['ora_prenotazione'];
 

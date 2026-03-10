@@ -128,7 +128,10 @@ function convert_units ($eq, $dest_unit='') {
 
 	if ($eq==='') return 0;
 
-	list($eq,$unit,$garbage) = explode(' ',$eq,3);
+	$parts = explode(' ',$eq,3);
+	$eq    = isset($parts[0]) ? $parts[0] : '';
+	$unit  = isset($parts[1]) ? $parts[1] : '';
+	$garbage = isset($parts[2]) ? $parts[2] : '';
 // echo 'equation: '.$eq.'<br>';
 	$num = eq_to_number($eq);
 
@@ -136,7 +139,8 @@ function convert_units ($eq, $dest_unit='') {
 	$dest_unit = strtolower($dest_unit);
 	$type = get_unit_type ($unit);
 
-	// defaults
+	// defaults (intermediate_unit must be set for all code paths)
+	$intermediate_unit = ($dest_unit !== '') ? $dest_unit : 'kg';
 	if ($type == UNIT_TYPE_MASS) {
 		if($dest_unit==='') $dest_unit = 'kg';
 		$intermediate_unit = 'kg';
@@ -247,13 +251,21 @@ function database_query($query,$file,$line,$db,$silent=false) {
 }
 
 function common_query($query,$file,$line,$silent=false) {
-	$db=$_SESSION['common_db'];
+	// Usa il database comune solo se correttamente inizializzato in sessione
+	if (!isset($_SESSION['common_db']) || $_SESSION['common_db'] === '') {
+		return false;
+	}
+	$db = $_SESSION['common_db'];
 	$res = database_query($query,$file,$line,$db,$silent);
 	return $res;
 }
 
 function accounting_query($query,$file,$line,$silent=false) {
-	$db=$_SESSION['mgmt_db'];
+	// Usa il database di gestione solo se correttamente inizializzato in sessione
+	if (!isset($_SESSION['mgmt_db']) || $_SESSION['mgmt_db'] === '') {
+		return false;
+	}
+	$db = $_SESSION['mgmt_db'];
 	$res = database_query($query,$file,$line,$db,$silent);
 	return $res;
 }
@@ -552,7 +564,7 @@ function lang_get_xml($language,$name,$charset='iso-8859-1') {
 	$value=$GLOBALS['lang'][$language][$name];
 	if(!empty($value)) {
 		$value=stripslashes($value);
-		if($charset=='CHARSET' || empty($charset)) $charset='iso-8859-1';
+		if($charset=='CHARSET' || empty($charset) || is_numeric($charset)) $charset='UTF-8';
 		$value = html_entity_decode ($value,ENT_QUOTES,$charset);
 		return $value;
 	}
@@ -565,7 +577,7 @@ function lang_get_xml($language,$name,$charset='iso-8859-1') {
 	$value=$GLOBALS['lang'][$conf_language][$name];
 	if(!empty($value)) {
 		$value=stripslashes($value);
-		if($charset=='CHARSET' || empty($charset)) $charset='iso-8859-1';
+		if($charset=='CHARSET' || empty($charset) || is_numeric($charset)) $charset='UTF-8';
 		$value = html_entity_decode ($value,ENT_QUOTES,$charset);
 		return $value;
 	}
@@ -578,7 +590,7 @@ function lang_get_xml($language,$name,$charset='iso-8859-1') {
 		if(empty($value)) continue;
 
 		$value=stripslashes($value);
-		if($charset=='CHARSET' || empty($charset)) $charset='iso-8859-1';
+		if($charset=='CHARSET' || empty($charset) || is_numeric($charset)) $charset='UTF-8';
 		$value = html_entity_decode ($value,ENT_QUOTES,$charset);
 
 		return $value;
@@ -627,7 +639,7 @@ function lang_get_db($lang,$name,$charset='iso-8859-1'){
 	$ret=$arr['table_name'];
 	$ret=stripslashes($ret);
 
-	if($charset=='CHARSET' || empty($charset)) $charset='iso-8859-1';
+	if($charset=='CHARSET' || empty($charset) || is_numeric($charset)) $charset='UTF-8';
 	$ret = html_entity_decode ($ret,ENT_QUOTES,$charset);
 
 	return $ret;
@@ -681,6 +693,10 @@ function var_dump_string($var){
 
 function list_upgrades($dir) {
 clearstatcache();
+$output = array();
+if (!is_dir($dir) || !is_readable($dir)) {
+	return $output;
+}
 if ($handle = opendir($dir)) {
 	while (false !== ($file = readdir($handle))) {
 		if (is_file($dir.'/'.$file) && is_readable($dir.'/'.$file) && $file != "." && $file != ".." && preg_match("/^mhr_/i",$file) && preg_match("/\.sql$/i",$file)) {
@@ -1469,9 +1485,11 @@ function debug_msg($file,$line,$msg){
 	$tmp=date("j/n/Y G:i:s",time());
 
 	//$user = new user($_SESSION['userid']);
-	$tmp.=" Table: ".$_SESSION['tablenum'];
+	$tablenum = isset($_SESSION['tablenum']) ? $_SESSION['tablenum'] : '';
+	$tmp.=" Table: ".$tablenum;
 	//$tmp .= " User: ".$user->data['name'];
-	$tmp .= " User: ".$_SESSION['userid'];
+	$userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : '';
+	$tmp .= " User: ".$userid;
 	$tmp .= " - $file line: $line - ";
 
 	$tmp.=$msg;

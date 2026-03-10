@@ -451,40 +451,45 @@ class dish extends object {
 			return -2;
 		}
 
-		if(is_array($input_data['ingreds']))
-			$input_data['ingreds']=implode (" ", $input_data['ingreds']);
-		else
-			$input_data['ingreds']="";
-		if(is_array($input_data['dispingreds']))
-			$input_data['dispingreds']=implode (" ", $input_data['dispingreds']);
-		else
-			$input_data['dispingreds']="";
+		// Normalizza gli array di ingredienti; se non presenti usa stringa vuota
+		if(isset($input_data['ingreds']) && is_array($input_data['ingreds'])) {
+			$input_data['ingreds'] = implode(" ", $input_data['ingreds']);
+		} else {
+			$input_data['ingreds'] = "";
+		}
+
+		if(isset($input_data['dispingreds']) && is_array($input_data['dispingreds'])) {
+			$input_data['dispingreds'] = implode(" ", $input_data['dispingreds']);
+		} else {
+			$input_data['dispingreds'] = "";
+		}
 
 		$input_data['price']=str_replace (",", ".", $input_data['price']);
 		$input_data['price']=round ($input_data['price'],2);
 
-		if(!$input_data['personal_list'])
+		// Flag booleani: se non settati o falsi, forza a 0
+		if(!isset($input_data['personal_list']) || !$input_data['personal_list'])
 			$input_data['personal_list']=0;
-		if(!$input_data['personal_list_order'])
+		if(!isset($input_data['personal_list_order']) || !$input_data['personal_list_order'])
 			$input_data['personal_list_order']=0;
 
-		if(!$input_data['asporto_list'])
+		if(!isset($input_data['asporto_list']) || !$input_data['asporto_list'])
 				$input_data['asporto_list']=0;
-		if(!$input_data['asporto_list_order'])
+		if(!isset($input_data['asporto_list_order']) || !$input_data['asporto_list_order'])
 				$input_data['asporto_list_order']=0;
 
 
-		if(!$input_data['autocalc'])
+		if(!isset($input_data['autocalc']) || !$input_data['autocalc'])
 			$input_data['autocalc']=0;
-		if(!$input_data['stock_is_on'])
+		if(!isset($input_data['stock_is_on']) || !$input_data['stock_is_on'])
 			$input_data['stock_is_on']=0;
-		if(!$input_data['generic'])
+		if(!isset($input_data['generic']) || !$input_data['generic'])
 			$input_data['generic']=0;
-		if(!$input_data['visible'])
+		if(!isset($input_data['visible']) || !$input_data['visible'])
 			$input_data['visible']=0;
-		if(!$input_data['menufisso'])
+		if(!isset($input_data['menufisso']) || !$input_data['menufisso'])
 			$input_data['menufisso']=0;
-		if(!$input_data['salta_stampa'])
+		if(!isset($input_data['salta_stampa']) || !$input_data['salta_stampa'])
 			$input_data['salta_stampa']=0;
 
 		return $input_data;
@@ -497,7 +502,8 @@ class dish extends object {
 
 	function form_new ($input_data=array()) {
 		global $tpl;
-		if($_REQUEST['data']['show_names']) $input_data['show_names']=true;
+		if (!is_array($input_data)) $input_data = array();
+		if(isset($_REQUEST['data']['show_names']) && $_REQUEST['data']['show_names']) $input_data['show_names']=true;
 		$this -> commands_horizontal(get_class($this));
 
 		$display = new display();
@@ -533,7 +539,7 @@ class dish extends object {
 		*************************************************/
 		$desc = ucphr('DISH');
 		if($editing) $desc.=' - '.$this->name($_SESSION['language']);
-		if ($editing && !$input_data['show_names']) {
+		if ($editing && (!isset($input_data['show_names']) || !$input_data['show_names'])) {
 			$desc .=' (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=1">'.ucphr('SHOW_NAMES').'</a>)';
 		} else {
 			$desc .=' (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=0">'.ucphr('HIDE_NAMES').'</a>)';
@@ -547,7 +553,7 @@ class dish extends object {
 		/*************************************************
 		Names
 		*************************************************/
-		if(!$editing || $input_data['show_names']) {
+		if(!$editing || (isset($input_data['show_names']) && $input_data['show_names'])) {
 			$display->rows[$row][$col]=ucphr('DISH_CODE');
 			$col++;
 			$display->rows[$row][$col]='<input type="text" size="40" name="data[name]" value="'.htmlentities($arr['name']).'">';
@@ -942,7 +948,7 @@ class dish extends object {
 	<input type="hidden" name="command" value="insert">';
 		}
 
-			if ($editing && !$input_data['show_names']) {
+			if ($editing && (!isset($input_data['show_names']) || !$input_data['show_names'])) {
 				$output .= '
 	<input type="hidden" name="data[name]" value="'.htmlentities($arr['name']).'">';
 				$res_lang=mysql_list_tables($_SESSION['common_db']);

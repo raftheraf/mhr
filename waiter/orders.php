@@ -34,6 +34,9 @@ if (!$table -> exists() and $command!='access_denied') {
 
 $tpl -> set_waiter_template_file ('orders');
 
+// Normalizza i dati di input una sola volta per tutti i comandi
+$start_data = (isset($_REQUEST['data']) && is_array($_REQUEST['data'])) ? $_REQUEST['data'] : array();
+
 // command selection
 switch ($command){
 	case 'access_denied':
@@ -41,11 +44,13 @@ switch ($command){
 				break;
 	case 'create':
 				$list = array();
-				$dishid=trim($_REQUEST['dishid']);
+				$dishid = trim($_REQUEST['dishid']);
 
-				if(!empty($start_data['quantita_moltiplicata'])) $start_data['quantity']=$start_data['quantita_moltiplicata'];
+				if(!empty($start_data['quantita_moltiplicata'])) {
+					$start_data['quantity'] = $start_data['quantita_moltiplicata'];
+				}
 
-				if ($dishid==SERVICE_ID AND $start_data['quantity']==="Zero") {
+				if ($dishid==SERVICE_ID && isset($start_data['quantity']) && $start_data['quantity']==="Zero") {
 					orders_list();
 				 	break;
 				}
@@ -137,9 +142,10 @@ switch ($command){
 
 				status_report ('CREATION',$err);
 
+				// Inizializza il flag per evitare Notice su variabile non definita
+				$back_to_cat = false;
 				if(isset($_REQUEST['from_category']) and $_REQUEST['from_category']) {
 					if (isset($_REQUEST['back_to_cat']) and $_REQUEST['back_to_cat']) $back_to_cat = true;
-					else $back_to_cat = false;
 				}
 				if($back_to_cat) {
 					$_SESSION['go_back_to_cat'] = 1;
@@ -401,8 +407,12 @@ switch ($command){
 				if(isset($_REQUEST['operation'])) $operation=$_REQUEST['operation'];
 				else $operation=0;
 
-				if($orderid==0 || $operation==0) $err =1;
-				else $err += bill_quantity($orderid,$operation);
+				$err = 0;
+				if($orderid==0 || $operation==0) {
+					$err = 1;
+				} else {
+					$err = bill_quantity($orderid,$operation);
+				}
 
 				status_report ('QUANTITY_UPDATE',$err);
 				$err= bill_select();
@@ -418,6 +428,14 @@ switch ($command){
 				break;
 
 	case 'bill_print':
+				// Inizializza i parametri di stampa conto con valori di default
+				$codice_lotteria = '';
+				$type = '';
+				$account = '';
+				$tipo_corrispettivo = '';
+				$pagato_altri_metodi = 0;
+				$pagato_carte_di_credito = 0;
+
 				if(isset($_REQUEST['codice_lotteria'])) $codice_lotteria=$_REQUEST['codice_lotteria'];
 				//Codice lotteria scontrini tutte le lettere maiuscole
 				$codice_lotteria=strtoupper($codice_lotteria);

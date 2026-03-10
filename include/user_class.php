@@ -391,19 +391,29 @@ class user extends object {
 	}
 
 	function is_waiter() {
-		if($this->level[USER_BIT_WAITER]) return true;
+		if (is_array($this->level) && isset($this->level[USER_BIT_WAITER]) && $this->level[USER_BIT_WAITER]) {
+			return true;
+		}
 		return false;
 	}
 
 	function is_cassiere() {
-		if($this->level[USER_BIT_CASHIER]) return true;
+		if (is_array($this->level) && isset($this->level[USER_BIT_CASHIER]) && $this->level[USER_BIT_CASHIER]) {
+			return true;
+		}
 		return false;
 	}
 
 
 	function is_admin() {
-		for($i=2;$i<100;$i++)
-			if($this->level[$i] && $i!=USER_BIT_MONEY) return true;
+		if (!is_array($this->level)) {
+			return false;
+		}
+		for ($i=2; $i<100; $i++) {
+			if (isset($this->level[$i]) && $this->level[$i] && $i != USER_BIT_MONEY) {
+				return true;
+			}
+		}
 
 		return false;
 	}
@@ -559,7 +569,9 @@ class user extends object {
 		unset($_COOKIE[session_name()]);
 
 		session_unset();
-		session_destroy();
+		if (session_id() !== '') {
+			session_destroy();
+		}
 
 		if (isset($_SESSION['userid'])) return true;
 
@@ -630,16 +642,18 @@ class user extends object {
 		}
 
 		$lev=array();
+		if(!is_array($input_data['level'])) $input_data['level'] = array();
 		for($i=0;$i<=USER_BIT_LAST;$i++)
-			if($input_data['level'][$i]) $lev[$i]='1'; else $lev[$i]='0';
+			if(!empty($input_data['level'][$i])) $lev[$i]='1'; else $lev[$i]='0';
 
 		krsort($lev);
+		$levinv = '';
 		foreach($lev as $val) $levinv.=$val;
 
 		$levinv=bindec($levinv);
 		$input_data['level']=$levinv;
 
-		if($input_data['disabled']) $input_data['disabled']=1; else $input_data['disabled']=0;
+		if(!empty($input_data['disabled'])) $input_data['disabled']=1; else $input_data['disabled']=0;
 
 		if($input_data['language']=="") $input_data['language']=$_SESSION['language'];
 
@@ -650,7 +664,7 @@ class user extends object {
 		unset($input_data['password1']);
 		unset($input_data['password2']);
 
-		if($input_data['password_remove']) $input_data['password']='';
+		if(!empty($input_data['password_remove'])) $input_data['password']='';
 		unset($input_data['password_remove']);
 
 		if(strlen($input_data['language'])!=2) $input_data['language']=$_SESSION['language'];
@@ -721,6 +735,7 @@ class user extends object {
 			$editing=0;
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 		}
+		$output = '';
 		$output .= '
 
 	<div align="center">

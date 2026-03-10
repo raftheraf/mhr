@@ -58,7 +58,7 @@
 		$start_data=$_REQUEST['data'];
 	}
 
-	if($_SESSION['section']!="waiter"){
+	if(!isset($_SESSION['section']) || $_SESSION['section']!="waiter"){
 		unset_session_vars();
 		$_SESSION['section']="waiter";
 	}

@@ -186,7 +186,8 @@ class category extends object {
 			$msg=ucfirst(phr('CHECK_NAME'));
 		}
 		
-		if(!$input_data['visible'])
+		// Normalizza flag di visibilità: se non settato o falso, forza a 0
+		if(!isset($input_data['visible']) || !$input_data['visible'])
 			$input_data['visible']=0;
 
 		if(!empty($msg)){
@@ -202,7 +203,8 @@ class category extends object {
 	}
 	
 	function form($input_data=''){
-		if($_REQUEST['data']['show_names']) $input_data['show_names']=true;
+		if (!is_array($input_data)) $input_data = array();
+		if(isset($_REQUEST['data']['show_names']) && $_REQUEST['data']['show_names']) $input_data['show_names']=true;
 		
 		if($this->id) {
 			$editing=1;
@@ -216,7 +218,14 @@ class category extends object {
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 			$arr['htmlcolor']='#FFFFFF';
 		}
+
+		$arr_name = isset($arr['name']) ? $arr['name'] : '';
+		$arr_ordine = isset($arr['ordine']) ? $arr['ordine'] : '';
+		$arr_priority = isset($arr['priority']) ? $arr['priority'] : 0;
+		$arr_vat_rate = isset($arr['vat_rate']) ? $arr['vat_rate'] : '';
+		$arr_visible = isset($arr['visible']) ? $arr['visible'] : 1;
 		
+		$output = '';
 		$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>
@@ -247,14 +256,14 @@ class category extends object {
 			</td>
 		</tr>';
 		
-	if(!$editing || $input_data['show_names']) {
+	if(!$editing || (isset($input_data['show_names']) && $input_data['show_names'])) {
 		$output .= '
 		<tr>
 			<td>
 			'.ucphr('NAME').':
 			</td>
 			<td>
-			<input type="text" name="data[name]" value="'.htmlentities($arr['name']).'"> (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=0">'.ucphr('HIDE_NAMES').'</a>)
+			<input type="text" name="data[name]" value="'.htmlentities($arr_name).'"> (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=0">'.ucphr('HIDE_NAMES').'</a>)
 			</td>
 		</tr>';
 
@@ -264,6 +273,7 @@ class category extends object {
 			if($lang_now=stristr($arr_lang[0],$this->table.'_')) {
 				$lang_now= substr($lang_now,-2);
 	
+				$lang_name = '';
 				if($editing) {
 					$ingred = new category ($this->id);
 					$lang_name = $ingred -> name ($lang_now);
@@ -281,7 +291,7 @@ class category extends object {
 		<tr>';
 
 		$output .= '
-			<input type="hidden" name="data[name]" value="'.htmlentities($arr['name']).'">';
+			<input type="hidden" name="data[name]" value="'.htmlentities($arr_name).'">';
 		$res_lang=mysql_list_tables($_SESSION['common_db']);
 		while($arr_lang=mysql_fetch_array($res_lang)) {
 			if($lang_now=stristr($arr_lang[0],$this->table.'_')) {
@@ -321,7 +331,7 @@ class category extends object {
 		<tr>
 		<td>Ordine della Categoria:</td>
 		<td>
-		<input type="text" name="data[ordine]" value="'.$arr['ordine'].'">
+		<input type="text" name="data[ordine]" value="'.$arr_ordine.'">
 		</td>
 		</tr>
 		<tr>
@@ -335,7 +345,7 @@ class category extends object {
 			$description = $i;
 			if(!$i) $description = ucfirst(phr('NONE'));
 
-			if($arr['priority']==$i) $selected=' selected';
+			if($arr_priority==$i) $selected=' selected';
 			else $selected='';
 			
 			$output .= '
@@ -358,7 +368,7 @@ class category extends object {
 		for (reset ($rates_list); list ($key, $value) = each ($rates_list); ) {
 			$rate -> id= $value;
 			$description=$rate -> name();
-			if($arr['vat_rate']==$value) $selected=' selected';
+			if($arr_vat_rate==$value) $selected=' selected';
 			else $selected='';
 
 			$output .= '
@@ -376,7 +386,7 @@ class category extends object {
 			<td colspan="2">
 			<input type="checkbox" name="data[visible]" value="1"';
 			
-		if($arr['visible']) $output .= ' checked';
+		if($arr_visible) $output .= ' checked';
 		
 		$output .= '>'.ucphr('VISIBLE_TO_WAITERS').'
 			</td>
@@ -462,6 +472,7 @@ function categories_html_color_row ($bit) {
 	$size= 10;
 
 	// $output = '<tr>'."\n";
+	$output = '';
 	for ($i=200;$i<261;$i=$i+6){
 		if($i>255) $i=255;
 		

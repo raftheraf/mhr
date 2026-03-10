@@ -39,6 +39,7 @@ class object {
 	var $limit_start;
 	var $orderby;
 	var $sort;
+	var $category;
 	var $search;
 	var $disable_mass_delete;
 	var $flag_delete;
@@ -152,7 +153,7 @@ class object {
 				$ret=stripslashes($ret);
 
 				$charset = lang_get($lang,'CHARSET');
-				if($charset=='CHARSET' || empty($charset)) $charset='iso-8859-1';
+				if($charset=='CHARSET' || empty($charset) || is_numeric($charset)) $charset='UTF-8';
 				$ret = html_entity_decode ($ret,ENT_QUOTES,$charset);
 
 				$cache -> set ($lang_table,$this->id,'table_name',$ret);
@@ -163,11 +164,11 @@ class object {
 		$cache = new cache ();
 		if($this->db=='common' && $cache_out=$cache -> get ($this->table,$this->id,'name')) return $cache_out;
 
-		 /* RTG: if this object has a name column on table, we already have if in data array
+		 /* RTG: if this object has a name column on table, we already have it in data array
 		I have seen this is not always true: for example, when construct a generic vat rate
 		(without data), so I put this like a conditional */
 
-		if ($data && $this->data['name']) {
+		if (!empty($this->data) && !empty($this->data['name'])) {
 			$ret=$this->data['name'];
 		} else {
 			$query="SELECT `name` FROM `".$this->table."` WHERE `id`='".$this->id."'";
@@ -471,6 +472,7 @@ class object {
 		global $display;
 
 		$output = '';
+		$tmp = '';
 
 		$display = new display;
 		$display->show_head=true;
@@ -535,6 +537,7 @@ class object {
 	}
 
 	function list_buttons () {
+		$tmp = '';
 		if(!$this->disable_mass_delete && $this->count_records()) {
 			$link = $this->file.'?class='.get_class($this).'&command=delete&delete=all';
 
@@ -632,7 +635,7 @@ class object {
 	}
 
 	function list_navbar () {
-		global $tpl;
+		global $tpl, $father;
 		$number_per_page = get_conf(__FILE__,__LINE__,'rows_per_page');
 
 		$last_shown=$this -> limit_start+$number_per_page;
@@ -886,7 +889,8 @@ class object {
 
 			$this -> search_list ($obj);
 		} else {
-			$this ->list_table($_REQUEST['data']['category'],$this);
+			$category = (isset($_REQUEST['data']) && isset($_REQUEST['data']['category'])) ? $_REQUEST['data']['category'] : '';
+			$this ->list_table($category,$this);
 		}
 
 		return 0;

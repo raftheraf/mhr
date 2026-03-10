@@ -258,6 +258,7 @@ class accounting_database extends object {
 			$editing=0;
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 		}
+	$output = '';
 	$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>

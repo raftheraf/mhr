@@ -356,6 +356,7 @@ function input_standard($id,$editing){
 		$oper['in']="";
 		$oper['out']="checked";
 
+		$row = array('description' => '', 'who' => '');
 		if(isset($_SESSION['who'])) {
 			$table=$GLOBALS['table_prefix'].'account_mgmt_addressbook';
 			$res_local=mysql_db_query($_SESSION['mgmt_db'],"SELECT * FROM $table WHERE `id`='".$_SESSION['who']."'");
@@ -449,6 +450,8 @@ function display_form_invoice($id){
 	} else {
 		$id=0;
 		$editing=0;
+		$paid=0;
+		$row = array('debit_taxable_amount' => 0, 'debit_vat_amount' => 0);
 	}
 	echo "</td><td></td></tr>\n";
 
@@ -611,6 +614,11 @@ function display_form_pos($id){
 
 	} else {
 		$editing=0;
+		$row = array(
+			'bank_taxable_amount' => 0,
+			'bank_vat_amount' => 0,
+			'account_id' => isset($_SESSION['mgmt_db']) ? $_SESSION['mgmt_db'] : '',
+		);
 	}
 
 	echo "<table><tr><td>\n";
@@ -657,6 +665,12 @@ function display_form_check($id){
 		echo "<input type=\"hidden\" name=\"data[account_movement]\" value=\"".$row['account_movement']."\">\n";
 	} else {
 		$editing=0;
+		$row = array(
+			'bank_taxable_amount' => 0,
+			'bank_vat_amount' => 0,
+			'number' => '',
+			'account_id' => isset($_SESSION['mgmt_db']) ? $_SESSION['mgmt_db'] : '',
+		);
 	}
 
 	echo "<table><tr><td>\n";
@@ -711,6 +725,11 @@ function display_form_bonifico($id){
 		echo "<input type=\"hidden\" name=\"data[account_movement]\" value=\"".$row['account_movement']."\">\n";
 	} else {
 		$editing=0;
+		$row = array(
+			'bank_taxable_amount' => 0,
+			'bank_vat_amount' => 0,
+			'account_id' => isset($_SESSION['mgmt_db']) ? $_SESSION['mgmt_db'] : '',
+		);
 	}
 
 	echo "<table><tr><td>\n";
@@ -758,6 +777,7 @@ function display_form_scontrino($id){
 		echo "<input type=\"hidden\" name=\"data[type]\" value=\"".$row['type']."\">\n";
 	} else {
 		$editing=0;
+		$row = array('cash_taxable_amount'=>0, 'cash_vat_amount'=>0);
 	}
 
 	echo "<table><tr><td>\n";
@@ -795,6 +815,7 @@ function display_form_versamento($id){
 		echo "<input type=\"hidden\" name=\"data[account_movement]\" value=\"".$row['account_movement']."\">\n";
 	} else {
 		$editing=0;
+		$row = array('bank_taxable_amount'=>0, 'bank_vat_amount'=>0, 'account_id'=>'');
 	}
 
 	echo "<table><tr><td>\n";
@@ -840,6 +861,7 @@ function display_form_ricevuta($id){
 		echo "<input type=\"hidden\" name=\"data[type]\" value=\"".$row['type']."\">\n";
 	} else {
 		$editing=0;
+		$row = array('cash_taxable_amount'=>0, 'cash_vat_amount'=>0);
 	}
 
 	echo "<table><tr><td>\n";
@@ -1602,6 +1624,15 @@ function table_general($orderby="date",$commandto,$query_type=0,$query_value=0) 
 
 	$i=0;
 
+	$totals = array(
+		'cash_total' => 0,
+		'cash_vat' => 0,
+		'bank_total' => 0,
+		'bank_vat' => 0,
+		'debit_total' => 0,
+		'debit_vat' => 0,
+	);
+
 	if($append_income_totals){
 		$table=$GLOBALS['table_prefix'].'mgmt_types';
 		$query_type_all="SELECT * FROM $table WHERE `is_invoice`='1' OR `is_receipt`='1' OR `is_bill`='1'";
@@ -1618,6 +1649,7 @@ function table_general($orderby="date",$commandto,$query_type=0,$query_value=0) 
 		}
 	}
 
+	$command = $commandto;
 	$totals_main=table_generator($page,$commandto,$query,$command);
 
 	$totals['cash_total']+=$totals_main['cash_total'];
@@ -1649,6 +1681,7 @@ function table_income($page,$commandto,$type){
 	$res = mysql_db_query ($_SESSION['mgmt_db'],$query);
 	if(!mysql_num_rows($res)) return 1;
 
+	$cash_total_amount = $cash_total_vat_amount = $bank_total_amount = $bank_total_vat_amount = $debit_total_amount = $debit_total_vat_amount = 0;
 	while($row = mysql_fetch_array ($res)) {
 		$cash_total_amount+=$row['cash_amount'];
 		$cash_total_vat_amount+=$row['cash_vat_amount'];
@@ -1710,6 +1743,8 @@ function table_income($page,$commandto,$type){
 
 		$description=ucfirst(phr('INCOME'))." $type_name ".ucphr('PERIOD');
 		$who="";
+		// Riga totali periodo: cod. cliente, cognome, tavolo e tipo non applicabili
+		$customer_id = $takeaway_surname = $tavolo_numero = $tipo_corrispettivo = "&nbsp;";
 
 		if($cash_total_amount>0){
 			$cash_plus_amount=sprintf("%01.2f",$cash_total_amount);
@@ -1793,7 +1828,7 @@ function table_generator($page,$commandto,$query,$command){
 		return 2;
 	}
 
-
+	$cash_total_amount = $cash_total_vat_amount = $bank_total_amount = $bank_total_vat_amount = $debit_total_amount = $debit_total_vat_amount = 0;
 
 	while($row = mysql_fetch_array ($res)) {
 

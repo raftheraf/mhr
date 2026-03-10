@@ -35,6 +35,9 @@ require(ROOTDIR."/manage/mgmt_start.php");
 
 unset($_SESSION['who']);
 
+$command = isset($_REQUEST['command']) ? $_REQUEST['command'] : 'default';
+
+$orderby = '';
 if(isset($_GET['orderby'])){
 	$orderby=$_GET['orderby'];
 } elseif(isset($_POST['orderby'])){

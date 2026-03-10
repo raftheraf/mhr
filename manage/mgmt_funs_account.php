@@ -301,6 +301,7 @@ function account_movement_form($id=0){
 		$second=date("s",time());
 
 		$editing=0;
+		$arr = array('account_id'=>'', 'type'=>'', 'description'=>'', 'amount'=>'');
 	}
 ?>
 <div align="center">

@@ -368,11 +368,11 @@ class table extends object {
 	function check_values($input_data){
 		$msg="";
 
-		if($input_data['order']==='') {
+		if(!isset($input_data['ordernum']) || $input_data['ordernum']==='') {
 			$msg=ucphr('CHECK_ORDER');
 		}
 
-		if($input_data['name']=="") {
+		if(!isset($input_data['name']) || $input_data['name']=="") {
 			$msg=ucphr('CHECK_NUMBER');
 		}
 
@@ -384,9 +384,9 @@ class table extends object {
 			return -2;
 		}
 
-		if(!$input_data['visible'])
+		if(!isset($input_data['visible']) || !$input_data['visible'])
 			$input_data['visible']=0;
-		if(!$input_data['takeaway'])
+		if(!isset($input_data['takeaway']) || !$input_data['takeaway'])
 			$input_data['takeaway']=0;
 
 		return $input_data;
@@ -405,6 +405,14 @@ class table extends object {
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 			$arr['visible']=1;
 		}
+		$arr_name = isset($arr['name']) ? $arr['name'] : '';
+		$arr_ordernum = isset($arr['ordernum']) ? $arr['ordernum'] : '';
+		$arr_utente_abilitato = isset($arr['utente_abilitato']) ? $arr['utente_abilitato'] : '';
+		$arr_tablehtmlcolor = isset($arr['tablehtmlcolor']) ? $arr['tablehtmlcolor'] : '#FFFFFF';
+		$arr_visible = isset($arr['visible']) ? $arr['visible'] : 1;
+		$arr_sospeso = isset($arr['sospeso']) ? $arr['sospeso'] : 0;
+		$arr_takeaway = isset($arr['takeaway']) ? $arr['takeaway'] : 0;
+	$output = '';
 	$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>
@@ -440,7 +448,7 @@ class table extends object {
 			'.ucphr('TABLE_NUMBER').':
 			</td>
 			<td>
-			<input type="text" name="data[name]" value="'.htmlentities($arr['name']).'">
+			<input type="text" name="data[name]" value="'.htmlentities($arr_name).'">
 			</td>
 			<td>&nbsp;</td>
 		</tr>
@@ -449,7 +457,7 @@ class table extends object {
 			'.ucphr('TABLE_ORDER').':
 			</td>
 			<td>
-			<input type="text" name="data[ordernum]" value="'.$arr['ordernum'].'">
+			<input type="text" name="data[ordernum]" value="'.$arr_ordernum.'">
 			</td>
 			<td>&nbsp;</td>
 		</tr>
@@ -459,7 +467,7 @@ class table extends object {
 			'.ucphr('Utente Abilitato per Tavolo Asporto, indicare ID utente').':
 			</td>
 			<td>
-			<input type="text" name="data[utente_abilitato]" value="'.$arr['utente_abilitato'].'">
+			<input type="text" name="data[utente_abilitato]" value="'.$arr_utente_abilitato.'">
 			</td>
 			<td>&nbsp;</td>
 		</tr>
@@ -468,9 +476,9 @@ class table extends object {
 			<td align="right">
 			Colore del tavolo:</td>
 			<td>
-			<input type="text" name="data[tablehtmlcolor]" maxlength="7" value="'.htmlentities($arr['tablehtmlcolor']).'" id="idcolor">
+			<input type="text" name="data[tablehtmlcolor]" maxlength="7" value="'.htmlentities($arr_tablehtmlcolor).'" id="idcolor">
 			</td>
-			<td width="10px" height="10px" id="tdcolor"  bgcolor="'.$arr['tablehtmlcolor'].'" id="idcolor">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td width="10px" height="10px" id="tdcolor"  bgcolor="'.$arr_tablehtmlcolor.'" id="idcolor">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>';
 	$output .= html_color_table();
 
@@ -478,21 +486,21 @@ class table extends object {
 		<tr>
 			<td colspan="3">
 			<input type="checkbox" name="data[visible]" value="1"';
-			if($arr['visible']) $output .= ' checked';
+			if($arr_visible) $output .= ' checked';
 			$output .= '>'.ucphr('VISIBLE_TO_WAITERS').'
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 			<input type="checkbox" name="data[sospeso]" value="1"';
-			if($arr['sospeso']) $output .= ' checked';
+			if($arr_sospeso) $output .= ' checked';
 			$output .= '>'.ucphr('Tavolo sospeso').'
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 			<input type="checkbox" name="data[takeaway]" value="1"';
-			if($arr['takeaway']) $output .= ' checked';
+			if($arr_takeaway) $output .= ' checked';
 			$output .= '>'.ucphr('TAKEAWAY').'
 			</td>
 		</tr>
@@ -541,6 +549,7 @@ class table extends object {
 function html_color_row ($bit) {
 	$size= 10;
 
+	$output = '';
 	// $output = '<tr>'."\n";
 	for ($i=200;$i<261;$i=$i+6){
 		if($i>255) $i=255;

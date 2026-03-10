@@ -159,6 +159,8 @@ function form_supplier_standard($id,$editing){
 		$table=$GLOBALS['table_prefix'].'account_mgmt_addressbook';
 		$res=mysql_db_query($_SESSION['mgmt_db'],"SELECT * FROM $table WHERE `id`='$id'");
 		$row=mysql_fetch_array($res);
+	} else {
+		$row = array('name'=>'', 'address'=>'', 'telephone'=>'', 'fax'=>'', 'email'=>'', 'web'=>'', 'vat'=>'', 'bank_account'=>'', 'abi'=>'', 'cab'=>'');
 	}
 
 	echo "<tr><td>".ucfirst(phr('NAME'))."</td>\n";
@@ -416,6 +418,7 @@ function display_supplier_form($id,$insert_type=0){
 
 function display_supplier_show($id){
 	require("./mgmt_start.php");
+	global $mgmt_color_tablebg, $mgmt_color_background;
 
 	$table=$GLOBALS['table_prefix'].'account_mgmt_addressbook';
 	$query="SELECT * FROM $table WHERE `id`='".$id."'";

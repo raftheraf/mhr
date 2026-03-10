@@ -43,7 +43,7 @@ function prenotazioni(){
 						<tbody>
 							';
 
-
+		$i = 0;
 		while ($arr = mysql_fetch_array ($res)) {
 
 		$sourceid=$arr['id'];

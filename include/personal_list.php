@@ -17,10 +17,11 @@ function personal_list_show(){
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return ERR_MYSQL;
 
+	$tmp = '';
 	if(!mysql_num_rows($res)) {
-	$tmp .= '<br><br><div align=center><b>Nessun Piatto </b><br>è presente nella Lista Personalizzata</div>';
-	$tpl -> assign ('toplist',$tmp);
-	return 0;
+		$tmp = '<br><br><div align=center><b>Nessun Piatto </b><br>è presente nella Lista Personalizzata</div>';
+		$tpl -> assign ('toplist',$tmp);
+		return 0;
 	}
 
 	$chk[1]="";
@@ -107,8 +108,6 @@ function personal_list_show(){
 //.'<a href="#" onclick="JavaScript:order_select(\''.$dishid.'\',\'personal_list_form\'); return false;">'.$disname.'</a>'.
 	$tmp .= '';
 
-	$i++;
-
 	}
 
 	$tmp .= '
@@ -137,9 +136,9 @@ function personal_list_show2cols(){
 	if(!$res) return ERR_MYSQL;
 
 	if(!mysql_num_rows($res)) {
-	$tmp .= '<br><br><div align=center><B>Nessun Piatto </B><br>è presente nella Lista Personalizzata</div>';
-	$tpl -> assign ('toplist2cols',$tmp);
-	return 0;
+		$tmp = '<br><br><div align=center><B>Nessun Piatto </B><br>è presente nella Lista Personalizzata</div>';
+		$tpl -> assign ('toplist2cols',$tmp);
+		return 0;
 	}
 
 	$chk[1]="";
@@ -147,7 +146,7 @@ function personal_list_show2cols(){
 	$chk[3]="";
 	$chk[4]="";
 
-	$tmp .= '
+	$tmp = '
 		<form action="orders.php" method="POST" name="personal_list_form">
 		<INPUT TYPE="HIDDEN" NAME="command" VALUE="create">
 		<INPUT TYPE="HIDDEN" NAME="dishid" VALUE="0">
@@ -231,7 +230,6 @@ function personal_list_show2cols(){
 
 	if(($a+1)%2) {$tmp .= '</tr>';}
 	$tmp .= '';
-	$i++;
 
 	}
 

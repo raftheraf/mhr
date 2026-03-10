@@ -194,6 +194,8 @@ class ingredient extends object {
 			//}
 		}
 
+		// Seleziona solo id e nome piatto; gli ingredienti di visualizzazione
+		// vengono letti dall'oggetto dish (colonna dispingreds sulla tabella base).
 		$query="SELECT #prefix#dishes.id, #prefix#dishes#lang#.table_id, #prefix#dishes#lang#.table_name FROM `#prefix#dishes`";
 		$query .= " JOIN `#prefix#dishes#lang#` WHERE table_id=#prefix#dishes.id";
 		$query .= " AND (`dispingreds` LIKE '% ".$this->id." %'";
@@ -208,7 +210,8 @@ class ingredient extends object {
 		while($arr=mysql_fetch_array($res)) {
 			$dish = new dish($arr['id']);
 
-			$ingreds=$dish->dispingredients($arr['dispingreds']);
+			// usa dispingreds dall'oggetto dish, non dalla query
+			$ingreds = $dish->dispingredients();
 			if (!empty($ingreds) && is_array($ingreds)) {
 				if(in_array($this->id,$ingreds)) {
 					$tmp = '';
@@ -334,9 +337,10 @@ class ingredient extends object {
 			return -2;
 		}
 
-		if(!$input_data['override_autocalc'])
+		// Normalizza flag booleani: se non settati o falsi, forza a 0
+		if(!isset($input_data['override_autocalc']) || !$input_data['override_autocalc'])
 			$input_data['override_autocalc']=0;
-		if(!$input_data['visible'])
+		if(!isset($input_data['visible']) || !$input_data['visible'])
 			$input_data['visible']=0;
 
 		$input_data['price']=str_replace (",", ".", $input_data['price']);
@@ -345,7 +349,8 @@ class ingredient extends object {
 	}
 
 	function form($input_data=''){
-		if($_REQUEST['data']['show_names']) $input_data['show_names']=true;
+		if (!is_array($input_data)) $input_data = array();
+		if(isset($_REQUEST['data']['show_names']) && $_REQUEST['data']['show_names']) $input_data['show_names']=true;
 
 		if($this->id) {
 			$editing=1;
@@ -359,6 +364,7 @@ class ingredient extends object {
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 			$arr['visible']=1;
 		}
+	$output = '';
 	$output .= '
 	<div align="center">
 	<a href="'.$this->file.'?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>';
@@ -434,7 +440,8 @@ class ingredient extends object {
 			<td>
 			<select name="data[category]">
 				<option value="0"';
-	if(0==$arr['category']) $output .= ' selected';
+	$arr_category = isset($arr['category']) ? $arr['category'] : 0;
+	if(0==$arr_category) $output .= ' selected';
 	$output .= '>'.ucphr('ALL').'</option>';
 
 	$query="SELECT * FROM `#prefix#categories` WHERE `deleted`='0'";
@@ -443,7 +450,7 @@ class ingredient extends object {
 	while($arr_type=mysql_fetch_array($res_type)){
 		$output .= '
 				<option value="'.$arr_type['id'].'"';
-		if($arr_type['id']==$arr['category']) $output .= ' selected';
+		if($arr_type['id']==$arr_category) $output .= ' selected';
 		$output .= '>';
 	$categ = new category($arr_type['id']);
 	$descr=$categ->name($_SESSION['language']);
@@ -456,14 +463,15 @@ class ingredient extends object {
 			</td>
 		</tr>';
 
-	if(!$editing || $input_data['show_names']) {
+	$arr_name = isset($arr['name']) ? $arr['name'] : '';
+	if(!$editing || (isset($input_data['show_names']) && $input_data['show_names'])) {
 		$output .= '
 		<tr>
 			<td>
 			'.ucphr('INGREDIENT_CODE').':
 			</td>
 			<td>
-			<input type="text" name="data[name]" value="'.htmlentities($arr['name']).'"> (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=0">'.ucphr('HIDE_NAMES').'</a>)
+			<input type="text" name="data[name]" value="'.htmlentities($arr_name).'"> (<a href="'.$this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$this->id.'&amp;data[show_names]=0">'.ucphr('HIDE_NAMES').'</a>)
 			</td>
 		</tr>';
 
@@ -473,6 +481,7 @@ class ingredient extends object {
 			if($lang_now=stristr($arr_lang[0],$GLOBALS['table_prefix'].'ingreds_')) {
 				$lang_now= substr($lang_now,-2);
 
+				$lang_name = '';
 				if($editing) {
 					$ingred = new ingredient ($this->id);
 					$lang_name = $ingred -> name ($lang_now);
@@ -490,7 +499,7 @@ class ingredient extends object {
 		<tr>';
 
 		$output .= '
-			<input type="hidden" name="data[name]" value="'.htmlentities($arr['name']).'">';
+			<input type="hidden" name="data[name]" value="'.htmlentities($arr_name).'">';
 		$res_lang=mysql_list_tables($_SESSION['common_db']);
 		while($arr_lang=mysql_fetch_array($res_lang)) {
 			if($lang_now=stristr($arr_lang[0],$GLOBALS['table_prefix'].'ingreds_')) {
@@ -509,19 +518,21 @@ class ingredient extends object {
 
 	}
 
+	$arr_price = isset($arr['price']) ? $arr['price'] : '';
+	$arr_override_autocalc = isset($arr['override_autocalc']) ? $arr['override_autocalc'] : 0;
 	$output .= '
 		<tr>
 			<td>
 			'.ucphr('PRICE').':
 			</td>
 			<td>
-			<input type="text" name="data[price]" value="'.$arr['price'].'">
+			<input type="text" name="data[price]" value="'.$arr_price.'">
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 			<input type="checkbox" name="data[override_autocalc]" value="1"';
-	if($arr['override_autocalc']) $output .= ' checked';
+	if($arr_override_autocalc) $output .= ' checked';
 	$output .= '>'.ucphr('INGREDIENT_OVERRIDE_AUTOCALC').' '.help_sticky('INGREDIENT_OVERRIDE_AUTOCALC').'
 			</td>
 		</tr>';

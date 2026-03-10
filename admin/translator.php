@@ -69,7 +69,7 @@ $tpl -> assign("title", $tmp);
 
 // random number-based check to be sure that no modifcation is done when reloading the page
 $vars['page_reloaded']=true;
-if($_REQUEST['random_check']==$_SESSION['random_check']) {
+if(isset($_REQUEST['random_check'], $_SESSION['random_check']) && $_REQUEST['random_check']==$_SESSION['random_check']) {
 	$vars['page_reloaded']=false;
 }
 unset($_SESSION['random_check']);
@@ -87,6 +87,7 @@ else $vars['lang_right']='en';
 
 if(isset($start_data['search_value'])) $vars['search']=mysql_escape_string($start_data['search_value']);
 elseif(!empty($_SESSION['search_value'])) $vars['search']=$_SESSION['search_value'];
+else $vars['search']='';
 
 if(!empty($start_data['limit_start'])) $vars['limit_start']=$start_data['limit_start'];
 

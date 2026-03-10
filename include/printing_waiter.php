@@ -40,6 +40,7 @@ $query ="SELECT * FROM `#prefix#orders` WHERE `sourceid`='".$_SESSION['sourceid'
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return 0;
 
+		$output = '';
 		$output .= '<br><br>';
 		$output .= '<table  class="ticket">';
 		$output .= '<tr><td colspan="3" align="left"><br><div class="ticket" id="negativo">&nbsp; Priorità: '.$category.'</div><br></td></tr>';
@@ -118,8 +119,6 @@ $query ="SELECT * FROM `#prefix#orders` WHERE `sourceid`='".$_SESSION['sourceid'
 
 			$output .= '</tr>';
 
-		$i++;
-
 		}
 		$output .= '<tr><td colspan="3" align="center"><br></td></tr>';
 		$output .= '</table>';
@@ -135,9 +134,12 @@ function riepilogo_stampa ($sourceid, $priority){
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return 0;
 
+	$output = '';
+	$i = 0;
+
 	if(!mysql_num_rows($res)) {
-	$output .= '<br><div align=center><<h2>>Nessun ordine da stampare</<h2>></div>';
-	return $output;
+		$output .= '<br><div align=center><h2>Nessun ordine da stampare</h2></div>';
+		return $output;
 	}
 
 
@@ -268,19 +270,16 @@ function printing_commands(){
 
 
 	while ($arr = mysql_fetch_array ($res)) {
-	$priority = $arr['priority'];
-	$table_number=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"name",$sourceid);
+		$priority = $arr['priority'];
+		$table_number=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"name",$sourceid);
 
-	//Stampa la Prorità a Video
-	$output .= '
+		// Stampa la priorità a video
+		$output .= '
 			<tr><td colspan="4"><br><div class="ticket" id="negativo">&nbsp; Priorità: '.$priority.'</div><br></td></tr>';
 
-	$output .= riepilogo_stampa($sourceid, $priority);
+		$output .= riepilogo_stampa($sourceid, $priority);
 
-	$output .= '<tr><td colspan="4" align="center"><br></td></tr>';
-
-	$i++;
-
+		$output .= '<tr><td colspan="4" align="center"><br></td></tr>';
 	}
 	$output .= '</table>';
 	$output .= '';
@@ -392,7 +391,8 @@ function printing_orders_to_print($sourceid) {
 }
 
 function printer_print_row($arr,$destid){
-	$msg= '';
+	$msg = '';
+	$extra = '';
 	$dest_language=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dests',"language",$destid);
 
 
@@ -598,6 +598,7 @@ other - mysql error number
 
 
 		$dest_language=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dests',"language",$destid);
+		$output['orders'] = '';
 
 		while($arr=mysql_fetch_array($res_ord)){
 
@@ -775,7 +776,7 @@ function printAddTicketID($msg,$idLog)
 
 
 function print_line($destid,$msg){
-	$debug = _FUNCTION_.' - Printing to destid '.$destid.' - line '.$msg.' '."\n";
+	$debug = __FUNCTION__.' - Printing to destid '.$destid.' - line '.$msg.' '."\n";
 	debug_msg(__FILE__,__LINE__,$debug);
 
 	if($destid=="all") {
@@ -805,10 +806,12 @@ function print_line($destid,$msg){
 	$driver=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dests','driver',$destid);
 	$msg = driver_apply($driver,$msg);
 
-
-	if ($saveToLog) if($idLog = printSaveToLog ($msg,$destid))
-	{
-		$msg = printAddTicketID($msg,$idLog);
+	// Salvataggio opzionale del ticket in log (feature disattivata di default)
+	$saveToLog = false;
+	if ($saveToLog && function_exists('printSaveToLog')) {
+		if($idLog = printSaveToLog ($msg,$destid)) {
+			$msg = printAddTicketID($msg,$idLog);
+		}
 	}
 
 
@@ -832,7 +835,7 @@ function print_line($destid,$msg){
 
 // Print-F inizio stampa il contenuto su di un file
 // se $_SESSION['type'] == 7 (7 è il numero corrispondente allo scontrino)
-	if ($_SESSION['type'] == 7)
+if (isset($_SESSION['type']) && $_SESSION['type'] == 7)
 	{
 
 		//elimina le righe vuote
@@ -850,14 +853,20 @@ function print_line($destid,$msg){
 	  //configurare il programma per leggere lo scontrino dalla directory ../PATH_IN/
 		
 
-
+	// 1 versione di $tosendfunzionante	
 	//Se però il tuo $msg/$tosend è in realtà UTF‑8 (tipico con PHP moderni, pagine text/html; charset=utf-8, DB in utf8, ecc.), iconv lo interpreta come ISO‑8859‑1 e gli accenti vengono rovinati.
-	//$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
-
-
-	//per non rovinare gli accenti provare a usare il seguente codice
-	$tosend = iconv("UTF-8", "WINDOWS-1252//TRANSLIT", $tosend); 
+	$tosend = iconv("ISO-8859-1", "WINDOWS-1252", $tosend);
 	
+	
+	// 2 versione di $tosend NON testata
+	//per non rovinare gli accenti: converti solo se la stringa è realmente UTF-8 valida
+	/*if (function_exists('mb_detect_encoding') && mb_detect_encoding($tosend, 'UTF-8', true)) {
+		$converted = iconv("UTF-8", "WINDOWS-1252//TRANSLIT", $tosend);
+		if ($converted !== false) {
+			$tosend = $converted;
+		}
+	}
+	*/
 	  file_put_contents(PATH_SCONTRINO_INP, $tosend);
 
 		//Righe per eseguire il programma MULTIDRIVER in windows
@@ -961,11 +970,11 @@ function print_line($destid,$msg){
 function print_line_os_chooser($value,$dest) {
 	switch(strtolower(get_conf(__FILE__,__LINE__,"printing_system"))) {
 		case "win":
-					$debug = _FUNCTION_.' - calling windows printing function'."\n";
+					$debug = __FUNCTION__.' - calling windows printing function'."\n";
 					$res = print_line_win($value, $dest);
 					break;
 		default:
-					$debug = _FUNCTION_.' - calling unix printing function'."\n";
+					$debug = __FUNCTION__.' - calling unix printing function'."\n";
 					$res = print_line_lp($value, $dest);
 					break;
 	}
@@ -997,7 +1006,7 @@ function print_line_win($value, $dest) {
 	//che richiama tutto il processo ovvero $result = print_line_os_chooser($msg,$dest); -> print_line_os_chooser -> print_line_win
 	if(!$handle)  { return ERR_COULD_NOT_OPEN_PRINTER;}
 
-	$debug = _FUNCTION_.' - Windows Printing to dest '.$dest.' - line '.$value.' '."\n";
+	$debug = __FUNCTION__.' - Windows Printing to dest '.$dest.' - line '.$value.' '."\n";
 	debug_msg(__FILE__,__LINE__,$debug);
 
 	printer_set_option($handle, PRINTER_MODE, "RAW");
@@ -1008,8 +1017,9 @@ function print_line_win($value, $dest) {
 	//printer_start_doc($handle, $title);
 	//printer_start_page($handle);
 
-	if($res!=printer_write($handle, $value)) return ERR_PRINTING_ERROR;
-	//$res = printer_write($handle, $value);
+	// Esegue la scrittura e controlla l'errore senza usare variabili non inizializzate
+	$res = printer_write($handle, $value);
+	if($res === false) return ERR_PRINTING_ERROR;
 
 	//printer_end_page($handle);
 	//printer_end_doc($handle);

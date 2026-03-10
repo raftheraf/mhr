@@ -33,6 +33,7 @@ define('ROOTDIR','..');
 require(ROOTDIR."/manage/mgmt_funs.php");
 require(ROOTDIR."/manage/mgmt_start.php");
 
+if(!isset($command)) $command = 'show';
 if(!access_allowed(USER_BIT_ACCOUNTING) && !access_allowed(USER_BIT_STOCK)) $command='access_denied';
 
 switch($command) {

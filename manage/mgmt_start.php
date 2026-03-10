@@ -40,7 +40,7 @@ if(!$header_printed){
 
 	common_set_error_reporting ();
 
-	if($_SESSION['section']!="manage"){
+	if(!isset($_SESSION['section']) || $_SESSION['section']!="manage"){
 		unset_session_vars();
 		$_SESSION['section']="manage";
 	}
@@ -94,14 +94,14 @@ if(!$header_printed){
 		die($error_msg);
 	}
 
-	$_SESSION['mgmt_db']=common_find_first_db($_SESSION['mgmt_db']);
+	$_SESSION['mgmt_db']=common_find_first_db(isset($_SESSION['mgmt_db']) ? $_SESSION['mgmt_db'] : '');
 
 //echo "first_db found:".$_SESSION['mgmt_db'];
 
 	// unsets all the waiters' _SESSION vars
 	unset($_SESSION['catprinted']);
 
-	if($_SERVER['PHP_SELF']!=$_SESSION['page']){
+	if(!isset($_SESSION['page']) || $_SERVER['PHP_SELF']!=$_SESSION['page']){
 		$_SESSION['page']=$_SERVER['PHP_SELF'];
 		unset($_SESSION['orderby']);
 		unset($_SESSION['ordersort']);
@@ -310,8 +310,8 @@ if(!$header_printed){
 		$payment_data['account_id']=$_POST['payment_data_account_id'];
 	}
 
-	if($_SERVER['REQUEST_URI']!=$_SESSION['actualpage']){
-		$_SESSION['lastpage']=$_SESSION['actualpage'];
+	if(!isset($_SESSION['actualpage']) || $_SERVER['REQUEST_URI']!=$_SESSION['actualpage']){
+		$_SESSION['lastpage']=isset($_SESSION['actualpage']) ? $_SESSION['actualpage'] : '';
 		$_SESSION['actualpage']=$_SERVER['REQUEST_URI'];
 	}
 

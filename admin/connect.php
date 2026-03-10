@@ -39,14 +39,16 @@ $tpl -> set_admin_template_file ('standard');
 
 switch($command) {
 	case 'disconnect':
-		$user = new user ($_SESSION['userid']);
-		$user->disconnect();
+		if(isset($_SESSION['userid']) && $_SESSION['userid']) {
+			$user = new user ($_SESSION['userid']);
+			$user->disconnect();
+		}
 		$tmp = access_connect_form();
 		$tpl -> assign("content", $tmp);
 		break;
 	
 	case 'connect':
-		$user = new user ($_SESSION['userid']);
+		$user = new user (isset($_SESSION['userid']) ? $_SESSION['userid'] : 0);
 		$err = $user -> connect ();
 		if (!$err) {
 			$tmp = 'ok<br>';
@@ -94,7 +96,7 @@ if($err=$tpl->parse()) return $err;
 $tpl -> clean();
 $output = $tpl->getOutput();
 
-header("Content-Language: ".$_SESSION['language']);
+header("Content-Language: ".(isset($_SESSION['language']) ? $_SESSION['language'] : 'en'));
 header("Content-type: text/html; charset=".phr('CHARSET'));
 
  //$tpl ->list_vars();

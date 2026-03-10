@@ -274,7 +274,8 @@ function order_fast_dishid_form () {
 	$tmp = dishlist_form_start(false);
 	$tmp .= priority_radio($data);
 	$tmp .= quantity_list($data);
-	$tmp .= input_dish_id ($start_data);
+	// input_dish_id non richiede dati specifici, passa array vuoto per evitare Notice
+	$tmp .= input_dish_id(array());
 	$tmp .= dishlist_form_end();
 	return $tmp;
 }
@@ -506,8 +507,10 @@ function orders_create ($dishid,$input_data=array()) {
 	if($dishid==SERVICE_ID) {
 					$ord -> data['priority']=1;
 				} else {
-					//salta_stampa
-					$ord -> data['printed']=$input_data['printed'];
+					// salta_stampa: aggiorna 'printed' solo se valorizzato in input
+					if (isset($input_data['printed']) && $input_data['printed'] !== '') {
+						$ord -> data['printed']=$input_data['printed'];
+					}
 				}
 
 // tutti gli articoli con menu fisso attivo hanno priorità 1 non dipende dalla priorità scelta
@@ -689,10 +692,11 @@ function nota_ordine ($ord) {
 
 	$arr = mysql_fetch_array ($res);
 
-	$data[nota_ordine]= $arr['nota_ordine'];
-	$tmp .='';
-	$tmp .='<b>Nota piatto</b><br>
-				<TEXTAREA NAME="data[nota_ordine]" COLS=38 ROWS=8>'.$data[nota_ordine].'</TEXTAREA>
+	$tmp = '';
+	$data['nota_ordine'] = $arr['nota_ordine'];
+	$tmp .= '';
+	$tmp .= '<b>Nota piatto</b><br>
+				<TEXTAREA NAME="data[nota_ordine]" COLS=38 ROWS=8>'.$data['nota_ordine'].'</TEXTAREA>
 				<br>';
 	$tpl -> append ('notaordine',$tmp);
 return 0;
@@ -765,9 +769,9 @@ function orders_edit_quantity_per_nota_ordine ($ord) {
 	if(!$res) return ERR_MYSQL;
 	$arr = mysql_fetch_array ($res);
 
-	$data[quantity]= $arr['quantity'];
+	$data['quantity'] = $arr['quantity'];
 
-	$tmp = '<input type="hidden" name="data[quantity]" value="'.$data[quantity].'">';
+	$tmp = '<input type="hidden" name="data[quantity]" value="'.$data['quantity'].'">';
 	$tpl -> assign ('quantity',$tmp);
 	return 0;
 }
@@ -1218,11 +1222,13 @@ function orders_list() {
 
 	// use session to decide wether to show the orders list or not
 	//se attivo la linea sotto visualizza per prima la toplist al primo accesso
-	//if(!isset($_SESSION['show_toplist'])) $_SESSION['show_toplist']=get_conf(__FILE__,__LINE__,"top_list_show_top");
+	if(!isset($_SESSION['show_toplist'])) {
+		$_SESSION['show_toplist']=get_conf(__FILE__,__LINE__,"top_list_show_top");
+	}
 	if($_SESSION['show_toplist']) {
 
-		$tmp = toplist_show2cols();
-		$tmp = toplist_show();
+		$tmp = personal_list_show2cols();
+		$tmp = personal_list_show();
 
 	}  elseif(get_conf(__FILE__,__LINE__,"top_list_show_top")) {
 		//$tmp = '<a href="orders.php?command=set_show_toplist">:: Mostra la TopList ::</a><br>';
@@ -1231,8 +1237,10 @@ function orders_list() {
 	}
 
 	if(!$_SESSION['show_toplist']) {
-		$tmp = personal_list_show2cols();
-		$tmp = personal_list_show();
+	
+		$tmp = toplist_show2cols();
+		$tmp = toplist_show();
+
 	}
 
 	$tmp = command_bar_table_horizontal();
@@ -1300,7 +1308,7 @@ function priority_radio ($data) {
 		elseif ($tmp=get_conf(__FILE__,__LINE__,"default_priority")) $data['priority']=$tmp;
 	}
 
-	for ($i=1;$i<4;$i++) $chk[$i]="";
+	for ($i=1;$i<=4;$i++) $chk[$i]="";
 	if(isset($data['priority'])) $chk[$data['priority']]="checked";
 	// RTR dishlist priority
 	// alternativa per link premendo qualunque punto della cella

@@ -134,6 +134,9 @@ class vat_rate extends object {
 			$editing=0;
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 		}
+	$arr_name = isset($arr['name']) ? $arr['name'] : '';
+	$arr_rate = isset($arr['rate']) ? $arr['rate'] : '';
+	$output = '';
 	$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>
@@ -168,7 +171,7 @@ class vat_rate extends object {
 			'.ucphr('NAME').':
 			</td>
 			<td>
-			<input type="text" name="data[name]" value="'.$arr['name'].'">
+			<input type="text" name="data[name]" value="'.$arr_name.'">
 			</td>
 		</tr>
 		<tr>
@@ -176,7 +179,7 @@ class vat_rate extends object {
 			'.ucphr('VAT_RATE').':
 			</td>
 			<td>
-			<input type="text" name="data[rate]" value="'.$arr['rate'].'">
+			<input type="text" name="data[rate]" value="'.$arr_rate.'">
 			</td>
 		</tr>
 		<tr>

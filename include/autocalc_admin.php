@@ -109,6 +109,7 @@ class autocalc extends object {
 			$arr['price']=sprintf("%0.2f",0);
 			$arr['quantity'] = $this->max_quantity()+1;
 		}
+		$output = '';
 		$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>

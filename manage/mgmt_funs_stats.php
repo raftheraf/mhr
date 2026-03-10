@@ -41,6 +41,14 @@ function statistics_show(){
 	$fine=microtime();
 	$timer+=elapsed_time($inizio,$fine);
 
+	$totals = array('revenue' => 0, 'number' => 0);
+	$waiters = array('revenue' => array());
+	$payments = array('number' => array());
+	$destinations = array('revenue' => array());
+	$dishes = array('number' => array(), 'revenue' => array());
+	$ingredsplus = array('number' => array(), 'revenue' => array());
+	$ingredsminus = array('number' => array(), 'revenue' => array());
+
 	$inizio=microtime();
 	while($row = mysql_fetch_array ($res)) {
 		$fine=microtime();
@@ -54,19 +62,24 @@ function statistics_show(){
 
 		$waiter=strtolower($row['waiter']);
 		if(empty($waiter)) $waiter='undefined';
+		if(!isset($waiters['revenue'][$waiter])) $waiters['revenue'][$waiter]=0;
 		$waiters['revenue'][$waiter]+=$price;
 
 		$payment=$row['payment'];
 		if($payment!=0){
+			if(!isset($payments['number'][$payment])) $payments['number'][$payment]=0;
 			$payments['number'][$payment]++;
 		}
 
 		$destination=strtolower($row['destination']);
+		if(!isset($destinations['revenue'][$destination])) $destinations['revenue'][$destination]=0;
 		$destinations['revenue'][$destination]+=$price;
 
 
 		$dish=strtolower($row['dish']);
 		if($dish!="") {
+			if(!isset($dishes['number'][$dish])) $dishes['number'][$dish]=0;
+			if(!isset($dishes['revenue'][$dish])) $dishes['revenue'][$dish]=0;
 			$dishes['number'][$dish]+=$quantity;
 			$dishes['revenue'][$dish]+=$price;
 		}
@@ -74,9 +87,13 @@ function statistics_show(){
 		$ingredient=strtolower($row['ingredient']);
 		$oper=$row['operation'];
 		if($ingredient!="" && $oper==1) {
+			if(!isset($ingredsplus['number'][$ingredient])) $ingredsplus['number'][$ingredient]=0;
+			if(!isset($ingredsplus['revenue'][$ingredient])) $ingredsplus['revenue'][$ingredient]=0;
 			$ingredsplus['number'][$ingredient]+=$quantity;
 			$ingredsplus['revenue'][$ingredient]+=$price;
 		} elseif($ingredient!="" && $oper==-1) {
+			if(!isset($ingredsminus['number'][$ingredient])) $ingredsminus['number'][$ingredient]=0;
+			if(!isset($ingredsminus['revenue'][$ingredient])) $ingredsminus['revenue'][$ingredient]=0;
 			$ingredsminus['number'][$ingredient]+=$quantity;
 			$ingredsminus['revenue'][$ingredient]+=$price;
 		}
@@ -181,11 +198,7 @@ function statistics_show(){
 
 	$totals['revenue']=sprintf("%01.2f",$totals['revenue']);
 	if($totals['revenue']) {
-		if ($dataset!="total") {
-			echo "<br><br>".ucfirst(GLOBALMSG_STATS_TOTAL_DEPTS).":<br>";
-		} else {
-			echo "<br><br>".ucfirst(GLOBALMSG_STATS_TOTAL_DEPTS).":<br>";
-		}
+		echo "<br><br>".ucfirst(GLOBALMSG_STATS_TOTAL_DEPTS).":<br>";
 		echo "<b>".$totals['revenue']."</b> ".country_conf_currency(true);
 	}
 

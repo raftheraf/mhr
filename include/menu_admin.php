@@ -36,7 +36,7 @@ class menu {
 
 	function main () {
 		$cache = new cache ();
-		if($cache_out=$cache -> lang_get ($_SESSION['language'],'menumenumenu')) return $cache_out;
+		if($cache_out=$cache -> lang_get (isset($_SESSION['language']) ? $_SESSION['language'] : 'en','menumenumenu')) return $cache_out;
 
 		$this -> links = array();
 
@@ -156,7 +156,7 @@ class menu {
 		// oM.menuPlacement=new Array(avail,avail+"*2",avail+"*3",avail+"*4",avail+"*5",avail+"*6",avail+"*7",avail+"*8");
 		//oM.menuPlacement=0;
 
-		$cache -> lang_set ($_SESSION['language'],'menumenumenu',$this -> output);
+		$cache -> lang_set (isset($_SESSION['language']) ? $_SESSION['language'] : 'en','menumenumenu',$this -> output);
 		return $this -> output;
 	}
 
@@ -238,8 +238,9 @@ class menu {
 
 		global $connect_page;
 
-		if($_SESSION['userid']) {
-			$notpwd=false;
+		$notpwd = false;
+
+		if(isset($_SESSION['userid']) && $_SESSION['userid']) {
 			$user = new user ($_SESSION['userid']);
 			if(!isset($_SESSION['passworded']) || !$_SESSION['passworded']) $notpwd=true;
 

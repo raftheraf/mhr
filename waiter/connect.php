@@ -47,7 +47,7 @@ switch($command) {
 	default:
 
 		//RTR start
-		if($_SESSION['userid'])
+		if(isset($_SESSION['userid']) && $_SESSION['userid'])
 		{
 		$tmp = '<H1>SEI GIA CONNESSO</H1><br>';
 			$tpl -> append("messages", $tmp);

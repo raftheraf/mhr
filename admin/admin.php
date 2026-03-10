@@ -38,7 +38,7 @@ switch($class) {
 		break;
 	case 'dish':
 		if(!access_allowed(USER_BIT_MENU)) $command='access_denied';
-		if($start_data['category']) {
+		if(isset($start_data['category']) && $start_data['category']) {
 			$cat=new category($start_data['category']);
 			$cat_name=$cat->name($_SESSION['language']);
 			unset($cat);
@@ -48,7 +48,7 @@ switch($class) {
 		break;
 	case 'ingredient':
 		if(!access_allowed(USER_BIT_MENU)) $command='access_denied';
-		if($start_data['category']) {
+		if(isset($start_data['category']) && $start_data['category']) {
 			$cat=new category($start_data['category']);
 			$cat_name=$cat->name($_SESSION['language']);
 			unset($cat);
@@ -113,7 +113,7 @@ if($err=$tpl->parse()) return $err;
 $tpl -> clean();
 $output = $tpl->getOutput();
 
-header("Content-Language: ".$_SESSION['language']);
+header("Content-Language: ".(isset($_SESSION['language']) ? $_SESSION['language'] : 'en'));
 header("Content-type: text/html; charset=".phr('CHARSET'));
 
  //$tpl ->list_vars();

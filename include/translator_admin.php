@@ -231,6 +231,8 @@ class lang_type extends lang {
 
 function translator_form ($vars) {
 	$tmp = '';
+	if (!isset($vars['limit_start'])) $vars['limit_start'] = 0;
+	if (!isset($vars['items_per_page'])) $vars['items_per_page'] = 5;
 	$tmp .= '<form action="?" method="get" name="displaylang_form">'."\n";
 	if($vars['devel']) $tmp .= '<input type="hidden" name="devel" value="1">'."\n";
 	$tmp .= '<input type="hidden" name="random_check" value="'.$vars['random_check'].'">'."\n";

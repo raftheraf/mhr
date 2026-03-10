@@ -28,7 +28,7 @@
 */
 
 function driver_apply($driver,$msg) {
-	$debug = _FUNCTION_.' - Applying driver '.$driver.' - to msgline '.$msg.' '."\n";
+	$debug = __FUNCTION__.' - Applying driver '.$driver.' - to msgline '.$msg.' '."\n";
 	debug_msg(__FILE__,__LINE__,$debug);
 
 	$driver_function='driver_'.$driver;
@@ -36,7 +36,7 @@ function driver_apply($driver,$msg) {
 		$msg = $driver_function ($msg);
 	} else {
 		echo 'driver not found: '.$driver.'<br>'."\n";
-		$debug = _FUNCTION_.' - driver '.$driver.' not found'."\n";
+		$debug = __FUNCTION__.' - driver '.$driver.' not found'."\n";
 		error_msg(__FILE__,__LINE__,$debug);
 	}
 

@@ -39,6 +39,8 @@ if(isset($_REQUEST['orderby'])){
 	$_SESSION['orderby']=$orderby;
 } elseif(isset($_SESSION['orderby'])){
 	$orderby=$_SESSION['orderby'];
+} else {
+	$orderby='';
 }
 
 if(!access_allowed(USER_BIT_ACCOUNTING)) $command='access_denied';
@@ -56,6 +58,7 @@ switch($command) {
 		table_general($orderby,"income_collapse",5);
 		break;
 	case "show_only":
+		$show_only = '';
 		if(isset($_GET['show_only'])){
 			$show_only=$_GET['show_only'];
 			$_SESSION['show_only']=$show_only;

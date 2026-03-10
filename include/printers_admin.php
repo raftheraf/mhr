@@ -86,25 +86,25 @@ class printer extends object {
 			return 2;
 		}
 
-	if(!$input_data['preconto'])
+	if(empty($input_data['preconto']))
 		$input_data['preconto']=0;
 		
-	if(!$input_data['preconto1'])
+	if(empty($input_data['preconto1']))
 		$input_data['preconto1']=0;
 	
-	if(!$input_data['bill'])
+	if(empty($input_data['bill']))
 		$input_data['bill']=0;
 		
-	if(!$input_data['bill1'])
+	if(empty($input_data['bill1']))
 		$input_data['bill1']=0;
 		
-	if(!$input_data['invoice'])
+	if(empty($input_data['invoice']))
 		$input_data['invoice']=0;
 		
-	if(!$input_data['invoice1'])
+	if(empty($input_data['invoice1']))
 		$input_data['invoice1']=0;
 
-	if(!$input_data['receipt'])
+	if(empty($input_data['receipt']))
 		$input_data['receipt']=0;
 
 
@@ -117,13 +117,14 @@ class printer extends object {
 			$query="SELECT * FROM `".$this->table."` WHERE `id`='".$this->id."'";
 			$res=common_query($query,__FILE__,__LINE__);
 			if(!$res) return mysql_errno();
-			
+
 			$arr=mysql_fetch_array($res);
 		} else {
 			$editing=0;
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 			$arr['template']='receipt.tpl';
 		}
+		$output = '';
 		$output .= '
 	<div align="center">
 	<a href="?class='.get_class($this).'">'.ucphr('BACK_TO_LIST').'.</a>

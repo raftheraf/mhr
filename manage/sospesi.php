@@ -6,7 +6,10 @@ define('ROOTDIR','..');
 require(ROOTDIR."/manage/mgmt_funs.php");
 require(ROOTDIR."/manage/mgmt_start.php");
 
+$command = isset($_REQUEST['command']) ? $_REQUEST['command'] : 'default';
 if(!access_allowed(USER_BIT_ACCOUNTING) && !access_allowed(USER_BIT_STOCK)) $command='access_denied';
+
+$orderby = isset($_REQUEST['orderby']) ? $_REQUEST['orderby'] : 'date';
 
 switch($command) {
 	case 'access_denied':

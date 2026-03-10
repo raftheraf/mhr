@@ -39,7 +39,7 @@ function access_connect_form_waiter ($url='') {
 	</div>
 	';
 
-	if($_SESSION['userid'])
+	if(isset($_SESSION['userid']) && $_SESSION['userid'])
 		$output = 'Sei già connesso.<br>
 		<a href="'.ROOTDIR.'/waiter/connect.php?command=disconnect">..::PRIMA DISCONNETTITI::..</a>';
 
@@ -135,7 +135,7 @@ function access_connect_form ($url='') {
 	</div>
 	';
 
-	if($_SESSION['userid'])
+	if(isset($_SESSION['userid']) && $_SESSION['userid'])
 		$output = 'You are connected.<br>
 		<a href="'.ROOTDIR.'/admin/connect.php?command=disconnect">Disconnect first.</a>';
 
@@ -165,10 +165,12 @@ function access_denied_admin () {
 	'.ucfirst(phr('ACCESS_DENIED_EXPLAIN')).'<br>';
 
 	if(!isset($_SESSION['userid']) || !$_SESSION['userid']) {
-		$user = new user ($_SESSION['userid']);
-		$user->disconnect();
+		// Nessun utente collegato: mostra il form di connessione
 		$tmp .= access_connect_form($url);
 	} else {
+		// Utente collegato ma senza privilegi: disconnette e propone nuova connessione
+		$user = new user ($_SESSION['userid']);
+		$user->disconnect();
 		$tmp .= '
 	<a href="'.$link.'">'.ucfirst(phr('CONNECT')).'</a>';
 	}

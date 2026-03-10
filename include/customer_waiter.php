@@ -12,7 +12,9 @@ class customer extends object {
 function customer_search_page($data=array()) {
 	global $tpl;
 
-	if(customer_recognize ($data['surname'])) return 0;
+	$surname = isset($data['surname']) ? $data['surname'] : '';
+
+	if(customer_recognize($surname)) return 0;
 
 	$tpl -> set_waiter_template_file ('standard');
 
@@ -22,7 +24,7 @@ function customer_search_page($data=array()) {
 
 	$tmp = '';
 	$tmp .= customer_search_form();
-	$tmp .= customer_list($data['surname']);
+	$tmp .= customer_list($surname);
 	$tmp .= '<br>
 	<a href="orders.php?command=customer_insert_form" class="input">Inserisci Nuovo Cliente</a><br><br>
 	';
@@ -111,7 +113,7 @@ function customer_list_table_head() {
 }
 
 function customer_list_table_bottom() {
-	$msg .= '</tbody>
+	$msg = '</tbody>
 	</table>
 	';
 	return $msg;
@@ -180,6 +182,7 @@ function customer_list($term='') {
 		return '';
 	}
 
+	$msg = '';
 	$msg .= customer_list_table_head();
 
 	while ($arr = mysql_fetch_array ($res)) {

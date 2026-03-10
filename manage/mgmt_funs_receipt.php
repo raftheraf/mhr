@@ -402,6 +402,7 @@ function show_receipt($id){
 	echo "</fieldset>";
 	echo '<br>';
 
+	$selected_T1 = $selected_T2 = $selected_T3 = $selected_T4 = $selected_T5 = '';
 	if($tipo_corrispettivo=='T1') $selected_T1='selected';
 	if($tipo_corrispettivo=='T2') $selected_T2='selected';
 	if($tipo_corrispettivo=='T3') $selected_T3='selected';;

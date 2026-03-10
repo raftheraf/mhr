@@ -39,6 +39,7 @@ if(isset($_GET['orderby'])){
 	$orderby=$_POST['orderby'];
 }
 
+$command = isset($_REQUEST['command']) ? $_REQUEST['command'] : 'list';
 if(!access_allowed(USER_BIT_ACCOUNTING)) $command='access_denied';
 
 switch($command) {

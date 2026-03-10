@@ -85,7 +85,8 @@ if(!$header_printed){
 		$start_data=$_REQUEST['data'];
 	} else $start_data = array();
 
-	if(!$dont_display_menu) {
+	// Mostra il menu per default se la variabile non è impostata
+	if(!isset($dont_display_menu) || !$dont_display_menu) {
 		$menu = new menu();
 		$tmp = $menu -> main ();
 		$tpl -> assign("menu", $tmp);
