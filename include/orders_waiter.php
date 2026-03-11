@@ -119,7 +119,7 @@ function dish_list ($start_data) {
 	}
 
 	if(isset($start_data['category'])){
-		$tmp = dishlist_form_start($back_to_cat);
+		$tmp = dishlist_form_start(false);
 		$tpl -> assign ('formstart',$tmp);
 		$tmp = dishlist_form_end();
 		$tpl -> assign ('formend',$tmp);
@@ -779,6 +779,7 @@ function orders_edit_quantity_per_nota_ordine ($ord) {
 function orders_edit_priority ($ord) {
 	global $tpl;
 
+	$tmp = '';
 // Vecchio codice
 //$tmp = '
 //	<table><tr><td valign="middle">P: </td><td>
@@ -857,8 +858,11 @@ function orders_update($start_data) {
 	// forces extra_care = 1 for generic dishes
 	$dishid=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],"orders","dishid",$start_data['id']);
 	$generic=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],"dishes","generic",$dishid);
-	if($generic && $start_data['price']==0) $start_data['extra_care'] = '1';
-	elseif($generic && $start_data['price']) $start_data['extra_care'] = '0';
+	if($generic && (!isset($start_data['price']) || $start_data['price']==0)) {
+		$start_data['extra_care'] = '1';
+	} elseif($generic && !empty($start_data['price'])) {
+		$start_data['extra_care'] = '0';
+	}
 
 	// toplist update code
 	if(!isset($start_data['quantity'])) $start_data['quantity']=0;

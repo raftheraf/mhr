@@ -410,6 +410,10 @@ function format_checkbox($data) {
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$res = mysql_db_query ($_SESSION['mgmt_db'],"SELECT * FROM $table");
 
+	if (!isset($data['paid'])) {
+		$data['paid'] = 0;
+	}
+
 	for (reset ($data); list ($key, $value) = each ($data); ) {
 		if($key=="paid" && $value==1) {
 			$data["paid"]= 1;
@@ -421,9 +425,9 @@ function format_checkbox($data) {
 }
 
 function calculate_amount($data){
-	$data["cash_amount"]=$data["cash_taxable_amount"]+$data["cash_vat_amount"];
-	$data["bank_amount"]=$data["bank_taxable_amount"]+$data["bank_vat_amount"];
-	$data["debit_amount"]=$data["debit_taxable_amount"]+$data["debit_vat_amount"];
+	$data["cash_amount"]=(isset($data["cash_taxable_amount"]) ? $data["cash_taxable_amount"] : 0)+(isset($data["cash_vat_amount"]) ? $data["cash_vat_amount"] : 0);
+	$data["bank_amount"]=(isset($data["bank_taxable_amount"]) ? $data["bank_taxable_amount"] : 0)+(isset($data["bank_vat_amount"]) ? $data["bank_vat_amount"] : 0);
+	$data["debit_amount"]=(isset($data["debit_taxable_amount"]) ? $data["debit_taxable_amount"] : 0)+(isset($data["debit_vat_amount"]) ? $data["debit_vat_amount"] : 0);
 	return $data;
 }
 

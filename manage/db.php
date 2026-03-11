@@ -45,6 +45,8 @@ if(isset($_REQUEST['orderby'])){
 
 if(!access_allowed(USER_BIT_ACCOUNTING)) $command='access_denied';
 
+if (!isset($payment_data)) $payment_data = 0;
+
 switch($command) {
 	case 'access_denied':
 				echo access_denied_admin();
@@ -148,6 +150,7 @@ switch($command) {
 		//caching disabler
 //		echo "<meta http-equiv=\"Cache-Control\" content=\"no-cache\" >\n";
 //		echo "<meta http-equiv=\"Expires\" content=\"0\" >\n";
+		$deleteconfirm = 0;
 		if(isset($_GET['deleteconfirm'])){
 			$deleteconfirm=$_GET['deleteconfirm'];
 		} elseif(isset($_POST['deleteconfirm'])){

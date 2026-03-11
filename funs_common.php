@@ -1528,7 +1528,8 @@ function error_msg($file,$line,$msg){
 	$tmp=date("j/n/Y G:i:s",time());
 
 	//$user = new user($_SESSION['userid']);
-	$tmp.=" Table: ".$_SESSION['tablenum'];
+	$table_num = isset($_SESSION['tablenum']) ? $_SESSION['tablenum'] : '';
+	$tmp.=" Table: ".$table_num;
 	//$tmp .= " User: ".$user->data['name'];
 	$tmp .= " User: ".$_SESSION['userid'];
 	$tmp .= " - $file line: $line - ";

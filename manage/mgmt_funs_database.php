@@ -44,6 +44,8 @@ function invoice_payment_access_lock($id){
 function file_show($id){
 	require("./mgmt_start.php");
 
+	global $mgmt_color_tablebg, $mgmt_color_background;
+
 	$table=$GLOBALS['table_prefix'].'account_mgmt_main';
 	$query="SELECT * FROM $table WHERE `id`='".$id."'";
 	$res=mysql_db_query($_SESSION['mgmt_db'],$query);
@@ -458,7 +460,7 @@ function display_form_invoice($id){
 	//$row['debit_taxable_amount']=$row['debit_taxable_amount']*(-1);
 	//$row['debit_vat_amount']=$row['debit_vat_amount']*(-1);
 
-
+	$row_payment = array('type' => 0, 'account_id' => 0);
 	input_standard($id,$editing);
 
 	if($paid) {
@@ -1152,11 +1154,11 @@ function insert_data($input_data,$payment_data=0) {
 	}
 
 	if ($num_affected==1) {
-		if($type!="fattura" && !$input_data['associated_invoice'])
+		if($type!="fattura" && empty($input_data['associated_invoice']))
 			echo("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"".get_conf(__FILE__,__LINE__,"refresh_time_management")."; URL=index.php\">");
 		echo GLOBALMSG_RECORD_THE." <b>".$input_data['description']."</b> ".GLOBALMSG_RECORD_ADD_OK.". <br>\n";
 
-		if($type=="fattura" && $input_data['paid']) {
+		if($type=="fattura" && !empty($input_data['paid'])) {
 
 			$invoice_data=$input_data;
 			unset($input_data);
@@ -1230,7 +1232,7 @@ function update_data($input_id,$input_data,$payment_data=0) {
 		return 1;
 	}
 
-	if(!$input_data['associated_invoice'])
+	if(empty($input_data['associated_invoice']))
 		$input_data=type_specific_variation($input_data);
 
 	unset($input_data['operation']);
@@ -1886,6 +1888,7 @@ function table_generator($page,$commandto,$query,$command){
 		$takeaway_surname=$row['takeaway_surname'];
 		$tavolo_numero=$row['tavolo_numero'];
 		$tipo_corrispettivo=$row['tipo_corrispettivo'];
+		$descrizione_tipo_corrispettivo = '';
 		if($tipo_corrispettivo=="T1") $descrizione_tipo_corrispettivo='In contanti';
 		if($tipo_corrispettivo=="T2") $descrizione_tipo_corrispettivo='Carte di credito';
 		if($tipo_corrispettivo=="T3") $descrizione_tipo_corrispettivo='Assegno';

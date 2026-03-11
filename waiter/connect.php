@@ -12,13 +12,25 @@ $tpl -> set_waiter_template_file ('standard');
 
 switch($command) {
 	case 'disconnect':
-		$user = new user ($_SESSION['userid']);
-		$user->disconnect();
+		if (isset($_SESSION['userid']) && $_SESSION['userid']) {
+			$user = new user ($_SESSION['userid']);
+			$user->disconnect();
+		}
 		$tmp = access_connect_form_waiter();
 		$tpl -> assign("content", $tmp);
 		break;
 
 	case 'connect':
+		if (!isset($_SESSION['userid']) || !$_SESSION['userid']) {
+			if (isset($_REQUEST['userid']) && $_REQUEST['userid']) {
+				$_SESSION['userid'] = $_REQUEST['userid'];
+			}
+		}
+		if (!isset($_SESSION['userid']) || !$_SESSION['userid']) {
+			$tmp = access_connect_form_waiter();
+			$tpl -> assign("content", $tmp);
+			break;
+		}
 		$user = new user ($_SESSION['userid']);
 		$err = $user -> connect ();
 		if (!$err) {

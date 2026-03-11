@@ -29,6 +29,7 @@
 
 class stock_dish extends object {
 	var $form_properties;
+	var $from_code;
 	function stock_dish($id=0) {
 		$this -> db = 'common';
 		$this->table=$GLOBALS['table_prefix'].'dishes';
@@ -196,6 +197,7 @@ class stock_dish extends object {
 	}
 
 	function list_buttons () {
+		$tmp = '';
 		if($this->count_records()) {
 			$tmp .= '<table width="100%"><tr>'."\n";
 			$tmp .= '<td align="left">'."\n";
@@ -262,8 +264,11 @@ class stock_dish extends object {
 
 	function ingredients_cost () {
 		$cost_arr=$this->ingredients_cost_array();
-		foreach($cost_arr as $ingred_id => $val) {
-			$cost=$cost+$val;
+		$cost = 0;
+		if (is_array($cost_arr)) {
+			foreach($cost_arr as $ingred_id => $val) {
+				$cost += $val;
+			}
 		}
 		return $cost;
 	}
@@ -393,6 +398,7 @@ class stock_dish extends object {
 	function edit_many ($arr) {
 		if(!is_array($arr)) return '';
 
+		$output = '';
 		$output .= '
 		<form name="edit_form_'.get_class($this).'" action="'.$this->file.'" method="post">
 		<input type="hidden" name="command" value="insert_ingred_quantities">
@@ -415,6 +421,7 @@ class stock_dish extends object {
 		if(!$this->from_code && isset($_REQUEST['edit']) && is_array($_REQUEST['edit'])) return $this->edit_many($_REQUEST['edit']);
 		elseif (!$this->from_code && !isset($_REQUEST['edit'])) return $this->edit_many(array($this->id));
 
+		$output = '';
 		$display = new display();
 		$display->highlight=false;
 

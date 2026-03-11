@@ -53,6 +53,7 @@ if(isset($_SESSION['printable']['query'])){
 	$query=$_SESSION['printable']['query'];
 }
 
+if(!isset($command)) $command = 'default';
 if(!access_allowed(USER_BIT_ACCOUNTING)) $command='access_denied';
 
 switch($command) {
@@ -61,9 +62,11 @@ switch($command) {
 				break;
 	default:
 		//table_generator_printable($query);
-		if($data=pdf_generator($query))
+		if($data=pdf_generator($query)) {
 			printable_write_pdf($data,$title);
-		else {
+		} else {
+			header("Content-Language: ".(isset($_SESSION['language']) ? $_SESSION['language'] : 'en'));
+			header("Content-type: text/html; charset=".phr('CHARSET'));
 			die(GLOBALMSG_RECORD_NONE_FOUND_ERROR.'. <a href="#" onclick="javascript:window.close(); return false">'.ucfirst(phr('GO_BACK')).'</a>');
 		}
 }

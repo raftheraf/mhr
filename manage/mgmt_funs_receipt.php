@@ -59,6 +59,7 @@ function delete_receipt_rows($delete){
 	$res = mysql_db_query ($_SESSION['mgmt_db'],$query);
 	$num_affected=mysql_affected_rows();
 
+	$msg = '';
 	if ($num_affected!=0 && $counter>1) {
 		echo("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"".get_conf(__FILE__,__LINE__,"refresh_time_management")."; URL=index.php\">");
 		$msg = GLOBALMSG_RECORD_THE_MANY." <b>";
@@ -123,6 +124,7 @@ function annul_receipt_rows($delete){
 	$res = mysql_db_query ($_SESSION['mgmt_db'],$query);
 	$num_affected=mysql_affected_rows();
 
+	$msg = '';
 	if ($num_affected!=0 && $counter>1) {
 		echo("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"".get_conf(__FILE__,__LINE__,"refresh_time_management")."; URL=index.php\">");
 		$msg = GLOBALMSG_RECORD_THE_MANY." <b>";
@@ -183,6 +185,7 @@ function delete_log_rows($delete){
 	$res = mysql_db_query ($_SESSION['mgmt_db'],$query);
 	$num_affected=mysql_affected_rows();
 
+	$msg = '';
 	if ($num_affected!=0 && $counter>1) {
 		echo("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"".get_conf(__FILE__,__LINE__,"refresh_time_management")."; URL=index.php\">");
 		$msg = GLOBALMSG_RECORD_THE_MANY." <b>";
@@ -341,6 +344,7 @@ function show_receipt($id){
 	<tbody>';
 
 	$i=0;
+	$total = 0;
 	while($row=mysql_fetch_array($res)){
 		if($row['operation']==1){
 			$ingred = new ingredient($row['ingredient']);

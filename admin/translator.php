@@ -94,6 +94,8 @@ if(!empty($start_data['limit_start'])) $vars['limit_start']=$start_data['limit_s
 if(isset($start_data['items_per_page'])) $vars['items_per_page']=$start_data['items_per_page'];
 elseif(!empty($_SESSION['items_per_page'])) $vars['items_per_page']=$_SESSION['items_per_page'];
 
+if(!isset($vars['items_per_page'])) $vars['items_per_page']=25;
+
 if(isset($_REQUEST['devel'])) $vars['devel']=true;
 else $vars['devel']=false;
 

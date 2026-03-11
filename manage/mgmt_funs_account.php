@@ -538,8 +538,10 @@ function account_movement_update($input_id,$input_data) {
 <META HTTP-EQUIV="Refresh" CONTENT="<?php echo get_conf(__FILE__,__LINE__,"refresh_time_management");?>; URL=account.php?command=movement_list&id=<?php echo $input_data['account_id']; ?>">
 */
 ?>
-<?php echo phr('ACCOUNT_MOVEMENT'); ?> <b><?php echo $input_data['name']; ?></b> <?php echo phr('ACCOUNT_MOVEMENT_UPDATE_SUCCESS'); ?>.<br>
 <?php
+    $name = isset($input_data['name']) ? htmlspecialchars($input_data['name']) : '';
+    echo phr('ACCOUNT_MOVEMENT').' <b>'.$name.'</b> '.phr('ACCOUNT_MOVEMENT_UPDATE_SUCCESS').".<br>\n";
+?>
 
 		$reset_amount=$old_amount-$old_movement_amount;
 
@@ -618,7 +620,7 @@ function account_movement_insert($input_data) {
 <META HTTP-EQUIV="Refresh" CONTENT="<?php echo get_conf(__FILE__,__LINE__,"refresh_time_management"); ?>; URL=account.php?command=movement_list&id=<?php echo $input_data['account_id']; ?>">
 */
 ?>
-<?php echo phr('ACCOUNT_MOVEMENT'); ?> <b><?php echo $input_data['name']; ?></b> <?php echo phr('ACCOUNT_MOVEMENT_ADD_SUCCESS'); ?>. <br>
+<?php echo phr('ACCOUNT_MOVEMENT'); ?> <b><?php echo isset($input_data['name']) ? htmlspecialchars($input_data['name']) : ''; ?></b> <?php echo phr('ACCOUNT_MOVEMENT_ADD_SUCCESS'); ?>. <br>
 <?php
 	$new_amount=$old_amount+$input_data['amount'];
 

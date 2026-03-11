@@ -400,6 +400,7 @@ class stock_object extends object {
 		}
 	
 	
+	$output = '';
 	$output .= '
 	<div align="center">';
 	if(!$input_data['no_back_to_list']) {

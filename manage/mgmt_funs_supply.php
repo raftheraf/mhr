@@ -629,7 +629,8 @@ function update_supplier_note($id,$data) {
 
 	if ($num_affected==1) {
 		echo("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"".get_conf(__FILE__,__LINE__,"refresh_time_management")."; URL=javascript:window.close();\">");
-		echo GLOBALMSG_RECORD_THE." <b>".$data['name']."</b> ".GLOBALMSG_RECORD_EDIT_OK.". <br>\n";
+		$name = isset($data['name']) ? $data['name'] : '';
+		echo GLOBALMSG_RECORD_THE." <b>".$name."</b> ".GLOBALMSG_RECORD_EDIT_OK.". <br>\n";
 //echo "ID: $id.<br>\n";
 	}elseif(mysql_errno()) {
 		echo ucfirst(phr('ERROR')).".<br>\n";

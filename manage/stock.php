@@ -50,7 +50,7 @@ switch($command) {
 		break;
 	case "edit":
 		$err=0;
-		if(is_array($start_data['quantity']['new'])){
+		if(isset($start_data['quantity']) && is_array($start_data['quantity']) && isset($start_data['quantity']['new']) && is_array($start_data['quantity']['new'])){
 			for (reset ($start_data['quantity']['new']); list ($key, $value) = each ($start_data['quantity']['new']); ) {
 				if($value){
 					$data['name']=$key;
@@ -63,7 +63,7 @@ switch($command) {
 				}
 			}
 		}
-		if(is_array($start_data['quantity']['edit'])){
+		if(isset($start_data['quantity']) && is_array($start_data['quantity']) && isset($start_data['quantity']['edit']) && is_array($start_data['quantity']['edit'])){
 			for (reset ($start_data['quantity']['edit']); list ($key, $value) = each ($start_data['quantity']['edit']); ) {
 				//$db['id']=$key;
 				$data['quantity']=$value;

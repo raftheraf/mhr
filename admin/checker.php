@@ -69,6 +69,7 @@ if(isset($_REQUEST['devel'])) $to_check=$to_check_admin;
 else $to_check=$to_check_user;
 
 $tmp = '';
+$recheck_url = $_SERVER['PHP_SELF'];
 if(!access_allowed(USER_BIT_TRANSLATION)) $command='access_denied';
 
 switch($command) {

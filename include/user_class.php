@@ -670,26 +670,26 @@ class user extends object {
 		if(strlen($input_data['language'])!=2) $input_data['language']=$_SESSION['language'];
 		$input_data['language']=strtolower($input_data['language']);
 
-		if(!$input_data['preconto'])
-		$input_data['preconto']=0;
-
-	if(!$input_data['preconto1'])
-		$input_data['preconto1']=0;
-
-	if(!$input_data['ricevuta'])
-		$input_data['ricevuta']=0;
-
-	if(!$input_data['ricevuta1'])
-		$input_data['ricevuta1']=0;
-
-	if(!$input_data['fattura'])
-		$input_data['fattura']=0;
-
-	if(!$input_data['fattura1'])
-		$input_data['fattura1']=0;
-
-	if(!$input_data['scontrino'])
-		$input_data['scontrino']=0;
+		if(empty($input_data['preconto']))
+			$input_data['preconto']=0;
+		
+		if(empty($input_data['preconto1']))
+			$input_data['preconto1']=0;
+	
+		if(empty($input_data['ricevuta']))
+			$input_data['ricevuta']=0;
+	
+		if(empty($input_data['ricevuta1']))
+			$input_data['ricevuta1']=0;
+	
+		if(empty($input_data['fattura']))
+			$input_data['fattura']=0;
+	
+		if(empty($input_data['fattura1']))
+			$input_data['fattura1']=0;
+	
+		if(empty($input_data['scontrino']))
+			$input_data['scontrino']=0;
 
 		return $input_data;
 	}

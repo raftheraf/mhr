@@ -40,6 +40,12 @@ function pdf_generator($query){
 	if(!mysql_num_rows($res)) return 0;
 
 	$i=0;
+	$cash_total_amount = 0;
+	$cash_total_vat_amount = 0;
+	$bank_total_amount = 0;
+	$bank_total_vat_amount = 0;
+	$debit_total_amount = 0;
+	$debit_total_vat_amount = 0;
 	while($row = mysql_fetch_array ($res)) {
 		$date['year']=substr($row['date'],0,4);
 		$date['month']=substr($row['date'],5,2);

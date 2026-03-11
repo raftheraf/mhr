@@ -31,6 +31,7 @@ class stock_movement extends object {
 	var $tmp;
 	var $last_updated_stock_object;
 	var $only_obj;
+	var $only_dish;
 	
 	function stock_movement ($id=0) {
 		$this -> db = 'common';
@@ -320,6 +321,9 @@ class stock_movement extends object {
 			$editing=0;
 			$arr['id']=next_free_id($_SESSION['common_db'],$this->table);
 		}
+		if(!isset($arr['quantity'])) $arr['quantity'] = '';
+		if(!isset($arr['value'])) $arr['value'] = '';
+	$output = '';
 	$output .= '
 	<div align="center">';
 	

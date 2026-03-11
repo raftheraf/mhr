@@ -33,6 +33,8 @@ define('ROOTDIR','..');
 require(ROOTDIR."/manage/mgmt_funs.php");
 require(ROOTDIR."/manage/mgmt_start.php");
 
+if (!isset($orderby)) $orderby = '';
+
 if(isset($start_id)){
 	$_SESSION['who']=$start_id;
 }

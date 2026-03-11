@@ -1,4 +1,5 @@
 <?php
+if (!defined('CONF_DEBUG')) {
 define('CONF_DEBUG',                                    1);	     // In production set to 0, prints all debug info in the relative file and some debug data on screen
 define('CONF_DEBUG_PRINT_GENERATING_TIME',              0);	     // In production set to 0, allows printing of the generating time
 define('CONF_DEBUG_REPORT_NOTICES',                     1);	     // In production set to 0, uses E_ALL php error reporting
@@ -288,4 +289,5 @@ Avvisaci se non puoi più arrivare.%0A
 %0A
 Ristorante Biscione');
 
+}
 ?>

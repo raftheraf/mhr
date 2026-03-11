@@ -531,6 +531,21 @@ class dish extends object {
 			$arr['visible']=1;
 		}
 
+		if (!isset($arr['name'])) $arr['name'] = '';
+		if (!isset($arr['price'])) $arr['price'] = '';
+		if (!isset($arr['category'])) $arr['category'] = 0;
+		if (!isset($arr['destid'])) $arr['destid'] = 0;
+		if (!isset($arr['autocalc'])) $arr['autocalc'] = 0;
+		if (!isset($arr['autocalc_skip'])) $arr['autocalc_skip'] = 0;
+		if (!isset($arr['generic'])) $arr['generic'] = 0;
+		if (!isset($arr['personal_list'])) $arr['personal_list'] = 0;
+		if (!isset($arr['personal_list_order'])) $arr['personal_list_order'] = '';
+		if (!isset($arr['asporto_list'])) $arr['asporto_list'] = 0;
+		if (!isset($arr['asporto_list_order'])) $arr['asporto_list_order'] = '';
+		if (!isset($arr['menufisso'])) $arr['menufisso'] = 0;
+		if (!isset($arr['dishesmenufisso'])) $arr['dishesmenufisso'] = '';
+		if (!isset($arr['salta_stampa'])) $arr['salta_stampa'] = 0;
+
 
 		$row = 0;
 		$col = 0;
@@ -566,6 +581,7 @@ class dish extends object {
 				if($lang_now=stristr($arr_lang[0],$GLOBALS['table_prefix'].'dishes_')) {
 					$lang_now= substr($lang_now,-2);
 
+					$lang_name = '';
 					if($editing) {
 						$dish = new dish ($arr['id']);
 						$lang_name = $dish -> name ($lang_now);
@@ -841,6 +857,7 @@ class dish extends object {
 		$display2 = new display;
 		$display2->highlight=false;
 		$display2->show_head=true;
+		$ingreds_data = '';
 		if($editing){
 			$dish = new dish($this->id);
 

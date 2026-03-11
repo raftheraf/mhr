@@ -50,6 +50,7 @@ switch($command) {
 		show_receipt($start_id);
 		break;	
 	case "delete":
+		$deleteconfirm = 0;
 		if(isset($_GET['deleteconfirm'])){
 			$deleteconfirm=$_GET['deleteconfirm'];
 		} elseif(isset($_POST['deleteconfirm'])){
@@ -97,6 +98,7 @@ switch($command) {
 		}
 		break;
 	case "annul":
+		$annulconfirm = 0;
 		if(isset($_GET['annulconfirm'])){
 			$annulconfirm=$_GET['annulconfirm'];
 		} elseif(isset($_POST['annulconfirm'])){
