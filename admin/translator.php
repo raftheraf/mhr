@@ -183,7 +183,7 @@ switch($command) {
 $tmp = generating_time($inizio);
 $tpl -> assign ('generating_time',$tmp);
 
-header("Content-Language: ".$_SESSION['language']);
+header("Content-Language: ".(isset($_SESSION['language']) ? $_SESSION['language'] : 'en'));
 header("Content-type: text/html; charset=".phr('CHARSET'));
 
 if($err=$tpl->parse()) die('error parsing template');

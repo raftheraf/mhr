@@ -509,7 +509,7 @@ class user extends object {
 
 		$tpl -> append ('scripts',$redirect);
 
-		$tmp = '<a href="index.php">'.ucfirst(phr('CONNECT')).'</a>';
+		$tmp = '<a href="index.php">Connettiti</a>';
 		$tpl -> assign ('logout',$tmp);
 
 		return 0;
@@ -569,8 +569,8 @@ class user extends object {
 		unset($_COOKIE[session_name()]);
 
 		session_unset();
-		if (session_id() !== '') {
-			session_destroy();
+		if (session_status() === PHP_SESSION_ACTIVE && session_id() !== '') {
+			@session_destroy();
 		}
 
 		if (isset($_SESSION['userid'])) return true;

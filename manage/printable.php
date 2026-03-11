@@ -67,7 +67,7 @@ switch($command) {
 		} else {
 			header("Content-Language: ".(isset($_SESSION['language']) ? $_SESSION['language'] : 'en'));
 			header("Content-type: text/html; charset=".phr('CHARSET'));
-			die(GLOBALMSG_RECORD_NONE_FOUND_ERROR.'. <a href="#" onclick="javascript:window.close(); return false">'.ucfirst(phr('GO_BACK')).'</a>');
+			die(GLOBALMSG_RECORD_NONE_FOUND_ERROR.'. <a href="#" onclick="javascript:window.close(); return false">Torna indietro</a>');
 		}
 }
 

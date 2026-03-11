@@ -2,7 +2,13 @@
 require(ROOTDIR."/conf/config.inc.php");
 require(ROOTDIR."/conf/config.constants.inc.php");
 
-global $header_printed;
+global $header_printed, $dont_display_menu;
+if (!isset($header_printed)) {
+	$header_printed = 0;
+}
+if (!isset($dont_display_menu)) {
+	$dont_display_menu = false;
+}
 
 if(!$header_printed){
 	//session_start();

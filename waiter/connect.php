@@ -36,7 +36,7 @@ switch($command) {
 		if (!$err) {
 			$tmp = '<H1>OK PASSWORD ACCETTATA</H1><br>';
 			$tpl -> append("messages", $tmp);
-			$tmp = ucphr('CONNECT');
+			$tmp = 'Connettiti';
 			$tpl -> assign("title", $tmp);
 			$tmp = redirect_waiter('tables.php');
 			$tpl -> append ('scripts',$tmp);
@@ -63,7 +63,7 @@ switch($command) {
 		{
 		$tmp = '<H1>SEI GIA CONNESSO</H1><br>';
 			$tpl -> append("messages", $tmp);
-			$tmp = ucphr('CONNECT');
+			$tmp = 'Connettiti';
 			$tpl -> assign("title", $tmp);
 			$tmp = redirect_waiter('tables.php');
 			$tpl -> append ('scripts',$tmp);
@@ -111,6 +111,7 @@ $_SESSION['userid']=$_REQUEST['userid'];
 $useridnotsetisok=true;
 $_SESSION['passworded']=true;
 $tmp = redirect('tables.php',0);
+$error_msg = '';
 $error_msg .= 'tables.php?userid='.$userid.'';
 $error_msg .= $_REQUEST['userid'];
 $error_msg .= '<br>';
@@ -135,13 +136,13 @@ $tmp = head_line('Connection');
 $tpl -> assign("head", $tmp);
 $tmp = show_logo();
 $tpl -> assign("logo", $tmp);
-$tmp = ucphr('CONNECT');
+$tmp = 'Connettiti';
 $tpl -> assign("title", $tmp);
 
 $menu = new menu();
 $tmp = $menu -> main ();
 $tpl -> assign("menu", $tmp);
-$tmp = ucphr('CONNECT');
+$tmp = 'Connettiti';
 $tpl -> assign("title", $tmp);
 
 // prints page generation time

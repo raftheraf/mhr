@@ -133,8 +133,12 @@ class order {
 		$query = substr ($query, 0, strlen($query)-1);
 		$query.=") VALUES (";
 		for (reset ($this->data); list ($key, $value) = each ($this->data); ) {
-			if($value==NULL && $key=='printed') $query.="NULL,";
-			else $query.="'".$value."',";
+			if($value===NULL && $key=='printed') {
+				$query.="NULL,";
+			} else {
+				$safe = mysql_real_escape_string($value);
+				$query.="'".$safe."',";
+			}
 		}
 		// strips the last comma that has been put
 		$query = substr ($query, 0, strlen($query)-1);	$query.=")";
@@ -165,8 +169,12 @@ class order {
 		// Now we'll build the correct UPDATE query, based on the fields provided
 		$query="UPDATE `#prefix#orders` SET ";
 		for (reset ($this->data); list ($key, $value) = each ($this->data); ) {
-			if($value==NULL && $key=='printed') $query.="`".$key."`= NULL,";
-			else $query.="`".$key."`='".$value."',";
+			if($value===NULL && $key=='printed') {
+				$query.="`".$key."`= NULL,";
+			} else {
+				$safe = mysql_real_escape_string($value);
+				$query.="`".$key."`='".$safe."',";
+			}
 		}
 		// strips the last comma that has been put
 		$query = substr ($query, 0, strlen($query)-1);
@@ -198,8 +206,12 @@ class order {
 
 		$query="UPDATE `#prefix#orders` SET ";
 		foreach ( $sync_array as $value) {
-			if($main->data[$value]==NULL && $value=='printed') $query.="`".$value."`=NULL,";
-			else $query.="`".$value."`='".$main->data[$value]."',";
+			if($main->data[$value]===NULL && $value=='printed') {
+				$query.="`".$value."`=NULL,";
+			} else {
+				$safe = mysql_real_escape_string($main->data[$value]);
+				$query.="`".$value."`='".$safe."',";
+			}
 		}
 		// strips the last comma that has been put
 		$query = substr ($query, 0, strlen($query)-1);

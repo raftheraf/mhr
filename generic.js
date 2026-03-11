@@ -857,13 +857,22 @@ function countdown(time_for_countdown){
         /* The particular code you want to excute on each tick */
        document.getElementById("timer").innerHTML = (maxTicks - tickCount);
        var alertcolor = (maxTicks - tickCount);
+       var top1 = document.getElementById("top1");
         if (alertcolor == 10){
           document.getElementById("timer").style.color = "red";
           document.getElementById("timer").style.backgroundColor = "yellow";
+          if (top1) {
+            top1.style.color = "red";
+            top1.style.backgroundColor = "yellow";
+          }
         }
         if (alertcolor == 5){
           document.getElementById("timer").style.color = "white";
           document.getElementById("timer").style.backgroundColor = "red";
+          if (top1) {
+            top1.style.color = "white";
+            top1.style.backgroundColor = "red";
+          }
         }
 
         tickCount++;

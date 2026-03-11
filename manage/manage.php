@@ -52,7 +52,7 @@ switch($command) {
 		break;
 }
 
-echo "<br><a href=\"index.php\">".ucfirst(phr('GO_MAIN_REPORT'))."</a><br>";
+		echo "<br><a href=\"index.php\">Torna al report principale</a><br>";
 
 echo generating_time($inizio);
 

@@ -36,7 +36,10 @@ class menu {
 
 	function main () {
 		$cache = new cache ();
-		if($cache_out=$cache -> lang_get (isset($_SESSION['language']) ? $_SESSION['language'] : 'en','menumenumenu')) return $cache_out;
+		$lang = isset($_SESSION['language']) ? $_SESSION['language'] : 'en';
+		$user_key = isset($_SESSION['userid']) ? $_SESSION['userid'] : 'guest';
+		$cache_key = 'menumenumenu_'.$user_key;
+		if($cache_out=$cache -> lang_get ($lang,$cache_key)) return $cache_out;
 
 		$this -> links = array();
 
@@ -156,7 +159,7 @@ class menu {
 		// oM.menuPlacement=new Array(avail,avail+"*2",avail+"*3",avail+"*4",avail+"*5",avail+"*6",avail+"*7",avail+"*8");
 		//oM.menuPlacement=0;
 
-		$cache -> lang_set (isset($_SESSION['language']) ? $_SESSION['language'] : 'en','menumenumenu',$this -> output);
+		$cache -> lang_set ($lang,$cache_key,$this -> output);
 		return $this -> output;
 	}
 

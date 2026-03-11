@@ -43,9 +43,9 @@ switch($command) {
 			$user = new user ($_SESSION['userid']);
 			$user->disconnect();
 		}
-		$tmp = access_connect_form();
-		$tpl -> assign("content", $tmp);
-		break;
+		// Dopo il logout ricarica la pagina di connessione "pulita"
+		header('Location: '.ROOTDIR.'/admin/connect.php?command=none');
+		exit;
 	
 	case 'connect':
 		$user = new user (isset($_SESSION['userid']) ? $_SESSION['userid'] : 0);

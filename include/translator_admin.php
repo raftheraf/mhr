@@ -488,6 +488,7 @@ function translator_delete_lang_value ($id) {
 
 function translator_translate ($input_data) {
 		// Now we'll build the correct UPDATE query, based on the fields provided
+		$not_found = array();
 		if(is_array($input_data)) {
 		for (reset ($input_data); list ($local_table, $table_data) = each ($input_data); ) {
 			$lang = substr ($local_table,-2);
@@ -528,7 +529,7 @@ function translator_translate ($input_data) {
 			}
 		}
 		}
-	if(is_array($not_found)) {
+	if(is_array($not_found) && !empty($not_found)) {
 		//var_dump_table($not_found);
 		return -1;
 	}

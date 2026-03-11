@@ -167,7 +167,7 @@ switch($command) {
 echo "
 	<br>
 	<form action=\"index.php\" method=\"GET\">
-	<input type=\"submit\" value=\"".ucfirst(phr('GO_MAIN_REPORT'))."\">
+	<input type=\"submit\" value=\"Torna al report principale\">
 	</form>
 ";
 

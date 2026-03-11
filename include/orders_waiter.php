@@ -310,7 +310,7 @@ function order_price_modify($id) {
 	<input type="hidden" name="command" value="update">
 	<input type="hidden" name="data[id]" value="'.$id.'">
 	<input type="hidden" name="data[quantity]" value="'.$quantity.'"><br/><br/>
-	<input type="number" size="4" maxlength="8" name="data[price]" id="price_input" value="'.$price.'" class="input" step="0.01" inputmode="decimal" pattern="[0-9]+([\\.,][0-9]{1,2})?" style="width:190px;text-align:center;"><br/><br/>
+	<input type="text" size="4" maxlength="8" name="data[price]" id="price_input" value="'.$price.'" class="input" inputmode="decimal" pattern="[0-9]+([\\.,][0-9]{1,2})?" style="width:190px;text-align:center;"><br/><br/>
 
 	<table id="price_keypad" cellspacing="6" cellpadding="0" style="margin:0 auto; text-align:center;">
 		<tr>
@@ -331,7 +331,7 @@ function order_price_modify($id) {
 		<tr>
 			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:18px;" onclick="priceBackspace();return false;">&larr;</button></td>
 			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'0\');return false;">0</button></td>
-			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'.\');return false;">.</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\',\');return false;">,</button></td>
 		</tr>
 		<tr>
 			<td colspan="3">
@@ -349,11 +349,15 @@ function order_price_modify($id) {
 			var input = document.getElementById(\'price_input\');
 			if (!input) return;
 			var val = input.value || \'\';
-			if (ch === \'.\') {
-				if (val.indexOf(\'.\') !== -1) return;
+			if (ch === \'.\' || ch === \',\') {
+				// usa sempre la virgola come separatore visivo
+				var sep = \',\';
+				if (val.indexOf(\',\') !== -1 || val.indexOf(\'.\') !== -1) return;
 				if (val === \'\') val = \'0\';
+				val += sep;
+			} else {
+				val += ch;
 			}
-			val += ch;
 			input.value = val;
 			if (input.focus) input.focus();
 		}

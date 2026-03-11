@@ -141,7 +141,7 @@
 		$_SESSION['userid']=$_REQUEST['userid'];
 
 		start_language ();
-	} elseif(!$useridnotsetisok && !$_SESSION['userid']) {
+	} elseif(!$useridnotsetisok && (!isset($_SESSION['userid']) || !$_SESSION['userid'])) {
 		/*
 		2 case: we didn't find any POST nor any SESSION giving us userid,
 		and we don't like it!

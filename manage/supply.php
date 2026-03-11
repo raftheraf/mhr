@@ -250,8 +250,8 @@ switch($command) {
 }
 if($command!="delete") unset($_SESSION["delete"]);
 
-echo "<br><a href=\"#\" onclick=\"javascript:history.go(-1); return false\">".ucfirst(phr('GO_BACK'))."</a><br>\n";
-echo "<br><a href=\"index.php\">".ucfirst(phr('GO_MAIN_REPORT'))."</a><br>";
+echo "<br><a href=\"#\" onclick=\"javascript:history.go(-1); return false\">Torna indietro</a><br>\n";
+echo "<br><a href=\"index.php\">Torna al report principale</a><br>";
 
 echo generating_time($inizio);
 ?>

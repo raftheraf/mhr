@@ -443,8 +443,20 @@ function lang_file_reader($filename) {
 
 function status_report ($name,$err) {
 	global $tpl;
-	if(!$err) $tmp = '<font color="green">'.ucphr($name).' ok'.'</font>'."<br />";
-	else $tmp = '<font color="red">'.ucphr($name).' '.ucphr('FAILED').'</font>'."<br />";
+	$label = ucphr($name);
+	// Se la traduzione è numerica (es. "1000"), usa la chiave originale
+	if (ctype_digit($label)) {
+		$label = $name;
+	}
+	if(!$err) {
+		$tmp = '<font color="green">'.$label.' ok'.'</font>'."<br />";
+	} else {
+		$failed = ucphr('FAILED');
+		if (ctype_digit($failed)) {
+			$failed = 'failed';
+		}
+		$tmp = '<font color="red">'.$label.' '.$failed.'</font>'."<br />";
+	}
 	$tpl -> append ('messages',$tmp);
 
 	if($err) error_display($err,true);
@@ -614,6 +626,10 @@ function lang_get_db($lang,$name,$charset='iso-8859-1'){
 	if(!$res) return ERR_MYSQL;
 
 	$arr = mysql_fetch_array ($res);
+	if (!$arr || !isset($arr['id'])) {
+		// Nessuna riga di traduzione trovata per questo nome: usa direttamente la chiave
+		return $name;
+	}
 	$id = $arr['id'];
 
 	$query="SELECT `table_name` FROM `".$lang_table."` WHERE `table_id`='".$id."'";
@@ -621,19 +637,10 @@ function lang_get_db($lang,$name,$charset='iso-8859-1'){
 	if(!$res) return ERR_MYSQL;
 
 	$arr = mysql_fetch_array ($res);
-
-	if(empty($arr["table_name"]) && CONF_SHOW_DEFAULT_ON_MISSING) {
-		$msg='Language data '.$name.' for language '.$lang.' not found';
-		debug_msg(__FILE__,__LINE__,$msg);
-
-		$default_lang=trim(get_conf(__FILE__,__LINE__,'default_language'));
-		if(empty($default_lang)) $default_lang='en';
-		if($lang!=$default_lang) return lang_get($default_lang,$name);
-		else $arr["table_name"]=$name;
-	} elseif(empty($arr["table_name"]) && !CONF_SHOW_DEFAULT_ON_MISSING) {
-		$arr["table_name"]=$name;
-		$msg='Language data '.$name.' for language '.$lang.' not found';
-		debug_msg(__FILE__,__LINE__,$msg);
+	// Se non esiste una traduzione per questo id, o il valore è vuoto,
+	// usa direttamente il nome chiave senza loggare errori.
+	if (!$arr || empty($arr["table_name"])) {
+		$arr["table_name"] = $name;
 	}
 
 	$ret=$arr['table_name'];
@@ -956,7 +963,7 @@ function stri_replace ($find,$replace,$string) {
 }
 
 function common_header($title,$mgmt='') {
-	if(IN_CONFIG) {
+	if(defined('IN_CONFIG') && IN_CONFIG) {
 		$charset='UTF-8';
 		$javascript = CONF_JS_URL_CONFIG;
 		$css = CONF_CSS_URL_CONFIG;
@@ -1372,7 +1379,7 @@ function disconnect_line () {
 }
 
 function common_bottom() {
-
+	$msg = '';
 	$msg.='
 	</body>
 </html>';

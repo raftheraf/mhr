@@ -953,13 +953,16 @@ if (isset($_SESSION['type']) && $_SESSION['type'] == 7)
 	$dest=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dests','dest',$destid);
 	//se il sistema di stampa è "win" verifica il se il percorso della stampante funziona
 	if ((strtolower(get_conf(__FILE__,__LINE__,"printing_system"))) == "win") {
-				$handle = printer_open($dest);
-				printer_close($handle);
-				if(!$handle) { return ERR_COULD_NOT_OPEN_PRINTER;}
+				$handle = @printer_open($dest);
+				if($handle) {
+					printer_close($handle);
+				} else {
+					return ERR_COULD_NOT_OPEN_PRINTER;
+				}
 				}
 	$result = print_line_os_chooser($msg,$dest);
 
-	if(!$result) {
+	if($result !== 0) {
 					$error_msg='Printing error: '.$result;
 					error_msg(__FILE__,__LINE__,$error_msg);
 					return $result;
@@ -1000,7 +1003,7 @@ function print_line_win($value, $dest) {
 	//NON SELEZIONARE 2 STAMPANTI CON LO STESSO PRECONTO O RICEVUTA
 	//IL SISTEMA UTILIZZA SEMPRE E SOLO LA PRIMA TROVATA (ID IN ORDINE CRESCENTE)
 
-	$handle = printer_open($dest);
+	$handle = @printer_open($dest);
 
 	//if(!$handle) non interromepe il processo di stampa deve essere messo anche nella prima funzione
 	//che richiama tutto il processo ovvero $result = print_line_os_chooser($msg,$dest); -> print_line_os_chooser -> print_line_win

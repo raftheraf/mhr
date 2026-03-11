@@ -25,7 +25,7 @@ function access_connect_form_waiter ($url='') {
 		</td></tr>
 		<tr><td>
 			<center>
-			'.ucfirst(phr('PASSWORD')).':<br>
+			Password:<br>
 			<input type="password" name="password" size="9" class="input">
 			</center>
 		</td></tr>
@@ -73,7 +73,7 @@ function access_connect_form_pos ($url='') {
 		</td></tr>
 		<tr><td>
 			<center>
-			'.ucfirst(phr('PASSWORD')).':<br>
+			Password:<br>
 			<input type="password" name="password" size="9" class="input">
 			</center>
 		</td></tr>
@@ -112,22 +112,22 @@ function access_connect_form ($url='') {
 		<tr><td>
 			<center>
 			<h4>
-			'.date("j/n/Y",time()).'<b>
+			'.date("j/n/Y",time()).'<br>
 			<b>'.date("G:i",time()).'</b>
 			</h4>
-			'.ucfirst(phr('WHO_ARE_YOU')).'<br>
-	'.$user->html_select(SHOW_ADMIN_ONLY).'
+			Chi sei?<br>
+	'.$user->html_select(SHOW_ALL_USERS).'
 			</center>
 		</td></tr>
 		<tr><td>
 			<center>
-			'.ucfirst(phr('PASSWORD')).':<br>
+			Password:<br>
 			<input type="password" name="password">
 			</center>
 		</td></tr>
 		<tr><td>
 			<center>
-			<INPUT TYPE="SUBMIT" value="'.ucfirst(phr('SUBMIT')).'">
+			<INPUT TYPE="SUBMIT" value="Invia">
 			</center>
 		</td></tr>
 	</table>
@@ -172,7 +172,7 @@ function access_denied_admin () {
 		$user = new user ($_SESSION['userid']);
 		$user->disconnect();
 		$tmp .= '
-	<a href="'.$link.'">'.ucfirst(phr('CONNECT')).'</a>';
+	<a href="'.$link.'">Connettiti</a>';
 	}
 	return $tmp;
 }
@@ -185,7 +185,7 @@ function access_denied_template () {
 
 	$tmp = '<b>'.ucfirst(phr('ACCESS_DENIED')).'</b><br>
 	'.ucfirst(phr('ACCESS_DENIED_EXPLAIN')).'<br>
-	<a href="'.$link.'">'.ucfirst(phr('CONNECT')).'</a>';
+	<a href="'.$link.'">Connettiti</a>';
 
 	$tmp='<font color="Red">'.$tmp.'</font>';
 	$tpl -> append ('messages',$tmp);
