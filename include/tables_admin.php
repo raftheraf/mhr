@@ -192,6 +192,8 @@ class table extends object {
 	function move_list_tables($cols=1){
 		global $tpl;
 
+		$output = '';
+
 		$query = "SELECT * FROM `#prefix#sources` WHERE `userid`='0'";
 		$query .= " AND `toclose` = '0'";
 		$query .= " AND `discount` = '0.00'";
@@ -257,7 +259,7 @@ class table extends object {
 		$color=$arr['tablehtmlcolor'];
 
 		if($arr['id']){
-		$output .= '
+		$output = '
 
 		<td onmouseover=""
 				style="cursor: pointer; border: 3px solid '.$color.';" background-color="'.COLOR_TABLE_FREE.'"
@@ -271,7 +273,7 @@ class table extends object {
 		</td>
 		'."\n";
 		} else {
-		$output .= '
+		$output = '
 		<td bgcolor="'.COLOR_TABLE_FREE.'">
 		&nbsp;
 		</td>'."\n";

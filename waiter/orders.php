@@ -569,6 +569,7 @@ switch ($command){
 				}
 				break;
 	case 'unisci':
+				$err = 0;
 				if (presenza_ordini($_SESSION['sourceid'])==TRUE){
 					orders_list ();
 					status_report ('Impossibile unire il tavolo sono presenti ordini',$err);

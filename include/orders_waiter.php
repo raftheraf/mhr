@@ -306,14 +306,73 @@ function order_price_modify($id) {
 	$tmp='';
 	if($generic) $tmp .= ucfirst(phr('GENERIC_PRICE_DESCRIPTION'))."<br>\n";
 	$tmp .= ucfirst(phr('GENERIC_PRICE_INSTRUCTION')).' '.ucfirst(phr('UPDATE_PRICE')).'<br>
-	<form action="orders.php" method="post" name="form1">
+	<form action="orders.php" method="post" name="form1" id="order_price_form">
 	<input type="hidden" name="command" value="update">
 	<input type="hidden" name="data[id]" value="'.$id.'">
 	<input type="hidden" name="data[quantity]" value="'.$quantity.'"><br/><br/>
-	<input type="text" size="8" maxlength="8" name="data[price]" value="'.$price.'" class="input"><br/><br/><br/>
+	<input type="number" size="4" maxlength="8" name="data[price]" id="price_input" value="'.$price.'" class="input" step="0.01" inputmode="decimal" pattern="[0-9]+([\\.,][0-9]{1,2})?" style="width:190px;text-align:center;"><br/><br/>
+
+	<table id="price_keypad" cellspacing="6" cellpadding="0" style="margin:0 auto; text-align:center;">
+		<tr>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'7\');return false;">7</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'8\');return false;">8</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'9\');return false;">9</button></td>
+		</tr>
+		<tr>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'4\');return false;">4</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'5\');return false;">5</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'6\');return false;">6</button></td>
+		</tr>
+		<tr>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'1\');return false;">1</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'2\');return false;">2</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'3\');return false;">3</button></td>
+		</tr>
+		<tr>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:18px;" onclick="priceBackspace();return false;">&larr;</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'0\');return false;">0</button></td>
+			<td><button type="button" class="button_big" style="width:60px;height:50px;font-size:20px;" onclick="priceKey(\'.\');return false;">.</button></td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<button type="button" class="button_big" style="width:100%;height:40px;font-size:18px;" onclick="priceClear();return false;">C</button>
+			</td>
+		</tr>
+	</table>
+
+	<br/>
 	<input type="submit" value="'.ucfirst(phr('UPDATE_PRICE')).'" class="button_big">
 	</form>
-	<br>';
+	<br>
+	<script type="text/javascript">
+		function priceKey(ch){
+			var input = document.getElementById(\'price_input\');
+			if (!input) return;
+			var val = input.value || \'\';
+			if (ch === \'.\') {
+				if (val.indexOf(\'.\') !== -1) return;
+				if (val === \'\') val = \'0\';
+			}
+			val += ch;
+			input.value = val;
+			if (input.focus) input.focus();
+		}
+
+		function priceBackspace(){
+			var input = document.getElementById(\'price_input\');
+			if (!input) return;
+			var val = input.value || \'\';
+			input.value = val.substring(0, val.length - 1);
+			if (input.focus) input.focus();
+		}
+
+		function priceClear(){
+			var input = document.getElementById(\'price_input\');
+			if (!input) return;
+			input.value = \'\';
+			if (input.focus) input.focus();
+		}
+	</script>';
 	$tpl -> assign ('question',$tmp);
 
 	return 0;

@@ -21,3 +21,24 @@
 11/3/2026 15:19:36 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
 11/3/2026 15:19:36 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
 11/3/2026 15:20:11 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:25:12 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:25:46 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:26:03 Table: 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:32:10 Table: Sospesi 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:32:10 Table: Sospesi 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:32:10 Table: Sospesi 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:34:23 Table: Sospesi 01 User: 1 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:39:20 Table: Sospesi 01 User: 1 - C:\xampp\htdocs\mhr\include\orders_waiter.php line: 292 - Error in database_query - mysql: 1054 Unknown column '344141mhr_tab_id' in 'where clause'
+query: SELECT * FROM `mhr_orders` WHERE `id`=344141mhr_tab_id=mhr_1773238838577_562205
+
+11/3/2026 15:48:45 Table: 02 User: 33 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:48:47 Table: 02 User: 33 - C:\xampp\htdocs\mhr\include\printing_waiter.php line: 964 - Printing error: 0
+11/3/2026 15:54:39 Table: 02 User: 33 - C:\xampp\htdocs\mhr\include\orders_waiter.php line: 292 - Error in database_query - mysql: 1054 Unknown column '344142mhr_tab_id' in 'where clause'
+query: SELECT * FROM `mhr_orders` WHERE `id`=344142mhr_tab_id=mhr_1773240479038_60463
+
+11/3/2026 15:55:57 Table: 02 User: 1 - C:\xampp\htdocs\mhr\include\orders_waiter.php line: 292 - Error in database_query - mysql: 1054 Unknown column '344142mhr_tab_id' in 'where clause'
+query: SELECT * FROM `mhr_orders` WHERE `id`=344142mhr_tab_id=mhr_1773238838577_562205
+
+11/3/2026 15:56:17 Table: 02 User: 1 - C:\xampp\htdocs\mhr\include\orders_waiter.php line: 292 - Error in database_query - mysql: 1054 Unknown column '344142mhr_tab_id' in 'where clause'
+query: SELECT * FROM `mhr_orders` WHERE `id`=344142mhr_tab_id=mhr_1773238838577_562205
+

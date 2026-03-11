@@ -1726,11 +1726,12 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 					<button type="button" id="btn_mostra_importo_carta" onclick="return mostra_importo_carta();">+ importo carta</button>
 					<span id="wrap_importo_carta" style="display:none">
 						+ CARTA
-						<input type="text" name="pagato_carte_di_credito" size="3" maxlength="6" value="">
+						<input type="text" name="pagato_carte_di_credito" size="3" maxlength="6" value="" placeholder="0.00">
 						<button type="button"
 							id="btn_pos_carta"
 							onclick="return invia_pos_carta();"
-							data-pos-base-url="../POS/ingenico.php?from=waiter">
+							data-pos-base-url="../POS/ingenico.php?from=waiter"
+							style="display:none">
 							POS
 						</button>
 					</span>

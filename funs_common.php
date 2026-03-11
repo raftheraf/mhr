@@ -1023,6 +1023,7 @@ function head_line ($title) {
 	<meta name="apple-mobile-web-app-title" content="MHR" />
 	<meta name="application-name" content="MHR" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<!-- APP ICONS -->
 	<link rel="apple-touch-icon" href="/img/icon.png" />

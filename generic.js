@@ -310,6 +310,7 @@ function pagamento_carte_switch(){
 function mostra_importo_carta(){
 	var span = document.getElementById('wrap_importo_carta');
 	var btn  = document.getElementById('btn_mostra_importo_carta');
+	var btnPos = document.getElementById('btn_pos_carta');
 
 	if(span){
 		span.style.display='';
@@ -319,13 +320,28 @@ function mostra_importo_carta(){
 	}
 
 	if(document.form_type && document.form_type.pagato_carte_di_credito){
-		document.form_type.pagato_carte_di_credito.disabled=false;
+		var input = document.form_type.pagato_carte_di_credito;
+		input.disabled=false;
 		try{
-			document.form_type.pagato_carte_di_credito.focus();
-			if(document.form_type.pagato_carte_di_credito.select){
-				document.form_type.pagato_carte_di_credito.select();
+			input.focus();
+			if(input.select){
+				input.select();
 			}
 		}catch(e){}
+
+		// mostra il bottone POS solo quando c'è un importo valido (>0)
+		if (btnPos && !input._posCartaListenerAdded) {
+			input._posCartaListenerAdded = true;
+			input.addEventListener('input', function(){
+				var rawVal = (this.value || '').replace(',', '.').trim();
+				var amountNum = parseFloat(rawVal);
+				if (!isNaN(amountNum) && amountNum > 0) {
+					btnPos.style.display = '';
+				} else {
+					btnPos.style.display = 'none';
+				}
+			});
+		}
 	}
 
 	return false;
