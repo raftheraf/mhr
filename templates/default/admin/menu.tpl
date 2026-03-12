@@ -21,6 +21,11 @@
 				</td>
 			</tr>
 			<tr>
+				<td colspan="3" valign="top" align="left" width="100%">
+					{categories}
+				</td>
+			</tr>
+			<tr>
 				<td colspan="3" valign="top" align="center" width="100%">
 					{messages}
 					{content}

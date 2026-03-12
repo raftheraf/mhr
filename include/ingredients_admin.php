@@ -157,9 +157,17 @@ class ingredient extends object {
 			}
 
 
-			$display->rows[$row][$col]=$value;
-			if($link && $field=='name') $display->links[$row][$col]=$link;
-			if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			// Colonna "Visibile": checkbox centrale
+			if ($field == 'visible' && isset($this->allow_single_update) && in_array('visible',$this->allow_single_update)) {
+				$is_yes = (strtoupper($value) == strtoupper(ucphr('YES')));
+				$checked = $is_yes ? ' checked="checked"' : '';
+				$checkbox = '<input type="checkbox" class="ingredient-visible-flag"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
+				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+			} else {
+				$display->rows[$row][$col]=$value;
+				if($link && $field=='name') $display->links[$row][$col]=$link;
+				if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			}
 
 			$col++;
 		}

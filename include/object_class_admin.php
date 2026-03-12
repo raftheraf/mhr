@@ -884,6 +884,13 @@ class object {
 
 		$this -> commands_horizontal($class);
 
+		// Filtro categoria compatto (per classi che lo prevedono, es. dish, ingredient)
+		if ($this->show_category_list) {
+			$cat = new category();
+			$tmp = $cat->show_page_list($class); // ora restituisce il menu a tendina
+			$tpl->assign("categories", $tmp);
+		}
+
 		if(isset($_REQUEST['data']['global_search']) && $_REQUEST['data']['global_search']) {
 			$tpl -> assign ('title',ucphr('SEARCH_RESULTS'));
 

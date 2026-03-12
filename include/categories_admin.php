@@ -72,6 +72,46 @@ class category extends object {
 		
 		return $query;
 	}
+
+	function list_rows ($arr,$row) {
+		global $tpl;
+		global $display;
+
+		$col=0;
+		if(!$this->disable_mass_delete) {
+			$display->rows[$row][$col]='<input type="checkbox" name="delete[]" value="'.$arr['id'].'">';
+			$display->width[$row][$col]='1%';
+			$col++;
+		}
+
+		foreach ($arr as $field => $value) {
+			$link = '';
+			if (isset($this->allow_single_update) && in_array($field,$this->allow_single_update)) {
+				$link = $this->link_base.'&amp;command=update_field&amp;data[id]='.$arr['id'].'&amp;data[field]='.$field;
+				if($this->limit_start) $link .= '&amp;data[limit_start]='.$this->limit_start;
+				if($this->orderby) $link.='&amp;data[orderby]='.$this->orderby;
+				if($this->sort) $link.='&amp;data[sort]='.$this->sort;
+
+				$display->links[$row][$col]=$link;
+			} elseif (method_exists($this,'form')) {
+				$link = $this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$arr['id'];
+			}
+
+			// Colonna "Visibile": checkbox centrale
+			if ($field == 'visible' && isset($this->allow_single_update) && in_array('visible',$this->allow_single_update)) {
+				$is_yes = (strtoupper($value) == strtoupper(ucphr('YES')));
+				$checked = $is_yes ? ' checked="checked"' : '';
+				$checkbox = '<input type="checkbox" class="category-visible-flag"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
+				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+			} else {
+				$display->rows[$row][$col]=$value;
+				if($link && $field=='name') $display->links[$row][$col]=$link;
+				if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			}
+
+			$col++;
+		}
+	}
 	
 	function remove_connected_dishes () {
 		$query="SELECT id
@@ -440,30 +480,38 @@ class category extends object {
 		$query="SELECT * FROM `".$this->table."` WHERE `deleted`='0'";
 		$res=common_query($query,__FILE__,__LINE__);
 		if(!$res) return '';
-	
-		if(!mysql_num_rows($res)) $output .= ucfirst(phr('ERROR_NONE_FOUND_CATEGORY')).".<br>\n";
-	
+
+		if(!mysql_num_rows($res)) $output = ucfirst(phr('ERROR_NONE_FOUND_CATEGORY')).".<br>\n";
+		else $output = '';
+
+		// categoria corrente (selezionata)
+		$current = '';
+		if(isset($_REQUEST['data']['category']) && $_REQUEST['data']['category']!=='') {
+			$current = $_REQUEST['data']['category'];
+		}
+
+		// menu a tendina compatto
+		$output .= '<form method="get" action="admin.php" style="margin:4px 0;">';
+		$output .= '<input type="hidden" name="class" value="'.$class.'">';
+		$output .= ucfirst(phr('CATEGORY')).': ';
+		$output .= '<select name="data[category]" onchange="this.form.submit()">';
+
+		// voce "Mostra tutti" (nessuna categoria -> valore vuoto)
+		$sel = ($current === '' ? ' selected' : '');
+		$output .= '<option value=""'.$sel.'>'.ucphr('CATEGORIES_SHOW_ALL').'</option>';
+
 		$cat=new category;
-	
-		$output .= '
-	<table>
-		<tbody>
-			<tr>
-				<td><a href="?class='.$class.'">'.ucphr('CATEGORIES_SHOW_ALL').'</a></td>
-			</tr>';
-			
 		while($arr=mysql_fetch_array($res)){
-	
 			$cat->id=$arr['id'];
-			$output .= '
-			<tr>
-				<td><a href="?data[category]='.$arr['id'].'&amp;class='.$class.'">'.ucfirst($cat->name($_SESSION['language'])).'</a></td>
-			</tr>';
+			$name = ucfirst($cat->name($_SESSION['language']));
+			$sel = ((string)$arr['id'] === (string)$current) ? ' selected' : '';
+			$output .= '<option value="'.$arr['id'].'"'.$sel.'>'.htmlspecialchars($name).'</option>';
 		}
 		unset($cat);
-		$output .= '
-		</tbody>
-	</table>';
+
+		$output .= '</select>';
+		$output .= '</form>';
+
 		return $output;
 	}
 }

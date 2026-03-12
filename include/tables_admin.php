@@ -57,6 +57,46 @@ class table extends object {
 		return $query;
 	}
 
+	function list_rows ($arr,$row) {
+		global $tpl;
+		global $display;
+
+		$col=0;
+		if(!$this->disable_mass_delete) {
+			$display->rows[$row][$col]='<input type="checkbox" name="delete[]" value="'.$arr['id'].'">';
+			$display->width[$row][$col]='1%';
+			$col++;
+		}
+
+		foreach ($arr as $field => $value) {
+			$link = '';
+			if (isset($this->allow_single_update) && in_array($field,$this->allow_single_update)) {
+				$link = $this->link_base.'&amp;command=update_field&amp;data[id]='.$arr['id'].'&amp;data[field]='.$field;
+				if($this->limit_start) $link .= '&amp;data[limit_start]='.$this->limit_start;
+				if($this->orderby) $link.='&amp;data[orderby]='.$this->orderby;
+				if($this->sort) $link.='&amp;data[sort]='.$this->sort;
+
+				$display->links[$row][$col]=$link;
+			} elseif (method_exists($this,'form')) {
+				$link = $this->file.'?class='.get_class($this).'&amp;command=edit&amp;data[id]='.$arr['id'];
+			}
+
+			// Colonna "Visibile": checkbox centrale
+			if ($field == 'visible' && isset($this->allow_single_update) && in_array('visible',$this->allow_single_update)) {
+				$is_yes = (strtoupper($value) == strtoupper(ucphr('YES')));
+				$checked = $is_yes ? ' checked="checked"' : '';
+				$checkbox = '<input type="checkbox" class="table-visible-flag"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
+				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+			} else {
+				$display->rows[$row][$col]=$value;
+				if($link && $field=='name') $display->links[$row][$col]=$link;
+				if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			}
+
+			$col++;
+		}
+	}
+
 	//RTG: included for performance, better than generic get that imply one query
 	//see use in
 	function getToClose() {

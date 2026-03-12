@@ -223,9 +223,32 @@ class dish extends object {
 				$value .= '</span>';
 			}
 
-			$display->rows[$row][$col]=$value;
-			if($link && $field=='name') $display->links[$row][$col]=$link;
-			if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			// Colonne booleane: mostra una checkbox centrata che alterna il valore
+			if (in_array($field, array('visible','personal_list','asporto_list'))
+				&& isset($this->allow_single_update)
+				&& in_array($field,$this->allow_single_update)) {
+
+				$is_yes = (strtoupper($value) == strtoupper(ucphr('YES')));
+
+				// classe CSS diversa per ogni colonna
+				if ($field == 'visible') {
+					$flag_class = 'dish-visible-flag';
+				} elseif ($field == 'personal_list') {
+					$flag_class = 'dish-personal-flag';
+				} else { // asporto_list
+					$flag_class = 'dish-asporto-flag';
+				}
+
+				$checked = $is_yes ? ' checked="checked"' : '';
+				$checkbox = '<input type="checkbox" class="'.$flag_class.'"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
+				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+				// niente click sulla cella per evitare doppi handler
+
+			} else {
+				$display->rows[$row][$col]=$value;
+				if($link && $field=='name') $display->links[$row][$col]=$link;
+				if($link) $display->clicks[$row][$col]='redir(\''.$link.'\');';
+			}
 
 			$col++;
 		}

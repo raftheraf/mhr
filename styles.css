@@ -138,6 +138,11 @@ ticket th {
   border-width: 0;
 }
 
+/* Centra l'intestazione della colonna "Visibile" (3a colonna: 1 = checkbox, 2 = Nome, 3 = Visibile) nelle tabelle admin */
+.admin_th th:nth-child(3) {
+  text-align: center;
+}
+
 .admin_tr_0 {
   border-width: 0;
   background-color: #FFE9B7
@@ -153,13 +158,53 @@ ticket th {
 }
 
 .admin_td_0 {
-  vertical-align: text-bottom;
+  vertical-align: middle;
   border-width: 0;
 }
 
 .admin_td_1 {
-  vertical-align: text-bottom;
+  vertical-align: middle;
   border-width: 0;
+}
+
+/* Centra orizzontalmente le colonne Lista Pers (8) e Lista Asporto (10) nella tabella piatti */
+.admin_tr_0 td:nth-child(8),
+.admin_tr_highlight td:nth-child(8),
+.admin_tr_0 td:nth-child(10),
+.admin_tr_highlight td:nth-child(10) {
+  text-align: center;
+}
+
+/* Allinea a sinistra la colonna "Colore" (ultima) nella lista tavoli */
+.admin_tr_0 td:nth-child(9),
+.admin_tr_highlight td:nth-child(9) {
+  text-align: left;
+}
+
+/* Ingrandisci solo le checkbox booleane nei piatti (Visibile, Lista Pers, Lista Asporto) */
+input.dish-visible-flag,
+input.dish-personal-flag,
+input.dish-asporto-flag {
+  width: 22px;
+  height: 22px;
+}
+
+/* Ingrandisci la checkbox "Visibile" nella lista categorie */
+input.category-visible-flag {
+  width: 22px;
+  height: 22px;
+}
+
+/* Ingrandisci la checkbox "Visibile" nella lista ingredienti */
+input.ingredient-visible-flag {
+  width: 22px;
+  height: 22px;
+}
+
+/* Ingrandisci la checkbox "Visibile" nella lista tavoli */
+input.table-visible-flag {
+  width: 22px;
+  height: 22px;
 }
 
 .admin_ingreds_list {
@@ -171,6 +216,12 @@ ticket th {
   background: #FFFACD;
   font-size: 30px;
   text-align: right;
+}
+
+/* Allinea il testo a sinistra solo nei <select class="input"> */
+select.input {
+  text-align: left;
+  text-align-last: left;
 }
 
 .button {
@@ -394,7 +445,7 @@ a:hover {
   padding: 0 10px;       /* solo padding orizzontale, niente padding verticale */
   font-size: 16px;
   font-weight: bold;
-  text-align: center; /* centra il testo solo nelle voci di menu in alto */
+  text-align: left;  /* allinea il testo a sinistra nelle voci di menu in alto */
   border-left: 2px solid #ffffff;
   border-right: 2px solid #ffffff;
   letter-spacing: 0.5px;

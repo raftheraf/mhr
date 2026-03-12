@@ -126,20 +126,10 @@ class menu {
 		oM.menuPlacement=new Array('.$arr_str.');';
 				break;
 			case 'page':
+				// Distribuzione originale CoolMenus: voci a partire da sinistra
 				$menu_placement = '
-		var avail = (cmpage.x2-'.$rightdist.')/8;
-		var colWidth = '.$colwidth.';
-		var offset = (avail - colWidth)/2;
-		oM.menuPlacement=new Array(
-			"offset",
-			"avail*1+offset",
-			"avail*2+offset",
-			"avail*3+offset",
-			"avail*4+offset",
-			"avail*5+offset",
-			"avail*6+offset",
-			"avail*7+offset"
-		);';
+		var avail="0+((cmpage.x2-'.$rightdist.')/9)";
+		oM.menuPlacement=new Array(0,avail,avail+"*2",avail+"*3",avail+"*4",avail+"*5",avail+"*6",avail+"*7",avail+"*8");';
 				break;
 			default:
 				$menu_placement = '
