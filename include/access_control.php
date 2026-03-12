@@ -168,9 +168,7 @@ function access_denied_admin () {
 		// Nessun utente collegato: mostra il form di connessione
 		$tmp .= access_connect_form($url);
 	} else {
-		// Utente collegato ma senza privilegi: disconnette e propone nuova connessione
-		$user = new user ($_SESSION['userid']);
-		$user->disconnect();
+		// Utente collegato ma senza privilegi: mostra solo il messaggio, NON disconnettere
 		$tmp .= '
 	<a href="'.$link.'">Connettiti</a>';
 	}

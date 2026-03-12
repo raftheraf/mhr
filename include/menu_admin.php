@@ -94,7 +94,7 @@ class menu {
 		$index = $this -> menu_menu($index+1,'');
 		$index = $this -> system($index+1,'');
 		$index = $this -> accounting($index+1,'');
-		$index = $this -> sospesi($index+1,'');
+		// voce SOSPESI ora spostata dentro Contabilità (ACCOUNTING)
 		$index = $this -> contacts($index+1,'');
 		$index = $this -> reports($index+1,'');
 		$index = $this -> stock($index+1,'');
@@ -127,8 +127,19 @@ class menu {
 				break;
 			case 'page':
 				$menu_placement = '
-		var avail="0+((cmpage.x2-'.$rightdist.')/9)";
-		oM.menuPlacement=new Array(0,avail,avail+"*2",avail+"*3",avail+"*4",avail+"*5",avail+"*6",avail+"*7",avail+"*8");';
+		var avail = (cmpage.x2-'.$rightdist.')/8;
+		var colWidth = '.$colwidth.';
+		var offset = (avail - colWidth)/2;
+		oM.menuPlacement=new Array(
+			"offset",
+			"avail*1+offset",
+			"avail*2+offset",
+			"avail*3+offset",
+			"avail*4+offset",
+			"avail*5+offset",
+			"avail*6+offset",
+			"avail*7+offset"
+		);';
 				break;
 			default:
 				$menu_placement = '
@@ -388,6 +399,11 @@ class menu {
 		$this -> output.="\t\toM.makeMenu('m".$i."','m".$start_idx."','".ucphr('INCOME_EXPAND')."','".ROOTDIR."/manage/db.php?command=show_all');\n";
 		$this -> links[$i]['name']=ucphr('ACCOUNTING').': '.ucphr('INCOME_EXPAND');
 		$this -> links[$i]['link']=ROOTDIR.'/manage/db.php?command=show_all';
+		// Dopo \"Espandi incassi\" aggiungi \"SOSPESI\"
+		$i++;
+		$this -> output.="\t\toM.makeMenu('m".$i."','m".$start_idx."','".ucphr('SOSPESI')."','".ROOTDIR."/manage/sospesi.php');\n";
+		$this -> links[$i]['name']=ucphr('ACCOUNTING').': '.ucphr('SOSPESI');
+		$this -> links[$i]['link']=ROOTDIR.'/manage/sospesi.php';
 		$i = $this -> insert_type_new($i+1,'m'.$start_idx);
 		$i++;
 

@@ -499,8 +499,16 @@ class user extends object {
 
 		$tpl -> set_waiter_template_file ('disconnect');
 
+		// Leggi mhr_tab_id prima di distruggere la sessione (serve per redirect e tab guard)
+		$tab_id = isset($_REQUEST['mhr_tab_id']) ? trim((string)$_REQUEST['mhr_tab_id']) : '';
+
 		// has to be before session_unset, because of common_db session var need
-		$redirect = redirect_waiter('index.php');
+		$redirect_url = 'connect.php?command=none&from_logout=1';
+		if ($tab_id !== '') {
+			$redirect_url .= '&mhr_tab_id=' . urlencode($tab_id);
+		}
+		// Redirect dopo il logout: attesa fissa di 2 secondi
+		$redirect = redirect_timed($redirect_url, 2000);
 
 		$err=$this->disconnect ();
 		status_report ('DISCONNECTION',$err);
@@ -583,9 +591,13 @@ class user extends object {
 
 		$tpl -> set_waiter_template_file ('disconnect');
 
+		$tab_param = '';
+		if (isset($_REQUEST['mhr_tab_id']) && trim((string)$_REQUEST['mhr_tab_id']) !== '') {
+			$tab_param = '&mhr_tab_id=' . urlencode(trim((string)$_REQUEST['mhr_tab_id']));
+		}
 		$tmp = ucfirst(phr('CONNECTED_AS')).": <b>".$this->data['name']."</b><br>\n";
 		$tmp .= ucfirst(phr('DISCONNECT_ASK'))."<br>\n";
-		$tmp .= '<a href="?command=destroy&rndm='.rand(0,100000).'"><h4><div class="preferred_answer">'.ucfirst(phr('YES')).'</div></h4></a>';
+		$tmp .= '<a href="?command=destroy&rndm='.rand(0,100000).$tab_param.'"><h4><div class="preferred_answer">'.ucfirst(phr('YES')).'</div></h4></a>';
 
 		// don't know if this works correctly with any browser.
 		// we should try bot go(-1) and back() ways and report success or failures.

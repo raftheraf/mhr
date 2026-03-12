@@ -385,14 +385,21 @@ a:hover {
   position: absolute;
   overflow: hidden;
   width: 130px;
-  height: 18px;
   cursor: pointer;
 }
 
 .clT, .clTover {
-  padding: 4px;
-  font-size: 15px;
-  font-weight: bold
+  height: 30px;          /* stessa altezza definita in cm_makeLevel per il livello 0 */
+  line-height: 30px;     /* centra verticalmente il testo nel div */
+  padding: 0 10px;       /* solo padding orizzontale, niente padding verticale */
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center; /* centra il testo solo nelle voci di menu in alto */
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.25);
 }
 
 .clT {
@@ -401,6 +408,7 @@ a:hover {
 
 .clTover {
   color: #FCCE55;
+  background-color: #283593; /* evidenzia la voce attiva/hover del menu alto */
 }
 
 .clS, .clSover {
@@ -438,6 +446,7 @@ a:hover {
   width: 10px;
   height: 10px;
   visibility: hidden;
+  border-right: 2px solid #ffffff; /* bordo bianco finale sul lato destro del menu alto */
 }
 
 /* END MENU */

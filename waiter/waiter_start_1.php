@@ -18,9 +18,9 @@ if(!$header_printed){
 
 	common_set_error_reporting ();
 
-	if(isset($_SESSION['section']) && $_SESSION['section']!="admin"){
+	if(!isset($_SESSION['section']) || $_SESSION['section']!="waiter"){
 		unset_session_vars();
-		$_SESSION['section']="admin";
+		$_SESSION['section']="waiter";
 	}
 
 	if(!$link = @mysql_pconnect ($cfgserver, $cfguser, $cfgpassword)) {

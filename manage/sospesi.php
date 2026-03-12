@@ -7,7 +7,9 @@ require(ROOTDIR."/manage/mgmt_funs.php");
 require(ROOTDIR."/manage/mgmt_start.php");
 
 $command = isset($_REQUEST['command']) ? $_REQUEST['command'] : 'default';
-if(!access_allowed(USER_BIT_ACCOUNTING) && !access_allowed(USER_BIT_STOCK)) $command='access_denied';
+// Allinea i permessi a quelli della sezione Contabilità:
+// solo utenti con diritto ACCOUNTING possono vedere la pagina "Sospesi".
+if(!access_allowed(USER_BIT_ACCOUNTING)) $command='access_denied';
 
 $orderby = isset($_REQUEST['orderby']) ? $_REQUEST['orderby'] : 'date';
 

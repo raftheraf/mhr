@@ -6,6 +6,14 @@ $dont_display_menu=true;
 session_start();
 define('ROOTDIR','..');
 require_once(ROOTDIR."/includes.php");
+
+// Se arriviamo qui dopo un logout esplicito o da \"Torna al login\",
+// puliamo comunque la sessione per sicurezza, così l'utente NON risulta connesso.
+if (!empty($_REQUEST['from_logout'])) {
+	$_SESSION = array();
+	session_unset();
+}
+
 require(ROOTDIR."/waiter/waiter_start_1.php");
 
 $tpl -> set_waiter_template_file ('standard');
@@ -38,7 +46,8 @@ switch($command) {
 			$tpl -> append("messages", $tmp);
 			$tmp = 'Connettiti';
 			$tpl -> assign("title", $tmp);
-			$tmp = redirect_waiter('tables.php');
+			// Redirect dopo login: attesa fissa di 2 secondi
+			$tmp = redirect_timed('tables.php', 2000);
 			$tpl -> append ('scripts',$tmp);
 
 			if(isset($_REQUEST['url']) && !empty($_REQUEST['url'])) {
@@ -69,63 +78,39 @@ switch($command) {
 			$tpl -> append ('scripts',$tmp);
 		}
 		//RTR end
-
-
-//RTR START allowed_user_host
-//nuova funzione per accesso automatico con ip impostato di default nella tabella users
-// funzione nel file include/common_waiter.php
-
-if(allowed_user_host($_SERVER['REMOTE_ADDR']))
-{
-// connessione a MySQL con l'estensione MySQLi
-$mysqli = new mysqli("$cfgserver", "$cfguser", "$cfgpassword", "$db_common");
-
-// verifica dell'avvenuta connessione
-if (mysqli_connect_errno()) {
-// notifica in caso di errore
-echo "Errore in connessione al DBMS: ".mysqli_connect_error()."<br><br>";
-// interruzione delle esecuzioni i caso di errore
-exit();
-}
-
-// estrarre risultati con il metodo mysqli_result::fetch_array
-// query argomento del metodo query()
-$query = "SELECT id FROM mhr_users WHERE user_host='".$_SERVER['REMOTE_ADDR']."' ";
-// esecuzione della query
-$result = $mysqli->query($query);
-// conteggio dei record restituiti dalla query
-if($result->num_rows >0)
-{
-// generazione di un array numerico
-while($row = $result->fetch_array(MYSQLI_NUM))
-{
-$userid=$row[0];
-}
-}
-// liberazione delle risorse occupate dal risultato
-$result->close();
-// chiusura della connessione
-$mysqli->close();
-$_REQUEST['userid']= $userid;
-$_SESSION['userid']=$_REQUEST['userid'];
-$useridnotsetisok=true;
-$_SESSION['passworded']=true;
-$tmp = redirect('tables.php',0);
-$error_msg = '';
-$error_msg .= 'tables.php?userid='.$userid.'';
-$error_msg .= $_REQUEST['userid'];
-$error_msg .= '<br>';
-$error_msg .= '<H1>RTR funzione filtra accessi con IP</H1><br>'."\n";
-$error_msg .= '<b>'.$_SERVER['REMOTE_ADDR'].'</b> è il tuo indirizzo IP.<br>'."\n";
-$error_msg .= '<b>'.sprintf("%u",ip2long($_SERVER['REMOTE_ADDR'])).'</b> è il tuo indirizzo IP long.'."\n";
-$error_msg .= common_bottom();
-die($error_msg);
-}
-//RTR END
-
+		// Dopo logout o "Torna al login" da multi_tab_error: mostra sempre il form (no auto-login per IP)
+		elseif (!empty($_REQUEST['from_logout'])) {
+			$tmp = access_connect_form_waiter();
+			$tpl -> assign("content", $tmp);
+		}
+		// Accesso normale all'area waiter (es. waiter/ o index): auto-login per IP se configurato
+		elseif (allowed_user_host($_SERVER['REMOTE_ADDR'])) {
+			$mysqli = new mysqli("$cfgserver", "$cfguser", "$cfgpassword", "$db_common");
+			if (mysqli_connect_errno()) {
+				echo "Errore in connessione al DBMS: ".mysqli_connect_error()."<br><br>";
+				exit();
+			}
+			$query = "SELECT id FROM mhr_users WHERE user_host='".$_SERVER['REMOTE_ADDR']."' ";
+			$result = $mysqli->query($query);
+			if ($result && $result->num_rows > 0) {
+				$row = $result->fetch_array(MYSQLI_NUM);
+				$userid = $row[0];
+				$result->close();
+				$mysqli->close();
+				$_REQUEST['userid'] = $userid;
+				$_SESSION['userid'] = $userid;
+				$_SESSION['passworded'] = true;
+				header('Location: '.ROOTDIR.'/waiter/tables.php?userid='.$userid);
+				exit();
+			}
+			if ($result) $result->close();
+			$mysqli->close();
+			$tmp = access_connect_form_waiter();
+			$tpl -> assign("content", $tmp);
+		}
 		else {
-		$tmp = access_connect_form_waiter();
-		$tpl -> assign("content", $tmp);
+			$tmp = access_connect_form_waiter();
+			$tpl -> assign("content", $tmp);
 		}
 		break;
 }
