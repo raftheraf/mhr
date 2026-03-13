@@ -1698,9 +1698,9 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 		$totale_pos += $prezzo_riga;
 	}
 	if (isset($_SESSION['discount']) && isset($_SESSION['discount']['type']) && !empty($_SESSION['discount']['type'])) {
-		if ($_SESSION['discount']['type']=="amount") {
+		if ($_SESSION['discount']['type']=="amount" && isset($_SESSION['discount']['amount'])) {
 			$totale_pos = $totale_pos + $_SESSION['discount']['amount'];
-		} elseif ($_SESSION['discount']['type']=="percent") {
+		} elseif ($_SESSION['discount']['type']=="percent" && isset($_SESSION['discount']['percent'])) {
 			$totale_pos = $totale_pos - $totale_pos/100*$_SESSION['discount']['percent'];
 		}
 	}
@@ -1852,16 +1852,21 @@ function bill_total(){
 		</tr>
 		';
 
-	if(!isset($_SESSION['discount']) or !isset($_SESSION['discount']['type']) or empty($_SESSION['discount']['type'])) return $output;
+	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])) {
+		return $output;
+	}
 
-	if($_SESSION['discount']['type']=="amount") {
-		$total_discounted=$total+$_SESSION['discount']['amount'];
-		$discount_label="";
-		$discount_number=-$_SESSION['discount']['amount'];
-	} elseif($_SESSION['discount']['type']=="percent") {
-		$total_discounted=$total-$total/100*$_SESSION['discount']['percent'];
-		$discount_label=$_SESSION['discount']['percent'].' %';
-		$discount_number=$total/100*$_SESSION['discount']['percent'];
+	if($_SESSION['discount']['type']=="amount" && isset($_SESSION['discount']['amount'])) {
+		$total_discounted = $total + $_SESSION['discount']['amount'];
+		$discount_label = "";
+		$discount_number = -$_SESSION['discount']['amount'];
+	} elseif($_SESSION['discount']['type']=="percent" && isset($_SESSION['discount']['percent'])) {
+		$total_discounted = $total - $total/100*$_SESSION['discount']['percent'];
+		$discount_label = $_SESSION['discount']['percent'].' %';
+		$discount_number = $total/100*$_SESSION['discount']['percent'];
+	} else {
+		// Nessun dato di sconto valido: restituisce il totale senza righe aggiuntive
+		return $output;
 	}
 
 	$output .= '
