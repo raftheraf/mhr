@@ -774,6 +774,66 @@ function printAddTicketID($msg,$idLog)
 	return $msg;
 }
 
+// Controllo stato stampante Windows usando WMIC (best effort, non blocca se WMIC non è disponibile)
+function windows_printer_is_online($printerName, &$statusText = null) {
+	$printerName = trim((string)$printerName);
+	if ($printerName === '') {
+		$statusText = 'Nome stampante vuoto.';
+		return false;
+	}
+
+	// Sanifica minimamente il nome per la query WMIC (evita virgolette che rompono la where)
+	$wmicName = str_replace(array('"', "'"), '', $printerName);
+
+	$cmd = 'wmic printer where "Name=\''.$wmicName.'\'" get Name,WorkOffline,PrinterStatus,DetectedErrorState /value 2>&1';
+	@exec($cmd, $output, $ret);
+
+	// Se WMIC non è disponibile o non restituisce dati, non blocchiamo la stampa
+	if ($ret !== 0 || empty($output)) {
+		$statusText = 'Impossibile determinare lo stato della stampante (WMIC non disponibile o nessun dato).';
+		return true;
+	}
+
+	$data = array(
+		'Name'               => null,
+		'WorkOffline'        => null,
+		'PrinterStatus'      => null,
+		'DetectedErrorState' => null,
+	);
+
+	foreach ($output as $line) {
+		$line = trim($line);
+		if ($line === '') continue;
+		$parts = explode('=', $line, 2);
+		if (count($parts) != 2) continue;
+		list($k, $v) = $parts;
+		if (array_key_exists($k, $data)) {
+			$data[$k] = trim($v);
+		}
+	}
+
+	// Stampante non trovata
+	if ($data['Name'] === null || $data['Name'] === '') {
+		$statusText = "Stampante '$printerName' non trovata nel sistema.";
+		return false;
+	}
+
+	// WorkOffline = TRUE -> spooler la considera offline
+	if (strcasecmp($data['WorkOffline'], 'TRUE') === 0) {
+		$statusText = "La stampante '$printerName' risulta OFFLINE (WorkOffline=TRUE).";
+		return false;
+	}
+
+	// DetectedErrorState: 0 nessun errore, altri valori indicano problemi
+	if ($data['DetectedErrorState'] !== null && $data['DetectedErrorState'] !== '' && $data['DetectedErrorState'] !== '0') {
+		$statusText = "La stampante '$printerName' segnala un errore (DetectedErrorState=".$data['DetectedErrorState'].").";
+		return false;
+	}
+
+	// Altri stati (PrinterStatus) li accettiamo, ma li annotiamo nel testo
+	$statusText = "Stampante '$printerName' OK (Status=".$data['PrinterStatus'].", WorkOffline=".$data['WorkOffline'].").";
+	return true;
+}
 
 function print_line($destid,$msg){
 	$debug = __FUNCTION__.' - Printing to destid '.$destid.' - line '.$msg.' '."\n";
