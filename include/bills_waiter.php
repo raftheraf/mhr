@@ -1629,19 +1629,19 @@ function bill_type_selection($sourceid){
 //	$output .= '<tr><td><br><hr><br></td></tr>';
 
 	if ($ricevuta){
-		$output .= '<tr><td><input type="radio" name="type" value="3" '.$chk[3].' class="radio">ricevuta<br><br></td></tr>';
+		$output .= '<tr><td><input type="radio" name="type" value="3" '.$chk[3].' class="radio" onclick="toggle_corrispettivo_by_type();">ricevuta<br><br></td></tr>';
 	}
 	if ($ricevuta1){
-		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="4" '.$chk[4].' class="radio"> ricevuta1 BAR<br><br></td></tr>';
+		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="4" '.$chk[4].' class="radio" onclick="toggle_corrispettivo_by_type();"> ricevuta1 BAR<br><br></td></tr>';
 	}
 	if ($fattura){
-		$output .= '<tr><td><input type="radio" name="type" value="5" '.$chk[5].' class="radio">fattura<br><br></td></tr>';
+		$output .= '<tr><td><input type="radio" name="type" value="5" '.$chk[5].' class="radio" onclick="toggle_corrispettivo_by_type();">fattura<br><br></td></tr>';
 	}
 	if ($fattura1){
-		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="6" '.$chk[6].' class="radio">fattura1 BAR<br><br></td></tr>';
+		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="6" '.$chk[6].' class="radio" onclick="toggle_corrispettivo_by_type();">fattura1 BAR<br><br></td></tr>';
 	}
 	if ($scontrino){
-		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="7" '.$chk[7].' class="radio">scontrino BAR</td></tr>';
+		$output .= '<tr><td bgcolor="lightgrey"><input type="radio" name="type" value="7" '.$chk[7].' class="radio" onclick="toggle_corrispettivo_by_type();">scontrino BAR</td></tr>';
 	}
 	$output .= '</table>';
 
@@ -1733,9 +1733,28 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 		input.value = num.toFixed(2);
 		return true;
 	}
+
+	function toggle_corrispettivo_by_type() {
+		var fs = document.getElementById("fieldset_corrispettivo");
+		if (!fs) return;
+		var radios = document.getElementsByName("type");
+		var show = false;
+		for (var i = 0; i < radios.length; i++) {
+			if (radios[i].checked) {
+				var v = parseInt(radios[i].value, 10);
+				if (v >= 3 && v <= 7) {
+					show = true;
+				}
+				break;
+			}
+		}
+		fs.style.display = show ? "" : "none";
+	}
+
+	window.setTimeout(toggle_corrispettivo_by_type, 0);
 	</script>
 	<br><br>
-	<FIELDSET>
+	<FIELDSET id="fieldset_corrispettivo" style="display:none;">
 	<LEGEND><b>CORRISPETTIVO</b></LEGEND>
 		<table width="100%" align="center" border="0" cellspacing="10" cellpadding="0">
 			<tr>
