@@ -102,24 +102,27 @@ class display {
 		foreach($rows[$row] as $col => $value) {
 			$o .= '
 			<td class="admin_td_'.$suff.'"';
-			if(isset($this->widths[$row][$col]) && !empty ($this->widths[$row][$col])) {
+			if (isset($this->widths[$row][$col]) && !empty($this->widths[$row][$col])) {
 				$o .= ' width="'.$this->widths[$row][$col].'"';
 			}
-			if(isset($this->clicks[$row][$col]) && !empty ($this->clicks[$row][$col])) {
+			// Evita doppio handler: se esiste un link, non aggiungere onclick sul TD
+			$has_link  = (isset($this->links[$row][$col])  && !empty($this->links[$row][$col]));
+			$has_click = (isset($this->clicks[$row][$col]) && !empty($this->clicks[$row][$col]));
+			if ($has_click && !$has_link) {
 				$o .= ' onclick="'.$this->clicks[$row][$col].'"';
 			}
-			if(isset($this->properties[$row][$col]) && !empty ($this->properties[$row][$col])) {
+			if (isset($this->properties[$row][$col]) && !empty($this->properties[$row][$col])) {
 				$o .= ' '.$this->properties[$row][$col].'"';
 			}
 			$o .= '>';
 			
-			if(isset($this->links[$row][$col]) && !empty ($this->links[$row][$col])) {
+			if ($has_link) {
 				$o .= '<a href="'.$this->links[$row][$col].'">';
 			}
 			
 			$o .= $rows[$row][$col];
 			
-			if(isset($this->links[$row][$col]) && !empty ($this->links[$row][$col])) {
+			if ($has_link) {
 				$o .= '</a>';
 			}
 			
