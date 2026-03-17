@@ -1715,6 +1715,25 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 
 	if (access_allowed(USER_BIT_MONEY)) {
 	$output .= '
+	<script type="text/javascript">
+	function verifica_importo_carta(input, maxImporto) {
+		if (!input) return true;
+		var val = input.value.replace(",", ".");
+		var num = parseFloat(val);
+		var max = parseFloat(maxImporto);
+		if (isNaN(num) || num < 0) {
+			input.value = "";
+			return true;
+		}
+		if (!isNaN(max) && num > max) {
+			alert("L\'importo carta non può superare il totale del tavolo (" + max.toFixed(2) + ").");
+			input.value = max.toFixed(2);
+			return false;
+		}
+		input.value = num.toFixed(2);
+		return true;
+	}
+	</script>
 	<br><br>
 	<FIELDSET>
 	<LEGEND><b>CORRISPETTIVO</b></LEGEND>
@@ -1726,7 +1745,8 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 					<button type="button" id="btn_mostra_importo_carta" onclick="return mostra_importo_carta();">+ importo carta</button>
 					<span id="wrap_importo_carta" style="display:none">
 						+ CARTA
-						<input type="text" name="pagato_carte_di_credito" size="3" maxlength="6" value="" placeholder="0.00">
+						<input type="text" name="pagato_carte_di_credito" size="3" maxlength="6" value="" placeholder="0.00"
+							onblur="verifica_importo_carta(this, '.$totale_pos_amount.');">
 						<button type="button"
 							id="btn_pos_carta"
 							onclick="return invia_pos_carta();"
