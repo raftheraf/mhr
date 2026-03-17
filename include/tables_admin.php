@@ -187,7 +187,10 @@ class table extends object {
 		if($orderid && $mods) $query .= " AND `associated_id`='".$orderid."'";
 		elseif($orderid && !$mods) $query .= " AND `id`='".$orderid."'";
 
-		if(!get_conf(__FILE__,__LINE__,"orders_show_deleted")) $query .= " AND `deleted`='0'";
+		// Applica il filtro "Mostra ordini cancellati" solo alla lista completa (tabellalistaordini),
+		// ma NON alla tabella dell'ultima operazione (tabellalastorder), così l'ultimo ordine
+		// è visibile anche se cancellato.
+		if(!$orderid && !get_conf(__FILE__,__LINE__,"orders_show_deleted")) $query .= " AND `deleted`='0'";
 		// Ordine visualizzazione:
 		// 1) coperti (SERVICE_ID)
 		// 2) menu fissi
