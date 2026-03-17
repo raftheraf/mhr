@@ -188,7 +188,17 @@ class table extends object {
 		elseif($orderid && !$mods) $query .= " AND `id`='".$orderid."'";
 
 		if(!get_conf(__FILE__,__LINE__,"orders_show_deleted")) $query .= " AND `deleted`='0'";
-		$query .=" ORDER BY priority ASC, menu_fisso DESC, associated_id ASC, dishid DESC, id ASC";
+		// Ordine visualizzazione:
+		// 1) coperti (SERVICE_ID)
+		// 2) menu fissi
+		// 3) tutti gli altri piatti nell'ordine logico esistente
+		$query .=" ORDER BY
+			CASE WHEN dishid=".SERVICE_ID." THEN 0 ELSE 1 END ASC,
+			menu_fisso DESC,
+			priority ASC,
+			associated_id ASC,
+			dishid DESC,
+			id ASC";
 
 // ______________________________________________________________________
 // RTR END
