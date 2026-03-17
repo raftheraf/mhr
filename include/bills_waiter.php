@@ -853,7 +853,7 @@ function bill_print_row($key,$value,$destid){
 	return $msg;
 }
 
-//Funzione per la stampante MCH RCH PRINT-F
+//Funzione per la stampante MCH RCH PrintF
 function bill_print_row_printf($key,$value,$destid){
 	global $output_page;
 	//RTR prima riga del conto
