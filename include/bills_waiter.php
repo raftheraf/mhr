@@ -1383,6 +1383,77 @@ function bill_method_selector(){
 	return $output;
 }
 
+function bill_is_menu_fisso_dish($dishid) {
+	// Cache per evitare di rileggere lo stesso piatto più volte
+	static $cache = array();
+
+	$dishid = (int)$dishid;
+	if (isset($cache[$dishid])) {
+		return $cache[$dishid];
+	}
+
+	if (!$dishid) {
+		$cache[$dishid] = false;
+		return false;
+	}
+
+	$dish = new dish($dishid);
+	if (!$dish->exists()) {
+		$cache[$dishid] = false;
+		return false;
+	}
+
+	$cache[$dishid] = !empty($dish->data['menufisso']);
+	return $cache[$dishid];
+}
+
+function bill_compare_separated_keys($a, $b) {
+	// Ordine desiderato:
+	// 1) Piatti ROMANA_QUOTA_ID
+	// 2) Piatti SERVICE_ID (coperto)
+	// 3) Piatti che sono menù fisso
+	// 4) Tutto il resto, nell'ordine originale (id riga ordine)
+
+	$sa = isset($_SESSION['separated'][$a]) ? $_SESSION['separated'][$a] : null;
+	$sb = isset($_SESSION['separated'][$b]) ? $_SESSION['separated'][$b] : null;
+
+	if ($sa === null || $sb === null) {
+		// fallback: ordina per id
+		return $a == $b ? 0 : ($a < $b ? -1 : 1);
+	}
+
+	$dishid_a = isset($sa['dishid']) ? (int)$sa['dishid'] : 0;
+	$dishid_b = isset($sb['dishid']) ? (int)$sb['dishid'] : 0;
+
+	// Calcola il "rank" per ciascuna riga
+	$rank_a = 3;
+	$rank_b = 3;
+
+	if ($dishid_a === ROMANA_QUOTA_ID) {
+		$rank_a = 0;
+	} elseif ($dishid_a === SERVICE_ID) {
+		$rank_a = 1;
+	} elseif (bill_is_menu_fisso_dish($dishid_a)) {
+		$rank_a = 2;
+	}
+
+	if ($dishid_b === ROMANA_QUOTA_ID) {
+		$rank_b = 0;
+	} elseif ($dishid_b === SERVICE_ID) {
+		$rank_b = 1;
+	} elseif (bill_is_menu_fisso_dish($dishid_b)) {
+		$rank_b = 2;
+	}
+
+	if ($rank_a !== $rank_b) {
+		return ($rank_a < $rank_b) ? -1 : 1;
+	}
+
+	// Stesso rank: mantieni l'ordine originale (id crescente)
+	if ($a == $b) return 0;
+	return ($a < $b) ? -1 : 1;
+}
+
 function bill_show_list(){
 	/*
 	prints on the page the list of dishes based on the waiter session
@@ -1407,10 +1478,13 @@ function bill_show_list(){
 
 	$class=COLOR_ORDER_PRINTED;
 
-	ksort($_SESSION['separated']);
+	// Ordina le righe secondo le regole del conto alla romana
+	$keys = array_keys($_SESSION['separated']);
+	usort($keys, 'bill_compare_separated_keys');
 
 	// the next for prints the list and the chosen dishes
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+	foreach ($keys as $key) {
+		$value = $_SESSION['separated'][$key];
 		if($_SESSION['separated'][$key]['extra_care']){
 			$classextra=COLOR_ORDER_EXTRACARE;
 		} else {

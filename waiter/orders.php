@@ -149,8 +149,42 @@ switch ($command){
 					break;
 				}
 
+				// Impedisci l'inserimento di più conti alla romana sullo stesso tavolo
+				if ($dishid == ROMANA_QUOTA_ID && isset($_SESSION['sourceid'])) {
+					$sourceid = mysql_real_escape_string($_SESSION['sourceid']);
+					$query = "
+						SELECT id FROM `#prefix#orders`
+						WHERE `sourceid` = '".$sourceid."'
+						  AND `deleted` = 0
+						  AND `dishid` = '".ROMANA_QUOTA_ID."'
+						LIMIT 1
+					";
+					$res = common_query($query,__FILE__,__LINE__);
+					if ($res && mysql_num_rows($res) > 0) {
+						$tmp = '<b><font color="Red">È già presente un conto alla romana per questo tavolo.</font></b><br>';
+						$tpl -> append('messages', $tmp);
+						orders_list();
+						break;
+					}
+				}
+
 				if($dishid) {
 					$id = orders_create ($dishid, $start_data);
+				}
+
+				// Se è stata inserita una quota "Conto alla romana",
+				// considera pagati tutti i piatti del tavolo (restano da pagare solo le quote)
+				if ($dishid == ROMANA_QUOTA_ID && isset($_SESSION['sourceid'])) {
+					$sourceid = mysql_real_escape_string($_SESSION['sourceid']);
+					$query = "
+						UPDATE `#prefix#orders`
+						SET `paid` = `quantity`
+						WHERE `sourceid` = '".$sourceid."'
+						  AND `deleted` = 0
+						  AND `printed` IS NOT NULL
+						  AND `dishid` != '".ROMANA_QUOTA_ID."'
+					";
+					common_query($query,__FILE__,__LINE__);
 				}
 
 // RTR START NOW
