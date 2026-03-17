@@ -600,6 +600,151 @@ function bill_logger($item_id,$receipt_id){
 	return 0;
 }
 
+/**
+ * Registra in contabilità tutti i piatti del tavolo (esclusa la quota alla romana)
+ * al momento della creazione del conto alla romana, e li marca come pagati.
+ *
+ * Crea un receipt "tecnico" nel db contabile, con description del tipo:
+ *   "Incasso piatti alla romana: <internal_id>"
+ * così da poter distinguere questo documento dagli scontrini/ricevute normali.
+ *
+ * @param int $sourceid
+ * @return int 0 ok, !=0 codice errore
+ */
+function logga_incasso_piatti_romana_e_chiudi_ordini($sourceid) {
+	$sourceid = (int)$sourceid;
+	if (!$sourceid) return 0;
+
+	// Determina il db contabile da usare
+	if (!isset($_SESSION['account']) || !$_SESSION['account']) {
+		$accountdb = common_find_first_db();
+		$_SESSION['account'] = $accountdb;
+	} else {
+		$accountdb = $_SESSION['account'];
+	}
+
+	// Leggi alcune info di base del tavolo
+	$tavolo_numero = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"name",$sourceid);
+	$customer_id   = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"customer",$sourceid);
+	$takeaway_surname = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"takeaway_surname",$sourceid);
+
+	// Tipo documento "tecnico": usiamo un type fittizio 99 (come alcuni preconti),
+	// ma con description personalizzata per riconoscerlo.
+	$type = 99;
+	$tipo_corrispettivo = 'T1'; // neutro, non rilevante ai fini fiscali qui
+
+	// Crea il receipt in account_mgmt_main
+	$receipt_id = receipt_insert($accountdb, $type, $customer_id, $takeaway_surname, $tavolo_numero, $tipo_corrispettivo);
+	if (!$receipt_id) {
+		return ERR_MYSQL;
+	}
+
+	// Sovrascrivi la description per renderla chiara
+	$table = $GLOBALS['table_prefix'].'account_mgmt_main';
+	$query_desc = "
+		UPDATE $table
+		SET `description` = 'Incasso piatti alla romana: ' || `internal_id`
+		WHERE `id` = '$receipt_id'
+	";
+	if (!empty($accountdb)) {
+		mysql_select_db($accountdb);
+	}
+	$res_desc = mysql_query($query_desc);
+	if (mysql_errno()) {
+		// Non bloccare tutto per un problema sulla description, ma segnala
+		$msg = 'Error in '.__FUNCTION__.' - updating description: '.mysql_errno().' '.mysql_error();
+		error_msg(__FILE__,__LINE__,$msg);
+	}
+
+	// Per coerenza con bill_logger, prepariamo $_SESSION['type']
+	$old_type = isset($_SESSION['type']) ? $_SESSION['type'] : null;
+	$_SESSION['type'] = 3; // usa un type che abilita l'UPDATE del campo paid
+
+	// Scorri tutti gli ordini del tavolo (esclusa la quota romana)
+	$q = "
+		SELECT * FROM `#prefix#orders`
+		WHERE `sourceid` = '$sourceid'
+		  AND `deleted` = 0
+		  AND `printed` IS NOT NULL
+		  AND `dishid` != '".ROMANA_QUOTA_ID."'
+	";
+	$res = common_query($q,__FILE__,__LINE__);
+	if (!$res) {
+		if ($old_type !== null) $_SESSION['type'] = $old_type;
+		return ERR_MYSQL;
+	}
+
+	while ($arr = mysql_fetch_array($res)) {
+		$orderid = (int)$arr['id'];
+		$quantity = (int)$arr['quantity'];
+		$paid     = (int)$arr['paid'];
+		$topay    = $quantity - $paid;
+
+		if ($topay <= 0) {
+			continue;
+		}
+
+		$price_per_unit = ($quantity > 0) ? ($arr['price'] / $quantity) : 0;
+		$line_price = $price_per_unit * $topay;
+
+		// aggiorna paid a livello ordine principale
+		$newpaid = $paid + $topay;
+		if ($newpaid < 0) $newpaid = 0;
+
+		$upd_q = "UPDATE `#prefix#orders` SET `paid` = '$newpaid' WHERE `id` = '".$orderid."'";
+		$res_upd = common_query($upd_q,__FILE__,__LINE__);
+		if (!$res_upd) {
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return mysql_errno();
+		}
+
+		// scrivi nel log contabile principale
+		$log_err = write_log_item($orderid, $topay, $line_price, $receipt_id);
+		if ($log_err) {
+			$msg = 'Error in '.__FUNCTION__.' - Logging Error: '.$log_err;
+			error_msg(__FILE__,__LINE__,$msg);
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return 2;
+		}
+
+		// gestisci eventuali ordini associati (come fa bill_logger)
+		$q_assoc = "SELECT * FROM `#prefix#orders` WHERE `associated_id`='$orderid' AND `id`!='$orderid'";
+		$res_assoc = common_query($q_assoc,__FILE__,__LINE__);
+		if (!$res_assoc) {
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return mysql_errno();
+		}
+		while ($arr_assoc = mysql_fetch_array($res_assoc)) {
+			$assoc_id = (int)$arr_assoc['id'];
+			$assoc_quantity = (int)$arr_assoc['quantity'];
+			$price_per_unit_assoc = ($assoc_quantity > 0) ? ($arr_assoc['price'] / $assoc_quantity) : 0;
+			$line_price_assoc = $price_per_unit_assoc * $topay;
+
+			$upd_q_assoc = "UPDATE `#prefix#orders` SET `paid` = '$newpaid' WHERE `id` = '".$assoc_id."'";
+			$res_upd_assoc = common_query($upd_q_assoc,__FILE__,__LINE__);
+			if (!$res_upd_assoc) {
+				if ($old_type !== null) $_SESSION['type'] = $old_type;
+				return mysql_errno();
+			}
+
+			$log_err2 = write_log_item($assoc_id, $topay, $line_price_assoc, $receipt_id);
+			if ($log_err2) {
+				$msg = 'Error in '.__FUNCTION__.' - Logging Error (assoc): '.$log_err2;
+				error_msg(__FILE__,__LINE__,$msg);
+				if ($old_type !== null) $_SESSION['type'] = $old_type;
+				return 2;
+			}
+		}
+	}
+
+	// Ripristina il type precedente, se c'era
+	if ($old_type !== null) {
+		$_SESSION['type'] = $old_type;
+	}
+
+	return 0;
+}
+
 function bill_order_get_modifications($orderid,$lang='') {
 	$max_chars=5;
 	$show_priced_only = true;

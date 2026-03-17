@@ -172,19 +172,12 @@ switch ($command){
 					$id = orders_create ($dishid, $start_data);
 				}
 
-				// Se è stata inserita una quota "Conto alla romana",
-				// considera pagati tutti i piatti del tavolo (restano da pagare solo le quote)
-				if ($dishid == ROMANA_QUOTA_ID && isset($_SESSION['sourceid'])) {
-					$sourceid = mysql_real_escape_string($_SESSION['sourceid']);
-					$query = "
-						UPDATE `#prefix#orders`
-						SET `paid` = `quantity`
-						WHERE `sourceid` = '".$sourceid."'
-						  AND `deleted` = 0
-						  AND `printed` IS NOT NULL
-						  AND `dishid` != '".ROMANA_QUOTA_ID."'
-					";
-					common_query($query,__FILE__,__LINE__);
+				// Se è stata inserita una quota "Conto alla romana"
+				// e l'ordine è stato creato correttamente, registra
+				// l'incasso di tutti i piatti del tavolo (esclusa la quota)
+				// in un documento tecnico separato, e marca quei piatti come pagati.
+				if ($dishid == ROMANA_QUOTA_ID && isset($_SESSION['sourceid']) && $id) {
+					logga_incasso_piatti_romana_e_chiudi_ordini($_SESSION['sourceid']);
 				}
 
 // RTR START NOW
