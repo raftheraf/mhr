@@ -1,0 +1,2415 @@
+
+
+
+
+
+
+
+<?xml version="1.0"?>
+<MyHandyRestaurant>
+	<type> database </type>
+	<data>
+		<database>
+			<name> myhandyrestaurant </name>
+			<type> common </type>
+			<table name="mhr_accounting_dbs">
+				<name> mhr_accounting_dbs </name>
+				<string> CREATE TABLE `mhr_accounting_dbs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `db` text NOT NULL,
+  `print_bill` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="db">
+					<name> db </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="print_bill">
+					<name> print_bill </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_allowed_clients">
+				<name> mhr_allowed_clients </name>
+				<string> CREATE TABLE `mhr_allowed_clients` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `host` text NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2147483647 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="host">
+					<name> host </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="description">
+					<name> description </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_autocalc">
+				<name> mhr_autocalc </name>
+				<string> CREATE TABLE `mhr_autocalc` (
+  `id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `quantity` tinyint(4) NOT NULL DEFAULT '0',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> smallint(6) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="price">
+					<name> price </name>
+					<type> decimal(10,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_categories">
+				<name> mhr_categories </name>
+				<string> CREATE TABLE `mhr_categories` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  `htmlcolor` text NOT NULL,
+  `vat_rate` mediumint(9) NOT NULL DEFAULT '0',
+  `priority` tinyint(4) NOT NULL DEFAULT '0',
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `visible` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=62 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ordine">
+					<name> ordine </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="htmlcolor">
+					<name> htmlcolor </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="vat_rate">
+					<name> vat_rate </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="priority">
+					<name> priority </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="visible">
+					<name> visible </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_categories_en">
+				<name> mhr_categories_en </name>
+				<string> CREATE TABLE `mhr_categories_en` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_categories_it">
+				<name> mhr_categories_it </name>
+				<string> CREATE TABLE `mhr_categories_it` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_conf">
+				<name> mhr_conf </name>
+				<string> CREATE TABLE `mhr_conf` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` mediumtext NOT NULL,
+  `value` mediumtext NOT NULL,
+  `bool` tinyint(4) NOT NULL DEFAULT '0',
+  `defaultval` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`(10))
+) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> mediumtext </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="value">
+					<name> value </name>
+					<type> mediumtext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="bool">
+					<name> bool </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="defaultval">
+					<name> defaultval </name>
+					<type> mediumtext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_conf_en">
+				<name> mhr_conf_en </name>
+				<string> CREATE TABLE `mhr_conf_en` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_conf_it">
+				<name> mhr_conf_it </name>
+				<string> CREATE TABLE `mhr_conf_it` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_countries">
+				<name> mhr_countries </name>
+				<string> CREATE TABLE `mhr_countries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `currency_letter` text NOT NULL,
+  `currency_name` text NOT NULL,
+  `currency_html` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=307 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="currency_letter">
+					<name> currency_letter </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="currency_name">
+					<name> currency_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="currency_html">
+					<name> currency_html </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_customers">
+				<name> mhr_customers </name>
+				<string> CREATE TABLE `mhr_customers` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` tinytext NOT NULL,
+  `surname` tinytext NOT NULL,
+  `address` text NOT NULL,
+  `city` tinytext NOT NULL,
+  `zip` tinytext NOT NULL,
+  `phone` tinytext NOT NULL,
+  `mobile` tinytext NOT NULL,
+  `email` mediumtext NOT NULL,
+  `vat_account` tinytext NOT NULL,
+  `codice_fiscale` tinytext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1330 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="surname">
+					<name> surname </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="address">
+					<name> address </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="city">
+					<name> city </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="zip">
+					<name> zip </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="phone">
+					<name> phone </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="mobile">
+					<name> mobile </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="email">
+					<name> email </name>
+					<type> mediumtext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="vat_account">
+					<name> vat_account </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="codice_fiscale">
+					<name> codice_fiscale </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_dests">
+				<name> mhr_dests </name>
+				<string> CREATE TABLE `mhr_dests` (
+  `id` bigint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `dest` text NOT NULL,
+  `driver` tinytext NOT NULL,
+  `preconto` tinyint(4) NOT NULL DEFAULT '0',
+  `preconto1` tinyint(4) NOT NULL DEFAULT '0',
+  `bill` tinyint(4) NOT NULL DEFAULT '0',
+  `bill1` tinyint(4) NOT NULL DEFAULT '0',
+  `invoice` tinyint(4) NOT NULL DEFAULT '0',
+  `invoice1` tinyint(4) NOT NULL DEFAULT '0',
+  `receipt` tinyint(4) NOT NULL DEFAULT '0',
+  `language` tinytext NOT NULL,
+  `template` text NOT NULL,
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="dest">
+					<name> dest </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="driver">
+					<name> driver </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="preconto">
+					<name> preconto </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="preconto1">
+					<name> preconto1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="bill">
+					<name> bill </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="bill1">
+					<name> bill1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="invoice">
+					<name> invoice </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="invoice1">
+					<name> invoice1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="receipt">
+					<name> receipt </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="language">
+					<name> language </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="template">
+					<name> template </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_dishes">
+				<name> mhr_dishes </name>
+				<string> CREATE TABLE `mhr_dishes` (
+  `id` bigint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `ingreds` text NOT NULL,
+  `destid` mediumint(9) NOT NULL DEFAULT '0',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `category` mediumint(9) NOT NULL DEFAULT '1',
+  `autocalc` smallint(4) NOT NULL DEFAULT '0',
+  `dispingreds` text NOT NULL,
+  `stock_is_on` tinyint(4) NOT NULL DEFAULT '0',
+  `stock` int(11) NOT NULL DEFAULT '0',
+  `generic` tinyint(4) NOT NULL DEFAULT '0',
+  `visible` tinyint(4) NOT NULL DEFAULT '1',
+  `autocalc_skip` tinyint(4) NOT NULL DEFAULT '0',
+  `personal_list` tinyint(4) NOT NULL DEFAULT '0',
+  `personal_list_order` tinyint(11) NOT NULL DEFAULT '0',
+  `asporto_list` tinyint(4) NOT NULL DEFAULT '0',
+  `asporto_list_order` int(11) NOT NULL DEFAULT '0',
+  `menufisso` tinyint(4) NOT NULL DEFAULT '0',
+  `dishesmenufisso` text NOT NULL,
+  `salta_stampa` smallint(6) NOT NULL DEFAULT '0',
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`(14))
+) ENGINE=MyISAM AUTO_INCREMENT=2166 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ingreds">
+					<name> ingreds </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="destid">
+					<name> destid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="price">
+					<name> price </name>
+					<type> decimal(10,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="category">
+					<name> category </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="autocalc">
+					<name> autocalc </name>
+					<type> smallint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dispingreds">
+					<name> dispingreds </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="stock_is_on">
+					<name> stock_is_on </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="stock">
+					<name> stock </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="generic">
+					<name> generic </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="visible">
+					<name> visible </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="autocalc_skip">
+					<name> autocalc_skip </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="personal_list">
+					<name> personal_list </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="personal_list_order">
+					<name> personal_list_order </name>
+					<type> tinyint(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="asporto_list">
+					<name> asporto_list </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="asporto_list_order">
+					<name> asporto_list_order </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="menufisso">
+					<name> menufisso </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dishesmenufisso">
+					<name> dishesmenufisso </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="salta_stampa">
+					<name> salta_stampa </name>
+					<type> smallint(6) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_dishes_en">
+				<name> mhr_dishes_en </name>
+				<string> CREATE TABLE `mhr_dishes_en` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1564 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_dishes_it">
+				<name> mhr_dishes_it </name>
+				<string> CREATE TABLE `mhr_dishes_it` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1565 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_ingreds">
+				<name> mhr_ingreds </name>
+				<string> CREATE TABLE `mhr_ingreds` (
+  `id` bigint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `category` mediumint(9) NOT NULL DEFAULT '1',
+  `override_autocalc` tinyint(4) NOT NULL DEFAULT '0',
+  `visible` tinyint(4) NOT NULL DEFAULT '1',
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=569 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="price">
+					<name> price </name>
+					<type> decimal(10,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="category">
+					<name> category </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="override_autocalc">
+					<name> override_autocalc </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="visible">
+					<name> visible </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_ingreds_en">
+				<name> mhr_ingreds_en </name>
+				<string> CREATE TABLE `mhr_ingreds_en` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=574 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_ingreds_it">
+				<name> mhr_ingreds_it </name>
+				<string> CREATE TABLE `mhr_ingreds_it` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `table_id` mediumint(9) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=574 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_lang">
+				<name> mhr_lang </name>
+				<string> CREATE TABLE `mhr_lang` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`(20))
+) ENGINE=MyISAM AUTO_INCREMENT=545 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> mediumtext </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_lang_en">
+				<name> mhr_lang_en </name>
+				<string> CREATE TABLE `mhr_lang_en` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=534 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_lang_it">
+				<name> mhr_lang_it </name>
+				<string> CREATE TABLE `mhr_lang_it` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `table_id` (`table_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=534 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_last_orders">
+				<name> mhr_last_orders </name>
+				<string> CREATE TABLE `mhr_last_orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dishid` mediumint(9) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1296144 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) unsigned </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="dishid">
+					<name> dishid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_people_types">
+				<name> mhr_mgmt_people_types </name>
+				<string> CREATE TABLE `mhr_mgmt_people_types` (
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_people_types_en">
+				<name> mhr_mgmt_people_types_en </name>
+				<string> CREATE TABLE `mhr_mgmt_people_types_en` (
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `table_id` tinyint(4) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_people_types_it">
+				<name> mhr_mgmt_people_types_it </name>
+				<string> CREATE TABLE `mhr_mgmt_people_types_it` (
+  `id` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `table_id` tinyint(4) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_types">
+				<name> mhr_mgmt_types </name>
+				<string> CREATE TABLE `mhr_mgmt_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `account_only` tinyint(4) NOT NULL DEFAULT '0',
+  `is_invoice` tinyint(4) NOT NULL DEFAULT '0',
+  `is_receipt` tinyint(4) NOT NULL DEFAULT '0',
+  `log_to_bank` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_invoice_payment` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_bill` tinyint(4) NOT NULL DEFAULT '0',
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="account_only">
+					<name> account_only </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="is_invoice">
+					<name> is_invoice </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="is_receipt">
+					<name> is_receipt </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="log_to_bank">
+					<name> log_to_bank </name>
+					<type> tinyint(3) unsigned </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="is_invoice_payment">
+					<name> is_invoice_payment </name>
+					<type> tinyint(3) unsigned </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="is_bill">
+					<name> is_bill </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_types_en">
+				<name> mhr_mgmt_types_en </name>
+				<string> CREATE TABLE `mhr_mgmt_types_en` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_mgmt_types_it">
+				<name> mhr_mgmt_types_it </name>
+				<string> CREATE TABLE `mhr_mgmt_types_it` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_id` int(11) NOT NULL DEFAULT '0',
+  `table_name` text NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="table_id">
+					<name> table_id </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="table_name">
+					<name> table_name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_orders">
+				<name> mhr_orders </name>
+				<string> CREATE TABLE `mhr_orders` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `dishid` mediumint(9) NOT NULL DEFAULT '0',
+  `printed` datetime DEFAULT '0000-00-00 00:00:00',
+  `suspend` tinyint(4) NOT NULL DEFAULT '0',
+  `associated_id` mediumint(9) NOT NULL DEFAULT '0',
+  `operation` mediumint(9) NOT NULL DEFAULT '0',
+  `ingredid` text NOT NULL,
+  `ingred_qty` tinyint(4) NOT NULL DEFAULT '0',
+  `extra_care` tinyint(4) NOT NULL DEFAULT '0',
+  `sourceid` mediumint(9) NOT NULL DEFAULT '0',
+  `quantity` mediumint(9) NOT NULL DEFAULT '0',
+  `priority` smallint(6) NOT NULL DEFAULT '1',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `ingreds` text NOT NULL,
+  `category` mediumint(9) NOT NULL DEFAULT '1',
+  `paid` mediumint(9) NOT NULL DEFAULT '0',
+  `deleted` smallint(6) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dest_id` mediumint(9) NOT NULL DEFAULT '0',
+  `menu_fisso` tinyint(4) NOT NULL DEFAULT '0',
+  `nota_ordine` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sourceid` (`sourceid`)
+) ENGINE=MyISAM AUTO_INCREMENT=344329 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> int(11) unsigned </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="dishid">
+					<name> dishid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="printed">
+					<name> printed </name>
+					<type> datetime </type>
+					<null> YES </null>
+					<key>  </key>
+					<default> 0000-00-00 00:00:00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="suspend">
+					<name> suspend </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="associated_id">
+					<name> associated_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="operation">
+					<name> operation </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="ingredid">
+					<name> ingredid </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ingred_qty">
+					<name> ingred_qty </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="extra_care">
+					<name> extra_care </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="sourceid">
+					<name> sourceid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="priority">
+					<name> priority </name>
+					<type> smallint(6) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="price">
+					<name> price </name>
+					<type> decimal(10,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="ingreds">
+					<name> ingreds </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="category">
+					<name> category </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="paid">
+					<name> paid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> smallint(6) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="dest_id">
+					<name> dest_id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="menu_fisso">
+					<name> menu_fisso </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="nota_ordine">
+					<name> nota_ordine </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_sources">
+				<name> mhr_sources </name>
+				<string> CREATE TABLE `mhr_sources` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `ordernum` int(11) NOT NULL DEFAULT '0',
+  `visible` tinyint(4) NOT NULL DEFAULT '1',
+  `userid` mediumint(9) NOT NULL DEFAULT '0',
+  `utente_abilitato` mediumint(9) NOT NULL DEFAULT '0',
+  `toclose` tinyint(4) NOT NULL DEFAULT '0',
+  `discount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `scontrinato` tinyint(5) NOT NULL DEFAULT '0',
+  `paid` tinyint(4) NOT NULL DEFAULT '0',
+  `catprinted` text NOT NULL,
+  `catprinted_time` datetime DEFAULT NULL,
+  `last_access_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_access_userid` mediumint(9) NOT NULL DEFAULT '0',
+  `takeaway` tinyint(4) NOT NULL DEFAULT '0',
+  `sospeso` tinyint(4) NOT NULL DEFAULT '0',
+  `unito` tinyint(4) NOT NULL DEFAULT '0',
+  `takeaway_surname` text NOT NULL,
+  `prefix_telefono` int(11) NOT NULL DEFAULT '39',
+  `telefono` varchar(255) DEFAULT '',
+  `ora_prenotazione` text,
+  `takeaway_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `customer` bigint(20) NOT NULL DEFAULT '0',
+  `tablehtmlcolor` text NOT NULL,
+  `nota_tavolo` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=169 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ordernum">
+					<name> ordernum </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="visible">
+					<name> visible </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 1 </default>
+					<extra>  </extra>
+				</field>
+				<field name="userid">
+					<name> userid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="utente_abilitato">
+					<name> utente_abilitato </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="toclose">
+					<name> toclose </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="discount">
+					<name> discount </name>
+					<type> decimal(10,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="scontrinato">
+					<name> scontrinato </name>
+					<type> tinyint(5) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="paid">
+					<name> paid </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="catprinted">
+					<name> catprinted </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="catprinted_time">
+					<name> catprinted_time </name>
+					<type> datetime </type>
+					<null> YES </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="last_access_time">
+					<name> last_access_time </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="last_access_userid">
+					<name> last_access_userid </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="takeaway">
+					<name> takeaway </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="sospeso">
+					<name> sospeso </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="unito">
+					<name> unito </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="takeaway_surname">
+					<name> takeaway_surname </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="prefix_telefono">
+					<name> prefix_telefono </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 39 </default>
+					<extra>  </extra>
+				</field>
+				<field name="telefono">
+					<name> telefono </name>
+					<type> varchar(255) </type>
+					<null> YES </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ora_prenotazione">
+					<name> ora_prenotazione </name>
+					<type> text </type>
+					<null> YES </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="takeaway_time">
+					<name> takeaway_time </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0000-00-00 00:00:00 </default>
+					<extra>  </extra>
+				</field>
+				<field name="customer">
+					<name> customer </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="tablehtmlcolor">
+					<name> tablehtmlcolor </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="nota_tavolo">
+					<name> nota_tavolo </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_stock_ingredient_quantities">
+				<name> mhr_stock_ingredient_quantities </name>
+				<string> CREATE TABLE `mhr_stock_ingredient_quantities` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `obj_id` bigint(20) NOT NULL DEFAULT '0',
+  `dish_id` bigint(20) NOT NULL DEFAULT '0',
+  `quantity` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `obj_id` (`obj_id`),
+  KEY `dish_id` (`dish_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="obj_id">
+					<name> obj_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dish_id">
+					<name> dish_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_stock_ingredient_samples">
+				<name> mhr_stock_ingredient_samples </name>
+				<string> CREATE TABLE `mhr_stock_ingredient_samples` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `obj_id` bigint(20) NOT NULL DEFAULT '0',
+  `dish_id` bigint(20) NOT NULL DEFAULT '0',
+  `quantity` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `obj_id` (`obj_id`),
+  KEY `dish_id` (`dish_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=159 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="obj_id">
+					<name> obj_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dish_id">
+					<name> dish_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_stock_movements">
+				<name> mhr_stock_movements </name>
+				<string> CREATE TABLE `mhr_stock_movements` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `obj_id` bigint(20) NOT NULL DEFAULT '0',
+  `dish_id` bigint(20) NOT NULL DEFAULT '0',
+  `dish_quantity` float NOT NULL DEFAULT '0',
+  `quantity` float NOT NULL DEFAULT '0',
+  `unit_type` tinyint(4) NOT NULL DEFAULT '0',
+  `value` float NOT NULL DEFAULT '0',
+  `user` mediumint(9) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `obj_id` (`obj_id`),
+  KEY `dish_id` (`dish_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=129269 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="obj_id">
+					<name> obj_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dish_id">
+					<name> dish_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="dish_quantity">
+					<name> dish_quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="unit_type">
+					<name> unit_type </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="value">
+					<name> value </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="user">
+					<name> user </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_stock_objects">
+				<name> mhr_stock_objects </name>
+				<string> CREATE TABLE `mhr_stock_objects` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `ref_type` tinyint(4) NOT NULL DEFAULT '0',
+  `ref_id` bigint(20) NOT NULL DEFAULT '0',
+  `quantity` float NOT NULL DEFAULT '0',
+  `unit_type` tinyint(4) NOT NULL DEFAULT '0',
+  `value` float NOT NULL DEFAULT '0',
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`(10)),
+  KEY `ref_id` (`ref_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4776 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="ref_type">
+					<name> ref_type </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="ref_id">
+					<name> ref_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="unit_type">
+					<name> unit_type </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="value">
+					<name> value </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_stock_samples">
+				<name> mhr_stock_samples </name>
+				<string> CREATE TABLE `mhr_stock_samples` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `obj_id` bigint(20) NOT NULL DEFAULT '0',
+  `quantity` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `timestamp` (`timestamp`,`obj_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="timestamp">
+					<name> timestamp </name>
+					<type> timestamp </type>
+					<null> NO </null>
+					<key> MUL </key>
+					<default> CURRENT_TIMESTAMP </default>
+					<extra> on update CURRENT_TIMESTAMP </extra>
+				</field>
+				<field name="obj_id">
+					<name> obj_id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="quantity">
+					<name> quantity </name>
+					<type> float </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_system">
+				<name> mhr_system </name>
+				<string> CREATE TABLE `mhr_system` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> bigint(20) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="value">
+					<name> value </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_users">
+				<name> mhr_users </name>
+				<string> CREATE TABLE `mhr_users` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `can_open_closed_table` tinyint(4) NOT NULL DEFAULT '0',
+  `language` tinytext NOT NULL,
+  `level` int(11) NOT NULL DEFAULT '0',
+  `password` text NOT NULL,
+  `template` text NOT NULL,
+  `disabled` tinyint(4) NOT NULL DEFAULT '0',
+  `user_host` text NOT NULL,
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `preconto` tinyint(4) NOT NULL DEFAULT '0',
+  `preconto1` tinyint(4) NOT NULL DEFAULT '0',
+  `ricevuta` tinyint(4) NOT NULL DEFAULT '0',
+  `ricevuta1` tinyint(4) NOT NULL DEFAULT '0',
+  `fattura` tinyint(4) NOT NULL DEFAULT '0',
+  `fattura1` tinyint(4) NOT NULL DEFAULT '0',
+  `scontrino` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="can_open_closed_table">
+					<name> can_open_closed_table </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="language">
+					<name> language </name>
+					<type> tinytext </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="level">
+					<name> level </name>
+					<type> int(11) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="password">
+					<name> password </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="template">
+					<name> template </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="disabled">
+					<name> disabled </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="user_host">
+					<name> user_host </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="deleted">
+					<name> deleted </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="preconto">
+					<name> preconto </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="preconto1">
+					<name> preconto1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="ricevuta">
+					<name> ricevuta </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="ricevuta1">
+					<name> ricevuta1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="fattura">
+					<name> fattura </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="fattura1">
+					<name> fattura1 </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+				<field name="scontrino">
+					<name> scontrino </name>
+					<type> tinyint(4) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+			<table name="mhr_vat_rates">
+				<name> mhr_vat_rates </name>
+				<string> CREATE TABLE `mhr_vat_rates` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `rate` decimal(3,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 </string>
+				<field name="id">
+					<name> id </name>
+					<type> mediumint(9) </type>
+					<null> NO </null>
+					<key> PRI </key>
+					<default>  </default>
+					<extra> auto_increment </extra>
+				</field>
+				<field name="name">
+					<name> name </name>
+					<type> text </type>
+					<null> NO </null>
+					<key>  </key>
+					<default>  </default>
+					<extra>  </extra>
+				</field>
+				<field name="rate">
+					<name> rate </name>
+					<type> decimal(3,2) </type>
+					<null> NO </null>
+					<key>  </key>
+					<default> 0.00 </default>
+					<extra>  </extra>
+				</field>
+			</table>
+		</database>
+	</data>
+</MyHandyRestaurant>

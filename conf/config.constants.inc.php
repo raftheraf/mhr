@@ -80,6 +80,7 @@ define('MIN_SEARCH_LENGTH',		0);
 define('SERVICE_ID',         -1);
 define('MOD_ID',             -2);
 define('DISCOUNT_ID',        -3);
+define('ROMANA_QUOTA_ID',    -4);
 
 define('LANG_TABLES_NUMBER', 	3);			// The number of tables added per language to the db
 define('LANG_FILES_NUMBER',  	1);			// The number of files added per language to the lang dir

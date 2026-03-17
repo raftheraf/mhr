@@ -75,13 +75,19 @@ class order {
 		);
 
 		if ($arr['generic']) {
-													if ($arr['price']>0) {
-														$new_arr['extra_care']=0;
-													} else {
-														$new_arr['extra_care']=1;
-													}
-													$new_arr['price']=$arr['price']*$input_data['quantity'];
-												}
+			if ($arr['price']>0) {
+				$new_arr['extra_care']=0;
+			} else {
+				$new_arr['extra_care']=1;
+			}
+
+			// Per la quota "conto alla romana" il prezzo viene passato esplicitamente
+			if ($dishid == ROMANA_QUOTA_ID && isset($input_data['romana_total']) && $input_data['romana_total'] !== '') {
+				$new_arr['price'] = (float)str_replace(',', '.', $input_data['romana_total']);
+			} else {
+				$new_arr['price']=$arr['price']*$input_data['quantity'];
+			}
+		}
 
 		$this->data=$new_arr;
 		return 0;
@@ -469,6 +475,7 @@ class order {
 			$price_unitary = $dish -> getPrice();
 		}
 
+		// Piatti generici (inclusa la quota alla romana) mantengono il prezzo impostato in inserimento
 		if ($dishid != SERVICE_ID && $dish -> getGeneric())
 			return 0.0;
 

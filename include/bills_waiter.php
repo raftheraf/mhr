@@ -1349,6 +1349,9 @@ function bill_method_selector(){
 					'."\n";
 	} else {
 		$output .= '
+				<!-- Conto alla romana -->
+				<button type="button" class="button_big" onclick="mostraContoRomana();">Conto alla Romana</button>
+				<br><br>
 				<FORM ACTION="orders.php?command=bill_select" METHOD=POST>
 				<INPUT TYPE="submit" value=" CONTI SEPARATI " class="button_big">
 				</form>
@@ -1709,6 +1712,7 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 	}
 	$totale_pos = round($totale_pos,2);
 	$totale_pos_amount = number_format($totale_pos,2,'.','');
+	$romana_totale_euro = sprintf("%0.2f", $totale_pos);
 
 	// mostra il bottone POS solo quando è selezionato il pagamento con CARTE
 	$style_btn_pos_totale = ($check3=='checked') ? '' : ' style="display:none"';
@@ -1752,8 +1756,94 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 	}
 
 	window.setTimeout(toggle_corrispettivo_by_type, 0);
+
+	function mostraContoRomana() {
+		var overlay = document.getElementById("romana_overlay");
+		if (overlay) overlay.style.display = "block";
+	}
+	function nascondiContoRomana() {
+		var overlay = document.getElementById("romana_overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	function romanaKey(ch){
+		var input = document.getElementById("romana_input");
+		if (!input) return;
+		var val = input.value || "";
+		if (ch === "C") {
+			input.value = "";
+			if (input.focus) input.focus();
+			return;
+		}
+		val += ch;
+		input.value = val;
+		if (input.focus) input.focus();
+	}
+	function romanaBackspace(){
+		var input = document.getElementById("romana_input");
+		if (!input) return;
+		var val = input.value || "";
+		input.value = val.substring(0, val.length - 1);
+		if (input.focus) input.focus();
+	}
+	function inviaContoRomana(){
+		var input = document.getElementById("romana_input");
+		if (!input) return false;
+		var val = (input.value || "").replace(/[^0-9]/g, "");
+		if (!val || parseInt(val,10) <= 0) {
+			alert("Inserire un numero di quote valido.");
+			if (input.focus) input.focus();
+			return false;
+		}
+		// Usa redir() per mantenere la logica esistente (mhr_tab_id, ecc.)
+		var url = "orders.php?command=create"
+			+ "&dishid='.ROMANA_QUOTA_ID.'"
+			+ "&data[priority]=1"
+			+ "&data[quantity]=" + encodeURIComponent(val)
+			+ "&data[romana_total]=" + encodeURIComponent("'.$romana_totale_euro.'");
+		nascondiContoRomana();
+		if (typeof redir === "function") {
+			redir(url);
+		} else {
+			document.location.href = url;
+		}
+		return false;
+	}
 	</script>
 	<br><br>
+	<div id="romana_overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999;">
+		<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#FFCA68; padding:20px; border:2px solid #000; text-align:center;">
+			<h3>Conto alla romana</h3>
+			<p>Totale tavolo scontato = &euro; '.$romana_totale_euro.'</p>
+			<p>Numero di quote:</p>
+			<input type="text" id="romana_input" value="" class="input" style="width:120px;text-align:center;" inputmode="numeric" pattern="[0-9]+"><br/><br/>
+				<table id="romana_keypad" cellspacing="6" cellpadding="0" style="margin:0 auto; text-align:center;">
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'7\');return false;">7</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'8\');return false;">8</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'9\');return false;">9</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'4\');return false;">4</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'5\');return false;">5</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'6\');return false;">6</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'1\');return false;">1</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'2\');return false;">2</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'3\');return false;">3</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaBackspace();return false;">&larr;</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'0\');return false;">0</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaKey(\'C\');return false;">C</button></td>
+					</tr>
+				</table>
+				<br/>
+				<button type="button" class="button_big" style="width:120px;" onclick="nascondiContoRomana();return false;">Annulla</button>
+				&nbsp;&nbsp;
+				<button type="button" class="button_big" style="width:120px;" onclick="return inviaContoRomana();">Invia</button>
+		</div>
+	</div>
 	<FIELDSET id="fieldset_corrispettivo" style="display:none;">
 	<LEGEND><b>CORRISPETTIVO</b></LEGEND>
 		<table width="100%" align="center" border="0" cellspacing="10" cellpadding="0">
