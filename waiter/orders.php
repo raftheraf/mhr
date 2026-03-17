@@ -16,10 +16,14 @@ if(!access_allowed(USER_BIT_WAITER) and !access_allowed(USER_BIT_CASHIER)) {
 };
 
 // if no command has been given, tries to infer one
-if(empty($command) || $command=="none")
-	$command=table_suggest_command($_SESSION['sourceid']);
+// Usa un valore di default sicuro se sourceid non è impostato
+if (empty($command) || $command=="none") {
+	$sourceid = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : 0;
+	$command = table_suggest_command($sourceid);
+}
 
-$table = new table($_SESSION['sourceid']);
+$sourceid = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : 0;
+$table = new table($sourceid);
 if (!$table -> exists() and $command!='access_denied') {
 	$tmp = 'table doesn\'t exist.<br>'."\n";
 	$tpl -> append ('messages',$tmp);
@@ -600,7 +604,8 @@ switch ($command){
 				break;
 }
 // this line is already in waiter_start, but it's here repeated because of possible modifications from waiter start till now
-$tmp = table_people_number_line ($_SESSION['sourceid']);
+$sourceid_footer = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : 0;
+$tmp = table_people_number_line ($sourceid_footer);
 $tpl -> assign("people_number", $tmp);
 
 // html closing stuff and disconnect line

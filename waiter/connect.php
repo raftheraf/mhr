@@ -56,12 +56,21 @@ switch($command) {
 			}
 		}
 		else {
+			// Password errata o vuota: mostra il messaggio e ripresenta il form di login,
+			// senza fare redirect verso altre pagine che possono generare "Accesso negato".
+			// Pulisce anche l'utente di sessione per evitare il messaggio "Sei già connesso".
+			if (isset($_SESSION['userid'])) {
+				unset($_SESSION['userid']);
+			}
+			if (isset($_SESSION['passworded'])) {
+				unset($_SESSION['passworded']);
+			}
+
 			$tmp = 'ERRORE : '.error_get($err).'<br>';
 			$tpl -> append("messages", $tmp);
 
-			$tmp = redirect_waiter('index.php');
-			$tpl -> append ('scripts',$tmp);
-
+			$tmp = access_connect_form_waiter();
+			$tpl -> assign("content", $tmp);
 		}
 		break;
 

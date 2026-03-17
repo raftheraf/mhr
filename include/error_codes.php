@@ -42,7 +42,7 @@ define('ERR_MOD_NOT_CREATED',500);
 define('ERR_USER_NOT_FOUND',600);
 define('ERR_WRONG_PASSWORD',601);
 define('ERR_NO_USER_PROVIDED',602);
-define('ERR_NO_PASSWORD',603);
+define('ERR_NO_PASSWORD',601);
 
 // stock
 define('ERR_NAME_IS_BLANK',700);
