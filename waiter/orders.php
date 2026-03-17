@@ -70,6 +70,50 @@ switch ($command){
 					break;
 				}
 
+				// Regola priorità se la categoria è già stata lanciata (catprinted)
+				if ($dishid != SERVICE_ID && isset($start_data['priority'])) {
+					$priority_sel = (int)$start_data['priority'];
+					if ($priority_sel > 1 &&
+						isset($_SESSION['catprinted'][$priority_sel]) &&
+						$_SESSION['catprinted'][$priority_sel]
+					) {
+						// Se NON è un menu fisso: degrada a priorità 1 con warning
+						if (!controlla_menu_fisso($dishid)) {
+							$tmp = '<b><font color="Red">La priorità '.$priority_sel.' è già stata lanciata per questo tavolo. Il piatto verrà inserito con priorità 1.</font></b><br>'."\n";
+							$tpl -> append('messages', $tmp);
+							$start_data['priority'] = 1;
+						}
+					}
+				}
+
+				// Se è un menu fisso, controlla TUTTE le priorità dei piatti collegati:
+				// se almeno una è già stata lanciata, blocca l'intero inserimento (menu + piatto principale).
+				if ($dishid != SERVICE_ID && controlla_menu_fisso($dishid)) {
+					$query = "SELECT dishesmenufisso FROM mhr_dishes WHERE id='".$dishid."'";
+					$res = common_query($query,__FILE__,__LINE__);
+					if(!$res) return ERR_MYSQL;
+					$arr = mysql_fetch_array($res);
+					$mf = isset($arr['dishesmenufisso']) ? $arr['dishesmenufisso'] : '';
+					$parts = explode(" ", trim($mf));
+					$count = count($parts);
+					if ($count > 1) {
+						for ($i = 0; $i+1 < $count; $i += 2) {
+							$prio_mf = (int)$parts[$i+1];
+							if ($prio_mf > 1 &&
+								isset($_SESSION['catprinted'][$prio_mf]) &&
+								$_SESSION['catprinted'][$prio_mf]
+							) {
+								$tmp = '<b><font color="Red">La priorità '.$prio_mf.' di un piatto del menu fisso è già stata lanciata per questo tavolo. Impossibile inserire questo menu fisso.</font></b><br>'."\n";
+								$tpl -> append('messages', $tmp);
+
+								$tmp = navbar_empty('javascript:history.go(-1);');
+								$tpl -> assign('navbar', $tmp);
+								break 2; // esce sia dal for che dal case 'create'
+							}
+						}
+					}
+				}
+
 				// autosearch
 				// the user provided a text instead of a number,
 				// we look for dish
