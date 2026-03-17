@@ -600,6 +600,151 @@ function bill_logger($item_id,$receipt_id){
 	return 0;
 }
 
+/**
+ * Registra in contabilità tutti i piatti del tavolo (esclusa la quota alla romana)
+ * al momento della creazione del conto alla romana, e li marca come pagati.
+ *
+ * Crea un receipt "tecnico" nel db contabile, con description del tipo:
+ *   "Incasso piatti alla romana: <internal_id>"
+ * così da poter distinguere questo documento dagli scontrini/ricevute normali.
+ *
+ * @param int $sourceid
+ * @return int 0 ok, !=0 codice errore
+ */
+function logga_incasso_piatti_romana_e_chiudi_ordini($sourceid) {
+	$sourceid = (int)$sourceid;
+	if (!$sourceid) return 0;
+
+	// Determina il db contabile da usare
+	if (!isset($_SESSION['account']) || !$_SESSION['account']) {
+		$accountdb = common_find_first_db();
+		$_SESSION['account'] = $accountdb;
+	} else {
+		$accountdb = $_SESSION['account'];
+	}
+
+	// Leggi alcune info di base del tavolo
+	$tavolo_numero = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"name",$sourceid);
+	$customer_id   = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"customer",$sourceid);
+	$takeaway_surname = get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources',"takeaway_surname",$sourceid);
+
+	// Tipo documento "tecnico": usiamo un type fittizio 99 (come alcuni preconti),
+	// ma con description personalizzata per riconoscerlo.
+	$type = 99;
+	$tipo_corrispettivo = 'T1'; // neutro, non rilevante ai fini fiscali qui
+
+	// Crea il receipt in account_mgmt_main
+	$receipt_id = receipt_insert($accountdb, $type, $customer_id, $takeaway_surname, $tavolo_numero, $tipo_corrispettivo);
+	if (!$receipt_id) {
+		return ERR_MYSQL;
+	}
+
+	// Sovrascrivi la description per renderla chiara
+	$table = $GLOBALS['table_prefix'].'account_mgmt_main';
+	$query_desc = "
+		UPDATE $table
+		SET `description` = 'Incasso piatti alla romana: ' || `internal_id`
+		WHERE `id` = '$receipt_id'
+	";
+	if (!empty($accountdb)) {
+		mysql_select_db($accountdb);
+	}
+	$res_desc = mysql_query($query_desc);
+	if (mysql_errno()) {
+		// Non bloccare tutto per un problema sulla description, ma segnala
+		$msg = 'Error in '.__FUNCTION__.' - updating description: '.mysql_errno().' '.mysql_error();
+		error_msg(__FILE__,__LINE__,$msg);
+	}
+
+	// Per coerenza con bill_logger, prepariamo $_SESSION['type']
+	$old_type = isset($_SESSION['type']) ? $_SESSION['type'] : null;
+	$_SESSION['type'] = 3; // usa un type che abilita l'UPDATE del campo paid
+
+	// Scorri tutti gli ordini del tavolo (esclusa la quota romana)
+	$q = "
+		SELECT * FROM `#prefix#orders`
+		WHERE `sourceid` = '$sourceid'
+		  AND `deleted` = 0
+		  AND `printed` IS NOT NULL
+		  AND `dishid` != '".ROMANA_QUOTA_ID."'
+	";
+	$res = common_query($q,__FILE__,__LINE__);
+	if (!$res) {
+		if ($old_type !== null) $_SESSION['type'] = $old_type;
+		return ERR_MYSQL;
+	}
+
+	while ($arr = mysql_fetch_array($res)) {
+		$orderid = (int)$arr['id'];
+		$quantity = (int)$arr['quantity'];
+		$paid     = (int)$arr['paid'];
+		$topay    = $quantity - $paid;
+
+		if ($topay <= 0) {
+			continue;
+		}
+
+		$price_per_unit = ($quantity > 0) ? ($arr['price'] / $quantity) : 0;
+		$line_price = $price_per_unit * $topay;
+
+		// aggiorna paid a livello ordine principale
+		$newpaid = $paid + $topay;
+		if ($newpaid < 0) $newpaid = 0;
+
+		$upd_q = "UPDATE `#prefix#orders` SET `paid` = '$newpaid' WHERE `id` = '".$orderid."'";
+		$res_upd = common_query($upd_q,__FILE__,__LINE__);
+		if (!$res_upd) {
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return mysql_errno();
+		}
+
+		// scrivi nel log contabile principale
+		$log_err = write_log_item($orderid, $topay, $line_price, $receipt_id);
+		if ($log_err) {
+			$msg = 'Error in '.__FUNCTION__.' - Logging Error: '.$log_err;
+			error_msg(__FILE__,__LINE__,$msg);
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return 2;
+		}
+
+		// gestisci eventuali ordini associati (come fa bill_logger)
+		$q_assoc = "SELECT * FROM `#prefix#orders` WHERE `associated_id`='$orderid' AND `id`!='$orderid'";
+		$res_assoc = common_query($q_assoc,__FILE__,__LINE__);
+		if (!$res_assoc) {
+			if ($old_type !== null) $_SESSION['type'] = $old_type;
+			return mysql_errno();
+		}
+		while ($arr_assoc = mysql_fetch_array($res_assoc)) {
+			$assoc_id = (int)$arr_assoc['id'];
+			$assoc_quantity = (int)$arr_assoc['quantity'];
+			$price_per_unit_assoc = ($assoc_quantity > 0) ? ($arr_assoc['price'] / $assoc_quantity) : 0;
+			$line_price_assoc = $price_per_unit_assoc * $topay;
+
+			$upd_q_assoc = "UPDATE `#prefix#orders` SET `paid` = '$newpaid' WHERE `id` = '".$assoc_id."'";
+			$res_upd_assoc = common_query($upd_q_assoc,__FILE__,__LINE__);
+			if (!$res_upd_assoc) {
+				if ($old_type !== null) $_SESSION['type'] = $old_type;
+				return mysql_errno();
+			}
+
+			$log_err2 = write_log_item($assoc_id, $topay, $line_price_assoc, $receipt_id);
+			if ($log_err2) {
+				$msg = 'Error in '.__FUNCTION__.' - Logging Error (assoc): '.$log_err2;
+				error_msg(__FILE__,__LINE__,$msg);
+				if ($old_type !== null) $_SESSION['type'] = $old_type;
+				return 2;
+			}
+		}
+	}
+
+	// Ripristina il type precedente, se c'era
+	if ($old_type !== null) {
+		$_SESSION['type'] = $old_type;
+	}
+
+	return 0;
+}
+
 function bill_order_get_modifications($orderid,$lang='') {
 	$max_chars=5;
 	$show_priced_only = true;
@@ -708,7 +853,7 @@ function bill_print_row($key,$value,$destid){
 	return $msg;
 }
 
-//Funzione per la stampante MCH RCH PRINT-F
+//Funzione per la stampante MCH RCH PrintF
 function bill_print_row_printf($key,$value,$destid){
 	global $output_page;
 	//RTR prima riga del conto
@@ -891,7 +1036,7 @@ function bill_calc_vat() {
 
 // scans all the orders that have a final price != 0
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		if($_SESSION['separated'][$key]['finalprice']) {
+		if(isset($_SESSION['separated'][$key]['finalprice']) && $_SESSION['separated'][$key]['finalprice']) {
 			$dishid=$_SESSION['separated'][$key]['dishid'];
 			$price=$_SESSION['separated'][$key]['finalprice'];
 			$dish_cat=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dishes',"category",$dishid);
@@ -1014,7 +1159,9 @@ $total = 0;
 $msg = '';
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
 	$descrizione_totale="Totale";
@@ -1044,7 +1191,9 @@ $total = 0;
 //	$class=COLOR_ORDER_PRINTED;
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
@@ -1349,9 +1498,6 @@ function bill_method_selector(){
 					'."\n";
 	} else {
 		$output .= '
-				<!-- Conto alla romana -->
-				<button type="button" class="button_big" onclick="mostraContoRomana();">Conto alla Romana</button>
-				<br><br>
 				<FORM ACTION="orders.php?command=bill_select" METHOD=POST>
 				<INPUT TYPE="submit" value=" CONTI SEPARATI " class="button_big">
 				</form>
@@ -1365,6 +1511,15 @@ function bill_method_selector(){
 					<INPUT TYPE="submit" value="Azzera conti separati" class="button_big">
 					</form>
 					';
+	}
+
+	// Conto alla romana dopo "Azzera conti separati"
+	if ($_SESSION['select_all']) {
+		$output .= '
+				<!-- Conto alla romana -->
+				<button type="button" class="button_big" onclick="mostraContoRomana();">Conto alla Romana</button>
+				<br><br>
+				'."\n";
 	}
 
 
@@ -1381,6 +1536,77 @@ function bill_method_selector(){
 		';
 
 	return $output;
+}
+
+function bill_is_menu_fisso_dish($dishid) {
+	// Cache per evitare di rileggere lo stesso piatto più volte
+	static $cache = array();
+
+	$dishid = (int)$dishid;
+	if (isset($cache[$dishid])) {
+		return $cache[$dishid];
+	}
+
+	if (!$dishid) {
+		$cache[$dishid] = false;
+		return false;
+	}
+
+	$dish = new dish($dishid);
+	if (!$dish->exists()) {
+		$cache[$dishid] = false;
+		return false;
+	}
+
+	$cache[$dishid] = !empty($dish->data['menufisso']);
+	return $cache[$dishid];
+}
+
+function bill_compare_separated_keys($a, $b) {
+	// Ordine desiderato:
+	// 1) Piatti ROMANA_QUOTA_ID
+	// 2) Piatti SERVICE_ID (coperto)
+	// 3) Piatti che sono menù fisso
+	// 4) Tutto il resto, nell'ordine originale (id riga ordine)
+
+	$sa = isset($_SESSION['separated'][$a]) ? $_SESSION['separated'][$a] : null;
+	$sb = isset($_SESSION['separated'][$b]) ? $_SESSION['separated'][$b] : null;
+
+	if ($sa === null || $sb === null) {
+		// fallback: ordina per id
+		return $a == $b ? 0 : ($a < $b ? -1 : 1);
+	}
+
+	$dishid_a = isset($sa['dishid']) ? (int)$sa['dishid'] : 0;
+	$dishid_b = isset($sb['dishid']) ? (int)$sb['dishid'] : 0;
+
+	// Calcola il "rank" per ciascuna riga
+	$rank_a = 3;
+	$rank_b = 3;
+
+	if ($dishid_a === ROMANA_QUOTA_ID) {
+		$rank_a = 0;
+	} elseif ($dishid_a === SERVICE_ID) {
+		$rank_a = 1;
+	} elseif (bill_is_menu_fisso_dish($dishid_a)) {
+		$rank_a = 2;
+	}
+
+	if ($dishid_b === ROMANA_QUOTA_ID) {
+		$rank_b = 0;
+	} elseif ($dishid_b === SERVICE_ID) {
+		$rank_b = 1;
+	} elseif (bill_is_menu_fisso_dish($dishid_b)) {
+		$rank_b = 2;
+	}
+
+	if ($rank_a !== $rank_b) {
+		return ($rank_a < $rank_b) ? -1 : 1;
+	}
+
+	// Stesso rank: mantieni l'ordine originale (id crescente)
+	if ($a == $b) return 0;
+	return ($a < $b) ? -1 : 1;
 }
 
 function bill_show_list(){
@@ -1407,10 +1633,30 @@ function bill_show_list(){
 
 	$class=COLOR_ORDER_PRINTED;
 
-	ksort($_SESSION['separated']);
+	// Verifica se è presente almeno una quota "Conto alla romana"
+	$has_romana = false;
+	foreach ($_SESSION['separated'] as $k_check => $v_check) {
+		if (isset($v_check['dishid']) && (int)$v_check['dishid'] === ROMANA_QUOTA_ID) {
+			$has_romana = true;
+			break;
+		}
+	}
+
+	// Ordina le righe secondo le regole del conto alla romana
+	$keys = array_keys($_SESSION['separated']);
+	usort($keys, 'bill_compare_separated_keys');
 
 	// the next for prints the list and the chosen dishes
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+	foreach ($keys as $key) {
+		$value = $_SESSION['separated'][$key];
+
+		// Se è presente una quota romana, mostra solo le righe con dishid = ROMANA_QUOTA_ID
+		if ($has_romana) {
+			if (!isset($_SESSION['separated'][$key]['dishid']) ||
+			    (int)$_SESSION['separated'][$key]['dishid'] !== ROMANA_QUOTA_ID) {
+				continue;
+			}
+		}
 		if($_SESSION['separated'][$key]['extra_care']){
 			$classextra=COLOR_ORDER_EXTRACARE;
 		} else {
@@ -1712,6 +1958,7 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 	}
 	$totale_pos = round($totale_pos,2);
 	$totale_pos_amount = number_format($totale_pos,2,'.','');
+	$romana_totale_euro = sprintf("%0.2f", $totale_pos);
 
 	// mostra il bottone POS solo quando è selezionato il pagamento con CARTE
 	$style_btn_pos_totale = ($check3=='checked') ? '' : ' style="display:none"';
@@ -1786,39 +2033,25 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 	}
 	function inviaContoRomana(){
 		var input = document.getElementById("romana_input");
-		if (!input) return;
-		var q = (input.value || "").replace(/[^0-9]/g,"");
-		if (!q || parseInt(q,10) <= 0) {
+		if (!input) return false;
+		var val = (input.value || "").replace(/[^0-9]/g, "");
+		if (!val || parseInt(val,10) <= 0) {
 			alert("Inserire un numero di quote valido.");
 			if (input.focus) input.focus();
 			return false;
 		}
-		var f = document.createElement("form");
-		f.method = "post";
-		f.action = "orders.php";
-		var h1 = document.createElement("input");
-		h1.type = "hidden";
-		h1.name = "command";
-		h1.value = "create";
-		f.appendChild(h1);
-		var h2 = document.createElement("input");
-		h2.type = "hidden";
-		h2.name = "dishid";
-		h2.value = "'.ROMANA_QUOTA_ID.'";
-		f.appendChild(h2);
-		var h3 = document.createElement("input");
-		h3.type = "hidden";
-		h3.name = "data[priority]";
-		h3.value = "1";
-		f.appendChild(h3);
-		var h4 = document.createElement("input");
-		h4.type = "hidden";
-		h4.name = "data[quantity]";
-		h4.value = q;
-		f.appendChild(h4);
-		document.body.appendChild(f);
-		f.submit();
+		// Usa redir() per mantenere la logica esistente (mhr_tab_id, ecc.)
+		var url = "orders.php?command=create"
+			+ "&dishid='.ROMANA_QUOTA_ID.'"
+			+ "&data[priority]=1"
+			+ "&data[quantity]=" + encodeURIComponent(val)
+			+ "&data[romana_total]=" + encodeURIComponent("'.$romana_totale_euro.'");
 		nascondiContoRomana();
+		if (typeof redir === "function") {
+			redir(url);
+		} else {
+			document.location.href = url;
+		}
 		return false;
 	}
 	</script>
@@ -1826,35 +2059,35 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 	<div id="romana_overlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999;">
 		<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#FFCA68; padding:20px; border:2px solid #000; text-align:center;">
 			<h3>Conto alla romana</h3>
-			<p>Totale tavolo scontato: &euro; '.$totale_pos_amount.'</p>
+			<p>Totale tavolo scontato = &euro; '.$romana_totale_euro.'</p>
 			<p>Numero di quote:</p>
 			<input type="text" id="romana_input" value="" class="input" style="width:120px;text-align:center;" inputmode="numeric" pattern="[0-9]+"><br/><br/>
-			<table id="romana_keypad" cellspacing="6" cellpadding="0" style="margin:0 auto; text-align:center;">
-				<tr>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'7\');return false;">7</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'8\');return false;">8</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'9\');return false;">9</button></td>
-				</tr>
-				<tr>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'4\');return false;">4</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'5\');return false;">5</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'6\');return false;">6</button></td>
-				</tr>
-				<tr>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'1\');return false;">1</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'2\');return false;">2</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'3\');return false;">3</button></td>
-				</tr>
-				<tr>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaBackspace();return false;">&larr;</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'0\');return false;">0</button></td>
-					<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaKey(\'C\');return false;">C</button></td>
-				</tr>
-			</table>
-			<br/>
-			<button type="button" class="button_big" style="width:120px;" onclick="nascondiContoRomana();return false;">Annulla</button>
-			&nbsp;&nbsp;
-			<button type="button" class="button_big" style="width:120px;" onclick="inviaContoRomana();return false;">Invia</button>
+				<table id="romana_keypad" cellspacing="6" cellpadding="0" style="margin:0 auto; text-align:center;">
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'7\');return false;">7</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'8\');return false;">8</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'9\');return false;">9</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'4\');return false;">4</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'5\');return false;">5</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'6\');return false;">6</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'1\');return false;">1</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'2\');return false;">2</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'3\');return false;">3</button></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaBackspace();return false;">&larr;</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:20px;" onclick="romanaKey(\'0\');return false;">0</button></td>
+						<td><button type="button" class="button_big" style="width:60px;height:40px;font-size:18px;" onclick="romanaKey(\'C\');return false;">C</button></td>
+					</tr>
+				</table>
+				<br/>
+				<button type="button" class="button_big" style="width:120px;" onclick="nascondiContoRomana();return false;">Annulla</button>
+				&nbsp;&nbsp;
+				<button type="button" class="button_big" style="width:120px;" onclick="return inviaContoRomana();">Invia</button>
 		</div>
 	</div>
 	<FIELDSET id="fieldset_corrispettivo" style="display:none;">
@@ -1981,7 +2214,9 @@ function bill_total(){
 	//$discount=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources','discount',$_SESSION['sourceid']);
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 	$output .= '
 		<tr bgcolor="'.$class.'">
