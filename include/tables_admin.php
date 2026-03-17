@@ -87,6 +87,14 @@ class table extends object {
 				$checked = $is_yes ? ' checked="checked"' : '';
 				$checkbox = '<input type="checkbox" class="table-visible-flag"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
 				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+			// Colonna "Colore": usa il codice esadecimale come sfondo della cella e mostra il valore
+			} elseif ($field == 'tablehtmlcolor') {
+				$color = trim($value);
+				if ($color === '') {
+					$color = '#FFFFFF';
+				}
+				$safe_color = htmlentities($color);
+				$display->rows[$row][$col] = '<div class="color_table_cell" style="background-color:'.$safe_color.';">'.$safe_color.'</div>';
 			} else {
 				$display->rows[$row][$col]=$value;
 				if($link && $field=='name') $display->links[$row][$col]=$link;
