@@ -49,6 +49,7 @@ class search extends object {
 	
 	function list_buttons () {
 		$obj = new stock_dish;
+		$tmp = '';
 		$tmp .= '<table width="100%"><tr>'."\n";
 		$tmp .= '<td align="left">'."\n";
 		$tmp .= '<input type="hidden" name="command" value="edit">'."\n";
@@ -63,6 +64,7 @@ class search extends object {
 	function list_query_all () {
 		global $tpl;
 		$tpl -> assign ('title',$this -> title);
+		$query = '';
 		
 		if(access_allowed(USER_BIT_MENU)) {
 			$obj = new dish ();

@@ -173,11 +173,15 @@ switch ($command){
 				}
 
 				// Se è stata inserita una quota "Conto alla romana"
-				// e l'ordine è stato creato correttamente, registra
-				// l'incasso di tutti i piatti del tavolo (esclusa la quota)
-				// in un documento tecnico separato, e marca quei piatti come pagati.
+				// e l'ordine è stato creato correttamente:
+				// - registra l'incasso di tutti i piatti del tavolo (esclusa la quota)
+				//   in un documento tecnico separato, e marca quei piatti come pagati;
+				// - azzera eventuali sconti di sessione (lo sconto non deve più essere attivo).
 				if ($dishid == ROMANA_QUOTA_ID && isset($_SESSION['sourceid']) && $id) {
 					logga_incasso_piatti_romana_e_chiudi_ordini($_SESSION['sourceid']);
+					if (isset($_SESSION['discount'])) {
+						unset($_SESSION['discount']);
+					}
 				}
 
 // RTR START NOW

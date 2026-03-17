@@ -1036,7 +1036,7 @@ function bill_calc_vat() {
 
 // scans all the orders that have a final price != 0
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		if($_SESSION['separated'][$key]['finalprice']) {
+		if(isset($_SESSION['separated'][$key]['finalprice']) && $_SESSION['separated'][$key]['finalprice']) {
 			$dishid=$_SESSION['separated'][$key]['dishid'];
 			$price=$_SESSION['separated'][$key]['finalprice'];
 			$dish_cat=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'dishes',"category",$dishid);
@@ -1159,7 +1159,9 @@ $total = 0;
 $msg = '';
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
 	$descrizione_totale="Totale";
@@ -1189,7 +1191,9 @@ $total = 0;
 //	$class=COLOR_ORDER_PRINTED;
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
@@ -1494,9 +1498,6 @@ function bill_method_selector(){
 					'."\n";
 	} else {
 		$output .= '
-				<!-- Conto alla romana -->
-				<button type="button" class="button_big" onclick="mostraContoRomana();">Conto alla Romana</button>
-				<br><br>
 				<FORM ACTION="orders.php?command=bill_select" METHOD=POST>
 				<INPUT TYPE="submit" value=" CONTI SEPARATI " class="button_big">
 				</form>
@@ -1510,6 +1511,15 @@ function bill_method_selector(){
 					<INPUT TYPE="submit" value="Azzera conti separati" class="button_big">
 					</form>
 					';
+	}
+
+	// Conto alla romana dopo "Azzera conti separati"
+	if ($_SESSION['select_all']) {
+		$output .= '
+				<!-- Conto alla romana -->
+				<button type="button" class="button_big" onclick="mostraContoRomana();">Conto alla Romana</button>
+				<br><br>
+				'."\n";
 	}
 
 
@@ -1623,6 +1633,15 @@ function bill_show_list(){
 
 	$class=COLOR_ORDER_PRINTED;
 
+	// Verifica se è presente almeno una quota "Conto alla romana"
+	$has_romana = false;
+	foreach ($_SESSION['separated'] as $k_check => $v_check) {
+		if (isset($v_check['dishid']) && (int)$v_check['dishid'] === ROMANA_QUOTA_ID) {
+			$has_romana = true;
+			break;
+		}
+	}
+
 	// Ordina le righe secondo le regole del conto alla romana
 	$keys = array_keys($_SESSION['separated']);
 	usort($keys, 'bill_compare_separated_keys');
@@ -1630,6 +1649,14 @@ function bill_show_list(){
 	// the next for prints the list and the chosen dishes
 	foreach ($keys as $key) {
 		$value = $_SESSION['separated'][$key];
+
+		// Se è presente una quota romana, mostra solo le righe con dishid = ROMANA_QUOTA_ID
+		if ($has_romana) {
+			if (!isset($_SESSION['separated'][$key]['dishid']) ||
+			    (int)$_SESSION['separated'][$key]['dishid'] !== ROMANA_QUOTA_ID) {
+				continue;
+			}
+		}
 		if($_SESSION['separated'][$key]['extra_care']){
 			$classextra=COLOR_ORDER_EXTRACARE;
 		} else {
@@ -2187,7 +2214,9 @@ function bill_total(){
 	//$discount=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources','discount',$_SESSION['sourceid']);
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total += $_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 	$output .= '
 		<tr bgcolor="'.$class.'">

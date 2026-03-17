@@ -894,7 +894,7 @@ class object {
 		if(isset($_REQUEST['data']['global_search']) && $_REQUEST['data']['global_search']) {
 			$tpl -> assign ('title',ucphr('SEARCH_RESULTS'));
 
-			$this -> search_list ($obj);
+			$this -> search_list ();
 		} else {
 			$category = (isset($_REQUEST['data']) && isset($_REQUEST['data']['category'])) ? $_REQUEST['data']['category'] : '';
 			$this ->list_table($category,$this);
@@ -974,6 +974,7 @@ class object {
 				$obj -> admin_list_page($class);
 				break;
 			case "delete":
+				$deleteconfirm = 0;
 				if(isset($_GET['deleteconfirm'])){
 					$deleteconfirm=$_GET['deleteconfirm'];
 				} elseif(isset($_POST['deleteconfirm'])){

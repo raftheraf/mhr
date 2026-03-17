@@ -136,6 +136,10 @@ class stock_object extends object {
 			$msg=ucfirst(phr('CHECK_NAME'));
 		}
 
+		// Normalizza la quantità: se non arriva dal form, usa il valore corrente o stringa vuota
+		if (!isset($input_data['quantity'])) {
+			$input_data['quantity'] = isset($this->data['quantity']) ? $this->data['quantity'] : "";
+		}
 		$input_data['quantity'] = eq_to_number ($input_data['quantity']);
 		if($input_data['quantity']==="") {
 			$msg=ucphr('CHECK_QUANTITY');
