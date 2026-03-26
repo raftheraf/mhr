@@ -1142,7 +1142,7 @@ function orders_list() {
 		$tmp = '';
 		$tmp .= ' <a href="orders.php?command=customer_search"><img src="'.IMAGE_FIND.'" alt="CAMBIA CLIENTE" border=0 align="absmiddle" width="32px" height="32px"></a> ';
 		$tmp .= '<b>'.$cust->data['surname'].' '.$cust->data['name'].'</b>';
-		$tmp .= ' <a href="orders.php?command=set_customer&amp;data[customer]=0&amp;data[takeaway_surname]="" "><img src="'.IMAGE_LITTLE_TRASH.'" alt="CANCELLA" border=0 align="absmiddle" width="35px" height="35px"></a>';
+		$tmp .= ' <a href="javascript:void(0)" onclick="redir(\'orders.php?command=set_customer&data[customer]=0&data[takeaway_surname]=\')"><img src="'.IMAGE_LITTLE_TRASH.'" alt="CANCELLA" border=0 align="absmiddle" width="35px" height="35px"></a>';
 		$tmp .= '<br><br>';
 	} else {
 		$tmp = '

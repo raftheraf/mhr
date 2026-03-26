@@ -1257,23 +1257,8 @@ window.history.replaceState({}, document.title, updated);
 			}, true);
 		}
 
-		function enhanceLinks() {
-			document.addEventListener("click", function (e) {
-				var el = e.target;
-				while (el && el.tagName && el.tagName.toLowerCase() !== "a") {
-					el = el.parentNode;
-				}
-				if (!el || !el.getAttribute) return;
-				var href = el.getAttribute("href");
-				if (!href) return;
-				var lhref = href.toLowerCase();
-				if (lhref.indexOf("javascript:") === 0 || lhref.indexOf("mailto:") === 0 || lhref.charAt(0) === "#") return;
-				if (href.indexOf("http://") === 0 || href.indexOf("https://") === 0) {
-					if (href.indexOf(window.location.origin) !== 0) return;
-				}
-				el.setAttribute("href", appendParam(href, "mhr_tab_id", tabId));
-			}, true);
-		}
+		// enhanceLinks rimossa: modificava href in capture phase causando URL malformate
+		// Il mhr_tab_id viene propagato da redir() e enhanceForms()
 
 		function attemptClaim() {
 			var lock = readLock();
@@ -1338,7 +1323,6 @@ window.history.replaceState({}, document.title, updated);
 		});
 
 		enhanceForms();
-		enhanceLinks();
 		normalizeNavigation();
 		attemptClaim();
 

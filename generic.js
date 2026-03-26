@@ -953,3 +953,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // FINE Barra countdown colorata
 
+// Protezione dal doppio invio dei form
+(function () {
+
+    // 1. Submit button (<input type="submit"> o Enter): disabilita i pulsanti del form per 5 secondi
+    document.addEventListener("submit", function (e) {
+        var form = e.target;
+        if (form._mhr_submitting) {
+            e.preventDefault();
+            return;
+        }
+        form._mhr_submitting = true;
+        var btns = form.querySelectorAll("[type=submit]");
+        for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
+        setTimeout(function () {
+            form._mhr_submitting = false;
+            var btns = form.querySelectorAll("[type=submit]");
+            for (var i = 0; i < btns.length; i++) btns[i].disabled = false;
+        }, 5000);
+    }, true);
+
+    // 2. Link/pulsanti con onclick che chiamano .submit() (es. pulsante conferma ordine cameriere)
+    //    Il submit event non si attiva per submit programmatici, quindi si intercetta il click
+    document.addEventListener("click", function (e) {
+        var el = e.target;
+        while (el && el.tagName) {
+            var oc = el.getAttribute && el.getAttribute("onclick");
+            if (oc && oc.indexOf(".submit()") !== -1) {
+                if (el._mhr_submitting) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                (function (capturedEl) {
+                    capturedEl._mhr_submitting = true;
+                    setTimeout(function () { capturedEl._mhr_submitting = false; }, 3000);
+                })(el);
+                break;
+            }
+            el = el.parentNode;
+        }
+    }, true);
+
+})();
+

@@ -59,6 +59,11 @@ switch ($command){
 				 	break;
 				}
 
+				if ($dishid==SERVICE_ID && orders_service_fee_exists()) {
+					orders_list();
+					break;
+				}
+
 				if(empty($start_data['quantity'])) $start_data['quantity']=get_conf(__FILE__,__LINE__,"default_quantity");
 
 				if((!isset($start_data['priority']) || !$start_data['priority']) and $dishid != SERVICE_ID) {
