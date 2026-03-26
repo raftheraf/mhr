@@ -38,7 +38,7 @@
 							<img src="../images/button_sidebar.png" alt="Apri la SideBar" style="width:50px; height:50px;">
 						</a>
 						<br><br><br>
-						<a href="tables.php">{countdown}</a>
+						<a href="javascript:void(0)" onclick="redir('tables.php')">{countdown}</a>
 						<br><br><br>
 						<a href="javascript:void(0)">
 							<img src="../images/button_prenotazioni.png" style="width: 50px; height: 50px;" alt="Visualizza i prenotati" onclick="FunctionLayerPrenotazioni()">
