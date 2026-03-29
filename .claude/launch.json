@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Apache (HTTP)",
+      "runtimeExecutable": "C:/xampp/apache/bin/httpd.exe",
+      "runtimeArgs": ["-D", "FOREGROUND"],
+      "port": 80
+    },
+    {
+      "name": "Apache (HTTPS)",
+      "runtimeExecutable": "C:/xampp/apache/bin/httpd.exe",
+      "runtimeArgs": ["-D", "SSL", "-D", "FOREGROUND"],
+      "port": 443
+    },
+    {
+      "name": "MySQL",
+      "runtimeExecutable": "C:/xampp/mysql/bin/mysqld.exe",
+      "runtimeArgs": ["--defaults-file=C:/xampp/mysql/bin/my.ini"],
+      "port": 3306
+    }
+  ]
+}
