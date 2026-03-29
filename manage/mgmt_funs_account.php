@@ -542,11 +542,12 @@ function account_movement_update($input_id,$input_data) {
     $name = isset($input_data['name']) ? htmlspecialchars($input_data['name']) : '';
     echo phr('ACCOUNT_MOVEMENT').' <b>'.$name.'</b> '.phr('ACCOUNT_MOVEMENT_UPDATE_SUCCESS').".<br>\n";
 ?>
+<?php
 
 		$reset_amount=$old_amount-$old_movement_amount;
 
 		$table=$GLOBALS['table_prefix'].'account_accounts';
-		$query="UPDATE $table SET `amount`='$reset_amount' WHERE `id`='$old_account_id]'";
+		$query="UPDATE $table SET `amount`='$reset_amount' WHERE `id`='$old_account_id'";
 		$res = mysql_db_query ($_SESSION['mgmt_db'],$query);
 		$num_affected=mysql_affected_rows();
 
