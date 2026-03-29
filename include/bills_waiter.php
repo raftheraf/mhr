@@ -1935,8 +1935,20 @@ if (!isset($_SESSION['tipo_corrispettivo']) || $_SESSION['tipo_corrispettivo'] =
 // 5.Altri
 
 	// calcola il totale del tavolo (già scontato, se presente uno sconto)
+	// Se è presente una quota romana, somma solo le righe ROMANA_QUOTA_ID (i piatti originali
+	// sono ancora con topay>0 in sessione ma il loro importo è già incluso nella quota romana).
+	$has_romana_totale = false;
+	foreach ($_SESSION['separated'] as $v_check) {
+		if (isset($v_check['dishid']) && (int)$v_check['dishid'] === ROMANA_QUOTA_ID) {
+			$has_romana_totale = true;
+			break;
+		}
+	}
 	$totale_pos = 0;
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+		if ($has_romana_totale && (!isset($_SESSION['separated'][$key]['dishid']) || (int)$_SESSION['separated'][$key]['dishid'] !== ROMANA_QUOTA_ID)) {
+			continue;
+		}
 		if (!isset($_SESSION['separated'][$key]['price']) || !isset($_SESSION['separated'][$key]['quantity']) || !isset($_SESSION['separated'][$key]['topay'])) {
 			continue;
 		}

@@ -409,7 +409,21 @@ function table_total($sourceid){
 function table_total_without_discount($sourceid){
 	$total=0;
 
-	$query ="SELECT * FROM `#prefix#orders` WHERE `sourceid`='$sourceid'";
+	// Verifica se esiste una quota "conto alla romana": in quel caso il suo price
+	// rappresenta già il totale dell'intero tavolo, quindi si somma solo quella
+	// ed si escludono i piatti originali (già contabilizzati nella quota).
+	$romana_query = "SELECT `price` FROM `#prefix#orders`
+		WHERE `sourceid`='$sourceid' AND `deleted`=0 AND `dishid`='".ROMANA_QUOTA_ID."'
+		LIMIT 1";
+	$romana_res = common_query($romana_query,__FILE__,__LINE__);
+	if ($romana_res && mysql_num_rows($romana_res) > 0) {
+		$romana_arr = mysql_fetch_array($romana_res);
+		$total = $romana_arr['price'];
+		$total = sprintf("%01.2f", $total);
+		return $total;
+	}
+
+	$query ="SELECT * FROM `#prefix#orders` WHERE `sourceid`='$sourceid' AND `deleted`=0 AND `dishid`!='".ROMANA_QUOTA_ID."'";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return 0;
 
