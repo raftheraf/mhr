@@ -965,7 +965,7 @@ function bill_print_discount($receipt_id,$destid) {
 	$total = 0;
 
 	for (reset($_SESSION['separated']); list($key, $value) = each($_SESSION['separated']); ) {
-		$total += $_SESSION['separated'][$key]['finalprice'];
+		$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
 	}
 
 	// Se lo sconto non è definito o non ha un tipo valido, non stampare nulla
@@ -1160,7 +1160,7 @@ $msg = '';
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
 		if (isset($_SESSION['separated'][$key]['finalprice'])) {
-			$total += $_SESSION['separated'][$key]['finalprice'];
+			$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
 		}
 	}
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
@@ -1192,7 +1192,7 @@ $total = 0;
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
 		if (isset($_SESSION['separated'][$key]['finalprice'])) {
-			$total += $_SESSION['separated'][$key]['finalprice'];
+			$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
 		}
 	}
 
@@ -2227,7 +2227,7 @@ function bill_total(){
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
 		if (isset($_SESSION['separated'][$key]['finalprice'])) {
-			$total += $_SESSION['separated'][$key]['finalprice'];
+			$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
 		}
 	}
 	$output .= '
