@@ -433,6 +433,11 @@ class user extends object {
 				$pos_only=false;
 				$admin_only=false;
 				break;
+			case SHOW_WAITER_CASHIER:
+				$waiter_only=true;
+				$pos_only=true;
+				$admin_only=false;
+				break;
 		 case SHOW_CASHIER_ONLY:
 		 		$waiter_only=false;
 				$pos_only=true;

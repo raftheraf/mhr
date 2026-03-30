@@ -19,7 +19,7 @@ function access_connect_form_waiter ($url='') {
 			<b>'.date("G:i",time()).'</b>
 			</h4>
 			'.ucfirst(phr('WHO_ARE_YOU')).'<br>
-	'.$user->html_select(SHOW_WAITER_ONLY).'
+	'.$user->html_select(SHOW_WAITER_CASHIER).'
 
 			</center>
 		</td></tr>

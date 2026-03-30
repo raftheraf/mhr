@@ -112,10 +112,11 @@ define('USER_BIT_MONEY',       9);
 
 define('USER_BIT_LAST',        9);
 
-define('SHOW_ALL_USERS',       0);
-define('SHOW_WAITER_ONLY',     1);
-define('SHOW_CASHIER_ONLY',    2);							  
-define('SHOW_ADMIN_ONLY',      3);
+define('SHOW_ALL_USERS',           0);
+define('SHOW_WAITER_ONLY',         1);
+define('SHOW_CASHIER_ONLY',        2);
+define('SHOW_ADMIN_ONLY',          3);
+define('SHOW_WAITER_CASHIER',      4);
 
 define('ERROR_LEVEL_USER',     0);
 define('ERROR_LEVEL_DEBUG',    1);
