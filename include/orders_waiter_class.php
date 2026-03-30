@@ -623,7 +623,7 @@ class order {
 
 		} elseif (!$deleted && $arr['dishid']!=MOD_ID) {
 			$output .= '
-		<td align="center" width="20px">
+		<td align="center" width="20px" class="mhr-qty-cell" data-id="'.$orderid.'" data-qty="'.$arr['quantity'].'">
 			'.$arr['quantity'].'
 		</td>';
 		} else {
@@ -708,7 +708,7 @@ class order {
 		if($generic && ($user->level[USER_BIT_CASHIER] OR access_allowed(USER_BIT_CONFIG) ) && $arr['printed'] && !$deleted) {
 			$link = 'orders.php?command=price_modify&amp;data[id]='.$arr['id'];
 			$output .= '
-		<td align="right" onclick="redir(\''.$link.'\');">
+		<td align="right" class="mhr-price-edit" data-id="'.$arr['id'].'" data-price="'.$arr['price'].'">
 			<a href="'.$link.'">'.$arr['price'].'</a>
 		</td>';
 		}
@@ -782,14 +782,14 @@ class order {
 				$link = 'orders.php?command=update&amp;data[quantity]='.$newquantity.'&amp;data[id]='.$orderid;
 				if($arr['suspend']) $link .= '&amp;data[suspend]=1';
 				if($arr['extra_care']) $link .= '&amp;data[extra_care]=1';
-				$output .= '<a href="'.$link.'"><img src="'.IMAGE_PLUS.'" alt="'.ucfirst(phr('PLUS')).' ('.ucfirst(phr('ADD')).')" border=0></a></td>
-		<td align="center">';
+				$output .= '<a href="'.$link.'" class="mhr-btn-plus" data-id="'.$orderid.'" data-qty="'.$newquantity.'" data-suspend="'.(int)$arr['suspend'].'" data-extra="'.(int)$arr['extra_care'].'"><img src="'.IMAGE_PLUS.'" alt="'.ucfirst(phr('PLUS')).' ('.ucfirst(phr('ADD')).')" border=0></a></td>
+		<td align="center" class="mhr-minus-cell" data-id="'.$orderid.'" data-img-minus="'.IMAGE_MINUS.'" data-img-trash="'.IMAGE_LITTLE_TRASH.'" data-cashier="'.(access_allowed(USER_BIT_CASHIER) ? '1' : '0').'" data-name="'.htmlspecialchars($dishname).'">';
 				if($arr['quantity']>1){
 					$newquantity=$arr['quantity']-1;
 					$link = 'orders.php?command=update&amp;data[quantity]='.$newquantity.'&amp;data[id]='.$orderid;
 					if($arr['suspend']) $link .= '&amp;data[suspend]=1';
 					if($arr['extra_care']) $link .= '&amp;data[extra_care]=1';
-					$output .= '<a href="'.$link.'"><img src="'.IMAGE_MINUS.'" alt="'.ucfirst(phr('MINUS')).' ('.ucfirst(phr('REMOVE')).')" border=0></a>';
+					$output .= '<a href="'.$link.'" class="mhr-btn-minus" data-id="'.$orderid.'" data-qty="'.$newquantity.'" data-suspend="'.(int)$arr['suspend'].'" data-extra="'.(int)$arr['extra_care'].'"><img src="'.IMAGE_MINUS.'" alt="'.ucfirst(phr('MINUS')).' ('.ucfirst(phr('REMOVE')).')" border=0></a>';
 				} elseif( $arr['quantity']==1 && CONF_ALLOW_EASY_DELETE ){
 					$newquantity=0;
 

@@ -231,7 +231,7 @@ class table extends object {
 		$tmp = '
 		<tr>
 		<td colspan="4" align="right" bgcolor="'.$class.'"><b>TOTALE : </b></td>
-		<td colspan="1" align="right" bgcolor="'.$class.'"><b>'.$this->total().'</b></td>
+		<td colspan="1" align="right" id="mhr-table-total" bgcolor="'.$class.'"><b>'.$this->total().'</b></td>
 		<td colspan="3" align="left" bgcolor="'.$class.'"></td>
 		</tr>
 		</tbody>

@@ -1044,6 +1044,7 @@ function head_line ($title) {
 
 	<script type="text/javascript" language="JavaScript" src="../javascript/ajax-script.js"></script>
 	<script type="text/javascript" language="JavaScript" src="../javascript/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" language="JavaScript" src="../javascript/orders_inline.js"></script>
 
 	<link rel="stylesheet" href="../reset.css" type="text/css" />
 	<link rel="stylesheet" href="'.CONF_CSS_URL.'" />
