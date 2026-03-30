@@ -2286,7 +2286,9 @@ function bill_total_table(){
 	//$discount=get_db_data(__FILE__,__LINE__,$_SESSION['common_db'],'sources','discount',$_SESSION['sourceid']);
 
 	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-		$total+=$_SESSION['separated'][$key]['finalprice'];
+		if (isset($_SESSION['separated'][$key]['finalprice'])) {
+			$total+=$_SESSION['separated'][$key]['finalprice'];
+		}
 	}
 
 	return $total;
