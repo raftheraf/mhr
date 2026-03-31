@@ -1336,6 +1336,56 @@ window.history.replaceState({}, document.title, updated);
 		}, 1500);
 	})();
 	</script>';
+
+	$output .= '
+	<style>
+	#mhr-priority-toast {
+		display: none;
+		position: fixed;
+		top: 80px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: #e67e00;
+		color: #fff;
+		font-size: 1.15em;
+		font-weight: bold;
+		padding: 18px 32px;
+		border-radius: 8px;
+		box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+		z-index: 9999;
+		text-align: center;
+		max-width: 500px;
+		cursor: pointer;
+		line-height: 1.4;
+	}
+	#mhr-priority-toast.mhr-toast-show {
+		display: block;
+		animation: mhrToastIn 0.3s ease;
+	}
+	@keyframes mhrToastIn {
+		from { opacity: 0; top: 55px; }
+		to   { opacity: 1; top: 80px; }
+	}
+	</style>
+	<script type="text/javascript">
+	function showPriorityWarning(msg) {
+		var el = document.getElementById("mhr-priority-toast");
+		if (!el) {
+			el = document.createElement("div");
+			el.id = "mhr-priority-toast";
+			el.onclick = function() { el.className = ""; el.style.display = "none"; };
+			document.body.appendChild(el);
+		}
+		el.innerHTML = "&#9888;&nbsp;" + msg;
+		el.className = "mhr-toast-show";
+		clearTimeout(el._t);
+		el._t = setTimeout(function() {
+			el.className = "";
+			el.style.display = "none";
+		}, 5000);
+	}
+	</script>';
+
 	$tpl -> assign("head", $output);
 
 	//inserisce nei templates .tpl in {scripts} il codice sotto

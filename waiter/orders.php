@@ -84,7 +84,8 @@ switch ($command){
 					) {
 						// Se NON è un menu fisso: degrada a priorità 1 con warning
 						if (!controlla_menu_fisso($dishid)) {
-							$tmp = '<b><font color="Red">La priorità '.$priority_sel.' è già stata lanciata per questo tavolo. Il piatto verrà inserito con priorità 1.</font></b><br>'."\n";
+							$tmp = '<script>showPriorityWarning('.json_encode('La priorità '.$priority_sel.' è già stata lanciata per questo tavolo. Il piatto verrà inserito con priorità 1.').');</script>'."
+";
 							$tpl -> append('messages', $tmp);
 							$start_data['priority'] = 1;
 						}
@@ -101,6 +102,7 @@ switch ($command){
 					$mf = isset($arr['dishesmenufisso']) ? $arr['dishesmenufisso'] : '';
 					$parts = explode(" ", trim($mf));
 					$count = count($parts);
+					$mf_blocked = false;
 					if ($count > 1) {
 						for ($i = 0; $i+1 < $count; $i += 2) {
 							$prio_mf = (int)$parts[$i+1];
@@ -108,14 +110,17 @@ switch ($command){
 								isset($_SESSION['catprinted'][$prio_mf]) &&
 								$_SESSION['catprinted'][$prio_mf]
 							) {
-								$tmp = '<b><font color="Red">La priorità '.$prio_mf.' di un piatto del menu fisso è già stata lanciata per questo tavolo. Impossibile inserire questo menu fisso.</font></b><br>'."\n";
+								$tmp = '<script>showPriorityWarning('.json_encode('La priorità '.$prio_mf.' di un piatto del menu fisso è già stata lanciata per questo tavolo. Impossibile inserire questo menu fisso.').');</script>'."
+";
 								$tpl -> append('messages', $tmp);
-
-								$tmp = navbar_empty('javascript:history.go(-1);');
-								$tpl -> assign('navbar', $tmp);
-								break 2; // esce sia dal for che dal case 'create'
+								$mf_blocked = true;
+								break;
 							}
 						}
+					}
+					if ($mf_blocked) {
+						orders_list();
+						break;
 					}
 				}
 

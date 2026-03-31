@@ -211,7 +211,7 @@ function mods_create_order ($start_data) {
 
 	// creates the new order;
 	$arr['quantity'] = 0;
-	$newid = orders_create ($ord->data['dishid'],$arr);
+	$newid = orders_create ($old->data['dishid'],$arr);
 	if($newid == 0) return 1;			// order not created
 
 	$newid = (int) $newid;
