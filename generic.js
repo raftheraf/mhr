@@ -356,6 +356,11 @@ function invia_pos_totale(el){
 		return false;
 	}
 
+	if(parseFloat(amount) <= 0){
+		alert('Importo zero: non è possibile inviare al POS.');
+		return false;
+	}
+
 	try{
 		if(window.fetch){
 			fetch(url, { method: 'GET', cache: 'no-store' })

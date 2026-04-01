@@ -53,11 +53,21 @@ switch ($command) {
         $tbl      = new table($sourceid);
         $total    = $tbl->total();
 
+        // Genera HTML riga per aggiornare tabellalastorder lato client
+        $last_order_html = '';
+        if ($err == 0 && !$deleted) {
+            $ord_display = new order($id);
+            if ($ord_display->id) {
+                $last_order_html = $ord_display->table_row($ord_display->data);
+            }
+        }
+
         ajax_out(array(
-            'success'   => ($err == 0),
-            'new_qty'   => $qty,
-            'new_total' => $total,
-            'deleted'   => $deleted,
+            'success'         => ($err == 0),
+            'new_qty'         => $qty,
+            'new_total'       => $total,
+            'deleted'         => $deleted,
+            'last_order_html' => $last_order_html,
         ));
         break;
 
@@ -88,6 +98,18 @@ switch ($command) {
             'success'   => ($err == 0),
             'new_price' => sprintf('%01.2f', $price),
             'new_total' => $total,
+        ));
+        break;
+
+    case 'delete':
+        $err      = orders_delete(array('id' => $id));
+        $sourceid = isset($_SESSION['sourceid']) ? (int)$_SESSION['sourceid'] : 0;
+        $tbl      = new table($sourceid);
+        $total    = $tbl->total();
+        ajax_out(array(
+            'success'   => ($err == 0),
+            'new_total' => $total,
+            'deleted'   => true,
         ));
         break;
 

@@ -168,7 +168,7 @@ class table extends object {
 		<table id="tabellalastorder" width="100%" bgcolor="'.COLOR_TABLE_ULTIMA_OPERAZIONE.'" border="0" cellspacing="1" cellpadding="0">
 		<thead>
 		<tr>
-		<th colspan="8"> :::::::::: ULTIMA OPERAZIONE :::::::::: </th>
+		<th colspan="8" style="color:#ffffff;"> :::::::::: ULTIMA OPERAZIONE :::::::::: </th>
 		</tr>
 		</thead>
 ';

@@ -802,15 +802,10 @@ class order {
 					if($arr['suspend']) $link .= '&amp;data[suspend]=1';
 					if($arr['extra_care']) $link .= '&amp;data[extra_care]=1';
 
-					$output .= '<a href="'.$link.'"';
-
-						if(access_allowed(USER_BIT_CASHIER))
-							$output .= '';
-						else
-							$output .= ' onclick="return confirm(\'Vuoi eliminare '.$dishname.' ?\')"';
-
-					$output .= '>';
-
+					$confirmData = !access_allowed(USER_BIT_CASHIER)
+						? ' data-confirm="Vuoi eliminare '.htmlspecialchars($dishname, ENT_QUOTES).'?"'
+						: '';
+					$output .= '<a href="'.$link.'" class="mhr-btn-delete" data-id="'.$orderid.'"'.$confirmData.'>';
 					$output .='<img src="'.IMAGE_LITTLE_TRASH.'" alt="'.ucfirst(phr('MINUS')).' ('.ucfirst(phr('REMOVE')).')" border=0></a>';
 
 				} else {

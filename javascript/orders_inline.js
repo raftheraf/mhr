@@ -34,6 +34,14 @@ $(document).ready(function () {
         $('#mhr-table-total b').text(total);
     }
 
+    function updateLastOrderTable(html) {
+        if (!html) return;
+        var $tbody = $('#tabellalastorder tbody');
+        if ($tbody.length) {
+            $tbody.html(html);
+        }
+    }
+
     // Valuta un'espressione matematica elementare (es. "4*12", "5-2", "7/12").
     // Accetta solo cifre, operatori + - * /, punto, virgola, parentesi e spazi.
     // Restituisce il risultato arrotondato a 2 decimali, oppure NaN se non valido.
@@ -90,9 +98,9 @@ $(document).ready(function () {
                 var deleteLink = 'orders.php?command=delete&data[id]=' + id;
                 if (parseInt(suspend, 10)) deleteLink += '&data[suspend]=1';
                 if (parseInt(extra,   10)) deleteLink += '&data[extra_care]=1';
-                var confirmAttr = isCashier ? '' : ' onclick="return confirm(\'Vuoi eliminare ' + name + ' ?\')"';
+                var confirmData = isCashier ? '' : ' data-confirm="Vuoi eliminare ' + name + '?"';
                 $cell.html(
-                    '<a href="' + deleteLink + '"' + confirmAttr + '>' +
+                    '<a href="' + deleteLink + '" class="mhr-btn-delete" data-id="' + id + '"' + confirmData + '>' +
                     '<img src="' + imgTrash + '" border="0"></a>'
                 );
             }
@@ -121,12 +129,36 @@ $(document).ready(function () {
             { command: 'update_qty', id: id, qty: newQty, suspend: suspend, extra_care: extra },
             function (resp) {
                 syncAllById(id, resp.new_qty);
+                updateLastOrderTable(resp.last_order_html);
                 updateTotal(resp.new_total);
             },
             function () {
                 /* Fallback su errore AJAX */
                 window.location.href = $btn.attr('href').replace(/&amp;/g, '&');
             }
+        );
+    });
+
+    /* ------------------------------------------------------------------ */
+    /* Cancellazione ordine (click su cestino)                             */
+    /* ------------------------------------------------------------------ */
+
+    $(document).on('click', 'a.mhr-btn-delete', function (e) {
+        e.preventDefault();
+        var $a       = $(this);
+        var id       = $a.attr('data-id');
+        var msg      = $a.attr('data-confirm');
+        var fallback = $a.attr('href').replace(/&amp;/g, '&');
+
+        if (msg && !window.confirm(msg)) return;
+
+        ajaxUpdate(
+            { command: 'delete', id: id },
+            function (resp) {
+                $('[data-id="' + id + '"]').closest('tr').remove();
+                updateTotal(resp.new_total);
+            },
+            function () { window.location.href = fallback; }
         );
     });
 
@@ -164,6 +196,7 @@ $(document).ready(function () {
                 { command: 'update_qty', id: id, qty: newQty, suspend: suspend, extra_care: extra },
                 function (resp) {
                     syncAllById(id, resp.new_qty);
+                    updateLastOrderTable(resp.last_order_html);
                     updateTotal(resp.new_total);
                 },
                 restore

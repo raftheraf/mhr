@@ -37,7 +37,18 @@ if ($from_waiter) {
 }
 
 $amountRaw = isset($_REQUEST['amount']) ? (float)$_REQUEST['amount'] : 1.00;
-$amount = round(max(0.01, min(99999.99, $amountRaw)), 2);
+
+if ($amountRaw <= 0) {
+    if ($from_waiter) {
+        echo '<script>alert("Importo zero: non \u00e8 possibile inviare al POS."); window.close();</script>';
+    } else {
+        http_response_code(400);
+        echo json_encode(array('error' => 'amount_zero'));
+    }
+    exit;
+}
+
+$amount = round(min(99999.99, $amountRaw), 2);
 $amountCents = (int) round($amount * 100);
 
 $tidRaw = isset($_REQUEST['tid']) ? preg_replace('/[^0-9]/', '', $_REQUEST['tid']) : '09253031';
