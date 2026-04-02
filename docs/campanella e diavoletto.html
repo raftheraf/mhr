@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comande Ristorante - Avvisi Animati</title>
+<style>
+  /* Stile generale della pagina e della tabella */
+  body { 
+    font-family: Arial, sans-serif; 
+    background-color: #f4f4f9; 
+    padding: 30px; 
+    display: flex; 
+    justify-content: center; 
+  }
+  .tabella-comande { 
+    background: white; 
+    border-collapse: collapse; 
+    width: 100%; 
+    max-width: 700px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    border-radius: 8px; 
+    overflow: hidden;
+  }
+  .tabella-comande th, .tabella-comande td { 
+    padding: 16px; 
+    text-align: left; 
+    border-bottom: 1px solid #eee; 
+    vertical-align: middle; 
+  }
+  .tabella-comande th { 
+    background-color: #2c3e50; 
+    color: white; 
+  }
+  .da-stampare { 
+    background-color: #fff9e6; 
+    font-weight: bold; 
+  }
+
+  /* ==========================================================
+     1. CSS PER LA CAMPANELLA (🔔) - Attesa Standard
+     ========================================================== */
+  .campanella-animata {
+    display: inline-block;
+    font-size: 26px;
+    animation: dondolo_campanella 1.5s infinite ease-in-out;
+    transform-origin: top center;
+  }
+
+  @keyframes dondolo_campanella {
+    0% { transform: rotate(0deg); }
+    15% { transform: rotate(20deg); }
+    30% { transform: rotate(-15deg); }
+    45% { transform: rotate(20deg); }
+    60% { transform: rotate(-15deg); }
+    75% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  /* ==========================================================
+     2. CSS PER IL DIAVOLETTO (😈) - Attesa Urgente
+     ========================================================== */
+  .diavoletto-emoji {
+    display: inline-block;
+    font-size: 28px;
+    animation: vibrazione_diavoletto 0.6s infinite linear, colori_fuoco 1.5s infinite alternate;
+  }
+
+  @keyframes vibrazione_diavoletto {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    25% { transform: translate(-2px, -1px) rotate(-10deg); }
+    50% { transform: translate(1px, -2px) rotate(10deg); }
+    75% { transform: translate(-1px, 2px) rotate(-10deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+  }
+
+  @keyframes colori_fuoco {
+    0% { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(10deg); }   
+    50% { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(340deg); } 
+    100% { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(310deg); } 
+  }
+</style>
+</head>
+<body>
+
+<table class="tabella-comande">
+  <thead>
+    <tr>
+      <th>Tavolo</th>
+      <th>Ora Ordine</th>
+      <th>Stato</th>
+      <th>Avviso Visivo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tavolo 4</td>
+      <td>19:20</td>
+      <td>Stampato in Cucina</td>
+      <td></td>
+    </tr>
+    <tr class="da-stampare">
+      <td>Tavolo 12</td>
+      <td>19:45</td>
+      <td>Da Stampare</td>
+      <td>
+        <span class="campanella-animata">🔔</span>
+      </td>
+    </tr>
+    <tr>
+      <td>Tavolo 8</td>
+      <td>19:40</td>
+      <td>Stampato in Cucina</td>
+      <td></td>
+    </tr>
+    <tr class="da-stampare">
+      <td>Tavolo 15</td>
+      <td>19:10</td>
+      <td>Tavolo fermo da oltre 30 minuti</td>
+      <td>
+        <span class="diavoletto-emoji">😈</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

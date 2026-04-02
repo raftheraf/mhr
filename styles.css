@@ -870,3 +870,42 @@ body {
     background-color: #34a853; /* Verde iniziale */
     transition: width 0.1s linear, background-color 0.3s ease;
 }
+
+/* Animazione diavoletto - tavolo fermo da troppo tempo */
+.diavoletto-animato {
+    display: inline-block;
+    font-size: 18px;
+    animation: vibrazione_diavoletto 0.6s infinite linear, colori_fuoco 1.5s infinite alternate;
+}
+
+@keyframes vibrazione_diavoletto {
+    0%   { transform: translate(1px, 1px) rotate(0deg); }
+    25%  { transform: translate(-2px, -1px) rotate(-10deg); }
+    50%  { transform: translate(1px, -2px) rotate(10deg); }
+    75%  { transform: translate(-1px, 2px) rotate(-10deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
+}
+
+@keyframes colori_fuoco {
+    0%   { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(10deg); }
+    50%  { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(340deg); }
+    100% { filter: grayscale(100%) sepia(100%) saturate(600%) hue-rotate(310deg); }
+}
+
+/* Animazione campanella - ordini da stampare */
+.campanella-animata {
+    display: inline-block;
+    font-size: 18px;
+    animation: dondolo_campanella 1.5s infinite ease-in-out;
+    transform-origin: top center;
+}
+
+@keyframes dondolo_campanella {
+    0%   { transform: rotate(0deg); }
+    15%  { transform: rotate(20deg); }
+    30%  { transform: rotate(-15deg); }
+    45%  { transform: rotate(20deg); }
+    60%  { transform: rotate(-15deg); }
+    75%  { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}

@@ -2,7 +2,7 @@
 if (!defined('CONF_DEBUG')) {
 define('CONF_DEBUG',                                    0);	     // In production set to 0, prints all debug info in the relative file and some debug data on screen
 define('CONF_DEBUG_PRINT_GENERATING_TIME',              0);	     // In production set to 0, allows printing of the generating time
-define('CONF_DEBUG_REPORT_NOTICES',                     1);	     // In production set to 0, uses E_ALL php error reporting
+define('CONF_DEBUG_REPORT_NOTICES',                     0);	     // In production set to 0, uses E_ALL php error reporting
 define('CONF_DEBUG_LANG_DISABLED',                      0);	     // disables the language functions (both db and xml)
 define('CONF_DEBUG_PRINT_GENERATING_TIME_ONLY_IF_HIGH', 0);	     // stampa tempo generazione pagnina solo se maggiore del valore sotto
 define('CONF_DEBUG_PRINT_GENERATING_TIME_TRESHOLD',     0.25);   // tempo massimo di generazione pagina in secondi 0.25 (valore standard)
@@ -269,7 +269,7 @@ define('ICONA_ORDINE_DA_STAMPARE',          '🔔');			//Emoticon oppure link al
 
 
 define('TEMPO_MASSIMO_TAVOLO_FERMO', '1800');	   //Default 30 minuti (30*60=1800) Dopo quanto tempo in sec coppare una icona per indicare che
-																								// il tavolo è fermo da troppo tempo.
+																								//se il tavolo è fermo da troppo tempo, compare un diavoletto.
 define('ICONA_TAVOLO_TROPPO_TEMPO_FERMO',  '😈');			//Icona o link ad immagine che appare sul tavolo fermo da troppo tempo
 
 //Paramtri per la configurazione della Print-F

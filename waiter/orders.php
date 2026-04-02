@@ -681,6 +681,11 @@ switch ($command){
 				}
 				
 				break;
+	case 'togli_diavoletto':
+				$query = "UPDATE `#prefix#sources` SET `catprinted_time`=NOW() WHERE `id`='".$_SESSION['sourceid']."' ";
+				$res = common_query($query,__FILE__,__LINE__);
+				orders_list();
+				break;
 	case 'none':
 				break;
 

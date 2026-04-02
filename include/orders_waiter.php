@@ -1217,7 +1217,14 @@ function orders_list() {
 			<INPUT TYPE="submit" value="UNISCI TAVOLO" class="button_big">
 			</form>
 			';
-	
+	if (ci_sono_ordini_nel_tavolo($_SESSION['sourceid']) && !controlla_tempo_massimo_tavolo_fermo($_SESSION['sourceid']) && !controlla_tempo_massimo_ordine_fermo($_SESSION['sourceid'])) {
+		$tmp .= '
+			<FORM ACTION="orders.php?command=togli_diavoletto" METHOD=POST>
+			<INPUT TYPE="submit" value="TOGLI DIAVOLETTO 😈" class="button_big">
+			</form>
+			';
+	}
+
 
 //RTR START attiva disattiva coperti
 /*
@@ -1923,14 +1930,13 @@ function controlla_ordini_da_stampare($sourceid) {
 
 	$intervallo=TEMPO_MASSIMO_ORDINI;
 
-	$diff=TIME()-$intervallo;
+	$diff=time()-$intervallo;
 	$now=date("Y-m-d H:i:s", $diff);
 
 	$query="SELECT `printed` FROM `#prefix#orders` WHERE `sourceid`='".$sourceid."' AND `printed` IS NULL AND `timestamp`<'".$now."' ";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return '';
 	$num_rows=mysql_num_rows($res);
-	if(!$num_rows) return 0;
 	if($num_rows==0) return 0;
 
 	return true;
@@ -1941,17 +1947,16 @@ function controlla_tempo_massimo_ordine_fermo($sourceid) {
 
 	$intervallo=TEMPO_MASSIMO_TAVOLO_FERMO;
 
-	$diff=TIME()-$intervallo;
+	$diff=time()-$intervallo;
 	$now=date("Y-m-d H:i:s", $diff);
 
 	$query="SELECT `printed`, `timestamp` FROM `#prefix#orders` WHERE `sourceid`='".$sourceid."' AND (`printed`>'".$now."' OR `timestamp`>'".$now."') ";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return '';
 	$num_rows=mysql_num_rows($res);
-	if(!$num_rows) return 0;
-	if($num_rows==0) return true;
+	if($num_rows==0) return 0;
 
-	//esiste almenu un ordine stampato da meno di 20 minuti
+	//esiste almeno un ordine stampato da meno di 20 minuti
 	return true;
 }
 
@@ -1960,15 +1965,14 @@ function controlla_tempo_massimo_tavolo_fermo($sourceid) {
 
 	$intervallo=TEMPO_MASSIMO_TAVOLO_FERMO;
 
-	$diff=TIME()-$intervallo;
+	$diff=time()-$intervallo;
 	$now=date("Y-m-d H:i:s", $diff);
 
 	$query="SELECT * FROM `#prefix#sources` WHERE `id`='".$sourceid."' AND `catprinted_time`>'".$now."' ";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return '';
 	$num_rows=mysql_num_rows($res);
-	if(!$num_rows) return 0;
-	if($num_rows==0) return true;
+	if($num_rows==0) return 0;
 
 	//esiste almeno una categoria stampata da meno di 20 minuti
 	return true;
@@ -1981,10 +1985,9 @@ function ci_sono_ordini_nel_tavolo($sourceid) {
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return '';
 	$num_rows=mysql_num_rows($res);
-	if(!$num_rows) return 0;
-	if($num_rows==0) return true;
+	if($num_rows==0) return 0;
 
-	//esiste almeno una categoria stampata da meno di 20 minuti
+	//esiste almeno un ordine nel tavolo
 	return true;
 }
 

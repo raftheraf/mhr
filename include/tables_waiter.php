@@ -748,7 +748,7 @@ function tavoli_colori_priorita_presenti($sourceid) {
 		$toprint_3='';
 		$toprint_4='';
 
-		if(ci_sono_ordini_nel_tavolo($sourceid) AND !controlla_tempo_massimo_tavolo_fermo($sourceid) AND !controlla_tempo_massimo_ordine_fermo($sourceid))	$toprint_0=true;
+		if(!table_is_closed($sourceid) AND ci_sono_ordini_nel_tavolo($sourceid) AND !controlla_tempo_massimo_tavolo_fermo($sourceid) AND !controlla_tempo_massimo_ordine_fermo($sourceid))	$toprint_0=true;
 		if(controlla_ordini_da_stampare($sourceid)) $toprint_1=true;
 		if(categories_orders_present ($sourceid,2) && !categories_printed ($sourceid,2)) 				$toprint_2=true;
 		if(categories_orders_present ($sourceid,3) && !categories_printed ($sourceid,3)) 				$toprint_3=true;
@@ -756,10 +756,10 @@ function tavoli_colori_priorita_presenti($sourceid) {
 
 		$output .= '';
 
-		if($toprint_0) $output .= ICONA_TAVOLO_TROPPO_TEMPO_FERMO; // inserite le emoticon
+		if($toprint_0) $output .= '<span class="diavoletto-animato">'.ICONA_TAVOLO_TROPPO_TEMPO_FERMO.'</span>'; // inserite le emoticon
 		//'<div style=" border:1px solid black; height:10px; width:10px; background-color:'.ICONA_TAVOLO_TROPPO_TEMPO_FERMO.'; margin:0 auto; border-radius:2px; display: inline-block; "></div> ';
 
-		if($toprint_1) $output .= ICONA_ORDINE_DA_STAMPARE; //inserite le emoticon
+		if($toprint_1) $output .= '<span class="campanella-animata">'.ICONA_ORDINE_DA_STAMPARE.'</span>'; //inserite le emoticon
 		//'<div style=" border:1px solid black; height:10px; width:10px; background-color:'.ICONA_ORDINE_DA_STAMPARE.'; margin:0 auto; border-radius:2px; display: inline-block; "></div> ';
 
 		if($toprint_2) $output .= '<div style=" border:1px solid black; height:10px; width:10px; background-color:'.COLOR_ORDER_PRIORITY_2.'; margin:0 auto; border-radius:2px; display: inline-block; "></div> ';
