@@ -1058,7 +1058,11 @@ function head_line ($title) {
 
 		function fixMalformedTabParam(url) {
 			if (!url || typeof url !== "string") return url;
-			return url.replace(/\.phpmhr_tab_id=/ig, ".php?mhr_tab_id=");
+			// Caso 1: nessun ? prima di mhr_tab_id  (es. "orders.phpmhr_tab_id=")
+			url = url.replace(/\.phpmhr_tab_id=/ig, ".php?mhr_tab_id=");
+			// Caso 2: ? presente ma & mancante prima di mhr_tab_id  (es. "=19mhr_tab_id=")
+			url = url.replace(/([^?&=])mhr_tab_id=/ig, "$1&mhr_tab_id=");
+			return url;
 		}
 
 		var currentUrl = window.location.href;

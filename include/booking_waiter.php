@@ -67,16 +67,14 @@ function prenotazioni(){
 		if(isset($command) && !empty($command)) $link .= '&amp;command='.$command;
 
 		$output .= '<tr>';
-		$output .= '<td height="30px"><a href="'.$link.'">';
-		//$output .= '<a href="'.$link.'">';
-		//$output .= $takeaway_surname.' ';
+		$output .= '<td height="30px"><a href="javascript:void(0)" onclick="redir(\''.$link.'\')">';
 		$output .= $customer_surname.' ';
 		$output .= $customer_name;
 		$output .= '</a>';
 		$output .= '</td>';
-		$output .= '<td align="center"><a href="'.$link.'">+'.$prefisso_telefono.' '.$numero_telefono.'</a></td>';
+		$output .= '<td align="center"><a href="javascript:void(0)" onclick="redir(\''.$link.'\')">+'.$prefisso_telefono.' '.$numero_telefono.'</a></td>';
 		$output .= '<td align="center">'.$ora_prenotazione.'</td>';
-		$output .= '<td align="center"><a href="'.$link.'">'.$tablenum.'</a></td>';
+		$output .= '<td align="center"><a href="javascript:void(0)" onclick="redir(\''.$link.'\')">'.$tablenum.'</a></td>';
 		$output .= '<td align="center">'.$totale_coperti_per_tavolo.'</td>';
 		$output .= '<td align="left">'.$nota_tavolo.'</td>';
 		$output .= '</tr>';
