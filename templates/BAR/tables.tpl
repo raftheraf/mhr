@@ -19,9 +19,7 @@
 		<br>
 		<a href="../admin/">Amministrazione</a>
 		<br>
-		<p>Apri/Chiudi</p>
-		{barra_apri_chiudi_coperti}
-		<p>
+<p>
 			{logout}
 		</p>
 		<br><br><br>

@@ -1,0 +1,19 @@
+{
+  "name": "RTR Restaurant",
+  "short_name": "RTR",
+  "description": "My Handy Restaurant - Gestionale ristorante",
+  "start_url": "/mhr/waiter/connect.php",
+  "scope": "/mhr/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#2e7d32",
+  "icons": [
+    {
+      "src": "/mhr/images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

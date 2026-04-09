@@ -18,9 +18,7 @@
 		    <div>
 			{barra_booking}
 
-			{barra_apri_chiudi_coperti}
-
-			{riepilogo}
+{riepilogo}
 			</div>
 			<br>
 			{logout}<br>

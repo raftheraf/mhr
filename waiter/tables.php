@@ -38,7 +38,6 @@ else $cols=get_conf(__FILE__,__LINE__,'menu_tables_per_row_waiter');
 
 $tpl -> append ('tables',tables_list_all($cols,0,false));
 $tpl -> append ('barra_booking',barra_booking());
-$tpl -> append ('barra_apri_chiudi_coperti',apri_chiudi_coperti());
 $tpl -> append ('prenotazioni',prenotazioni());
 $tpl -> append ('giorno',date("d.m.y"));
 $tpl -> append ('sono_le_ore',date("H:i"));

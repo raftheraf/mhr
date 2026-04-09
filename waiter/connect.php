@@ -89,7 +89,25 @@ switch($command) {
 		//RTR end
 		// Dopo logout o "Torna al login" da multi_tab_error: mostra sempre il form (no auto-login per IP)
 		elseif (!empty($_REQUEST['from_logout'])) {
-			$tmp = access_connect_form_waiter();
+			$ip_button = '';
+			if (allowed_user_host($_SERVER['REMOTE_ADDR'])) {
+				$ip_button = '<div style="text-align:center; margin-bottom:18px;">'."\n"
+					.'<a href="'.ROOTDIR.'/waiter/connect.php" style="'
+					.'display:inline-block;'
+					.'background:#2e7d32;'
+					.'color:#ffffff;'
+					.'font-size:32px;'
+					.'font-weight:bold;'
+					.'padding:18px 48px;'
+					.'border-radius:12px;'
+					.'border:3px solid #1b5e20;'
+					.'box-shadow:0 4px 8px rgba(0,0,0,0.35);'
+					.'text-decoration:none;'
+					.'letter-spacing:1px;'
+					.'">&#10003; Accedi con IP</a>'."\n"
+					.'</div>'."\n";
+			}
+			$tmp = $ip_button . access_connect_form_waiter();
 			$tpl -> assign("content", $tmp);
 		}
 		// Accesso normale all'area waiter (es. waiter/ o index): auto-login per IP se configurato
@@ -128,8 +146,6 @@ $_SESSION['common_db']=$db_common;
 
 $tmp = head_line('Connection');
 $tpl -> assign("head", $tmp);
-$tmp = show_logo();
-$tpl -> assign("logo", $tmp);
 $tmp = 'Connettiti';
 $tpl -> assign("title", $tmp);
 

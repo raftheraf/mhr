@@ -1,4 +1,10 @@
 <?php
+function format_date_ita($ts) {
+	$giorni = array('domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato');
+	$mesi   = array(1=>'gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre');
+	return $giorni[date('w',$ts)] . ' ' . date('j',$ts) . ' ' . $mesi[(int)date('n',$ts)] . ' ' . date('Y',$ts);
+}
+
 function access_connect_form_waiter ($url='') {
 	$output = '';
 	if(empty($url) && isset($_REQUEST['url']) && !empty($_REQUEST['url'])) $url=$_REQUEST['url'];
@@ -11,30 +17,51 @@ function access_connect_form_waiter ($url='') {
 	';
 	if(!empty($url))
 		$output .= '<input type="hidden" name="url" value="'.$url.'">'."\n";
-	$output .= '<table>
-		<tr><td>
-			<center>
-			<h4>
-			'.date("j/n/Y",time()).'<br>
-			<b>'.date("G:i",time()).'</b>
-			</h4>
-			'.ucfirst(phr('WHO_ARE_YOU')).'<br>
-	'.$user->html_select(SHOW_WAITER_CASHIER).'
-
-			</center>
-		</td></tr>
-		<tr><td>
-			<center>
-			Password:<br>
-			<input type="password" name="password" size="9" class="input">
-			</center>
-		</td></tr>
-		<tr><td>
-			<center>
-			<INPUT TYPE="SUBMIT" value="ACCEDI" class="button_big">
-			</center>
-		</td></tr>
-	</table>
+	$output .= '<div style="
+		background:#ffffff;
+		border:1px solid #c8e6c9;
+		border-radius:14px;
+		box-shadow:0 4px 12px rgba(0,0,0,0.15);
+		padding:28px 32px;
+		max-width:300px;
+		margin:0 auto;
+		font-family:Arial,sans-serif;
+	">
+		<div style="text-align:center; margin-bottom:18px; color:#333; font-size:15px;">
+			'.format_date_ita(time()).'<br>
+			<span style="font-size:28px; font-weight:bold; color:#1b5e20;">'.date("G:i",time()).'</span>
+		</div>
+		<div style="margin-bottom:14px;">
+			<label style="display:block; font-size:14px; color:#555; margin-bottom:5px; font-weight:bold;">'.ucfirst(phr('WHO_ARE_YOU')).'</label>
+			'.$user->html_select(SHOW_WAITER_CASHIER).'
+		</div>
+		<div style="margin-bottom:20px;">
+			<label style="display:block; font-size:14px; color:#555; margin-bottom:5px; font-weight:bold;">Password</label>
+			<input type="password" name="password" style="
+				width:100%;
+				font-size:22px;
+				padding:8px 10px;
+				border:2px solid #a5d6a7;
+				border-radius:8px;
+				box-sizing:border-box;
+				text-align:center;
+			">
+		</div>
+		<div style="text-align:center;">
+			<input type="submit" value="ACCEDI" style="
+				background:#2e7d32;
+				color:#ffffff;
+				font-size:24px;
+				font-weight:bold;
+				padding:14px 48px;
+				border-radius:10px;
+				border:3px solid #1b5e20;
+				box-shadow:0 4px 8px rgba(0,0,0,0.25);
+				cursor:pointer;
+				width:100%;
+			">
+		</div>
+	</div>
 	</form>
 	</div>
 	';
@@ -62,10 +89,7 @@ function access_connect_form_pos ($url='') {
 	$output .= '<table>
 		<tr><td>
 			<center>
-			<h4>
-			'.date("j/n/Y",time()).'<br>
-			<b>'.date("G:i",time()).'</b>
-			</h4>
+			<h4>'.format_date_ita(time()).' - <b>'.date("G:i",time()).'</b></h4>
 			'.ucfirst(phr('WHO_ARE_YOU')).'<br>
 	'.$user->html_select(SHOW_CASHIER_ONLY).'
 
@@ -111,10 +135,7 @@ function access_connect_form ($url='') {
 	$output .= '<table>
 		<tr><td>
 			<center>
-			<h4>
-			'.date("j/n/Y",time()).'<br>
-			<b>'.date("G:i",time()).'</b>
-			</h4>
+			<h4>'.format_date_ita(time()).' - <b>'.date("G:i",time()).'</b></h4>
 			Chi sei?<br>
 	'.$user->html_select(SHOW_ALL_USERS).'
 			</center>

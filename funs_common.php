@@ -1033,9 +1033,9 @@ function head_line ($title) {
 	<meta name="mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<!-- APP ICONS -->
-	<link rel="apple-touch-icon" href="/img/icon.png" />
-	<link rel="apple-touch-icon" href="../images/icon.png" />
+	<link rel="apple-touch-icon" href="/mhr/images/icon.png" />
 	<link rel="shortcut icon" href="../favicon.ico" />
+	<link rel="manifest" href="/mhr/manifest.json" />
 
 	<meta http-equiv="content-type" content="text/html; charset='.phr('CHARSET').'" />
 	<title>My Handy Restaurant - '.$title.'</title>
@@ -1049,7 +1049,15 @@ function head_line ($title) {
 	<link rel="stylesheet" href="../reset.css" type="text/css" />
 	<link rel="stylesheet" href="'.CONF_CSS_URL.'" />
 	<meta http-equiv="Cache-Control" content="no-cache" />
-	<meta http-equiv="Expires" content="0" />';
+	<meta http-equiv="Expires" content="0" />
+	<meta name="theme-color" content="#2e7d32" />';
+
+	$output .= '
+	<script type="text/javascript">
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.register("/mhr/service-worker.js");
+	}
+	</script>';
 
 	$output .= '
 	<script type="text/javascript">

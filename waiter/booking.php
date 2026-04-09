@@ -27,7 +27,6 @@ if(!access_allowed(USER_BIT_WAITER) && !access_allowed(USER_BIT_CASHIER)) {
 //Lista prenotazioni
 	$tpl -> append ('prenotazioni',prenotazioni());
 	$tpl -> append ('barra_booking',barra_booking());
-	$tpl -> append ('barra_apri_chiudi_coperti',apri_chiudi_coperti());
 
 // html closing stuff and disconnect line
 $tmp = disconnect_line();
