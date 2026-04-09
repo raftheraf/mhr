@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/xampp/htdocs/mhr -type f -name \"*.php\" -exec wc -l {} +)",
+      "Bash(grep -rn \"var $\\\\|public $\\\\|private $\\\\|protected $\" /c/xampp/htdocs/mhr/include/mysql_class.php)",
+      "Bash(xargs grep:*)",
+      "Bash(find /c/xampp/htdocs/mhr -type f -name \"*.php\" -exec grep -l \"mysql_\" {} +)",
+      "Bash(grep -rn \"$\\\\{\" /c/xampp/htdocs/mhr --include=\"*.php\")",
+      "Bash(grep -rn \"var $\" /c/xampp/htdocs/mhr/include/mysql_class.php)",
+      "Bash(git push:*)",
+      "Bash(ls -1d /c/xampp/htdocs/mhr/*/)",
+      "Bash(grep -l \"class\\\\|function\" /c/xampp/htdocs/mhr/include/*.php)",
+      "Bash(wc -l /c/xampp/htdocs/mhr/include/*.php)",
+      "Bash(git show-ref:*)",
+      "Bash(ls -la /c/xampp/htdocs/mhr/admin/*.php)",
+      "Bash(grep -l \"class.*table\\\\|class.*dish\\\\|class.*ingredient\" /c/xampp/htdocs/mhr/include/*.php)",
+      "Bash(git fetch:*)",
+      "Bash(find /c/xampp/htdocs/mhr -name tables.tpl* -o -name tables.html*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:effatta.it)",
+      "WebFetch(domain:acubeapi.com)",
+      "WebFetch(domain:docs.acubeapi.com)"
+    ]
+  }
+}
