@@ -611,6 +611,41 @@ class table extends object {
 ';
 		}
 
+		// --- Tavoli con prenotazione (userid = 0, sospeso = 0, ma con dati) escluso il tavolo corrente ---
+		$query_pren  = "SELECT * FROM `#prefix#sources`";
+		$query_pren .= " WHERE `userid` = '0'";
+		$query_pren .= " AND `sospeso` = '0'";
+		$query_pren .= " AND `visible` = '1'";
+		$query_pren .= " AND `id` != '".$current_id."'";
+		$query_pren .= " AND (`takeaway_surname` != '' OR `telefono` != '' OR `ora_prenotazione` != ''";
+		$query_pren .= "  OR (SELECT COUNT(*) FROM `#prefix#orders` WHERE `sourceid` = `#prefix#sources`.`id`) > 0)";
+		$query_pren .= $order;
+		$res_pren = common_query($query_pren,__FILE__,__LINE__);
+		if(!$res_pren) return mysql_errno();
+
+		if(mysql_num_rows($res_pren)){
+			$output .= '<a id="Tuttiprenotati">Tavoli con prenotazione</a>';
+			$output .= '
+		<table class="tavoli" id="tabella_tutti_i_prenotati">
+			<tbody>'."\n";
+			while($arr = mysql_fetch_array($res_pren)){
+				$output .= '
+	<tr>'."\n";
+				for($i=0;$i<$cols;$i++){
+					$output .= $this->swap_list_cell($arr,'occupato');
+					if($i != ($cols-1)){
+						$arr = mysql_fetch_array($res_pren);
+					}
+				}
+				$output .= '
+	</tr>';
+			}
+			$output .= '
+	</tbody>
+</table>
+';
+		}
+
 		// --- Tavoli sospesi (sospeso = 1) escluso il tavolo corrente ---
 		$query  = "SELECT * FROM `#prefix#sources`";
 		$query .= " WHERE `sospeso` = '1'";
