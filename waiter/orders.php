@@ -399,6 +399,34 @@ switch ($command){
 				orders_list ();
 
 				break;
+	case 'ask_swap':
+				$tpl -> set_waiter_template_file ('tables');
+
+				$tmp = navbar_empty('javascript:history.go(-1);');
+				$tpl -> assign('navbar',$tmp);
+
+				$user = new user($_SESSION['userid']);
+				if($user->level[USER_BIT_CASHIER]) $cols=get_conf(__FILE__,__LINE__,'menu_tables_per_row_cashier');
+				else $cols=get_conf(__FILE__,__LINE__,'menu_tables_per_row_waiter');
+
+				$table = new table($_SESSION['sourceid']);
+				$table -> swap_list_tables($cols);
+				break;
+	case 'swap':
+				$newtable = $start_data['id'];
+
+				if(!$newtable){
+					orders_list();
+					break;
+				}
+
+				$table = new table($_SESSION['sourceid']);
+				$err = $table -> swap($newtable);
+
+				status_report('MOVEMENT',$err);
+
+				orders_list();
+				break;
 	case 'service_fee':
 				orders_service_fee_questions ();
 				break;
