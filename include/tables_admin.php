@@ -526,6 +526,111 @@ class table extends object {
 		return 0;
 	}
 
+	function swap_list_cell($arr,$tipo){
+		$link = 'orders.php?command=swap&amp;data[id]='.$arr['id'];
+		$color = $arr['tablehtmlcolor'];
+		$msg = ($tipo === 'sospeso') ? ucfirst(phr('SUSPENDED')) : ucfirst(phr('BUSY'));
+		// fallback se la chiave non è tradotta
+		if(ctype_digit($msg)) $msg = ($tipo === 'sospeso') ? 'Sospeso' : 'Occupato';
+
+		if($arr['id']){
+			$output = '
+		<td onmouseover=""
+				style="cursor: pointer; border: 3px solid '.$color.';" background-color="'.COLOR_TABLE_FREE.'"
+				onclick="redir(\''.$link.'\');">
+				<!-- function swap_list_tables -->
+				<div class="SingoloTavolo">
+					<div class="tablenum">'.$arr['name'].'</div>
+					<div class="tavoli_msg">'.$msg.'</div>
+				</div>
+		</td>
+		'."\n";
+		} else {
+			$output = '
+		<td>&nbsp;</td>'."\n";
+		}
+		return $output;
+	}
+
+	function swap_list_tables($cols=1){
+		global $tpl;
+
+		$current_id = (int)$this->id;
+		$output = '';
+
+		$order = " ORDER BY `ordernum` ASC, `name` ASC";
+
+		// --- Tavoli occupati (userid != 0, sospeso = 0) escluso il tavolo corrente ---
+		$query  = "SELECT * FROM `#prefix#sources`";
+		$query .= " WHERE `userid` != '0'";
+		$query .= " AND `sospeso` = '0'";
+		$query .= " AND `visible` = '1'";
+		$query .= " AND `id` != '".$current_id."'";
+		$query .= $order;
+		$res = common_query($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		if(mysql_num_rows($res)){
+			$output .= '<a id="Tuttiitavoli">Tavoli occupati</a>';
+			$output .= '
+		<table class="tavoli" id="tabella_tutti_i_tavoli">
+			<tbody>'."\n";
+			while($arr = mysql_fetch_array($res)){
+				$output .= '
+	<tr>'."\n";
+				for($i=0;$i<$cols;$i++){
+					$output .= $this->swap_list_cell($arr,'occupato');
+					if($i != ($cols-1)){
+						$arr = mysql_fetch_array($res);
+					}
+				}
+				$output .= '
+	</tr>';
+			}
+			$output .= '
+	</tbody>
+</table>
+';
+		}
+
+		// --- Tavoli sospesi (sospeso = 1) escluso il tavolo corrente ---
+		$query  = "SELECT * FROM `#prefix#sources`";
+		$query .= " WHERE `sospeso` = '1'";
+		$query .= " AND `visible` = '1'";
+		$query .= " AND `id` != '".$current_id."'";
+		$query .= $order;
+		$res_sosp = common_query($query,__FILE__,__LINE__);
+		if(!$res_sosp) return mysql_errno();
+
+		if(mysql_num_rows($res_sosp)){
+			$output .= '<a id="Tuttiisospesi">Tavoli sospesi</a>';
+			$output .= '
+		<table class="tavoli" id="tabella_tutti_i_sospesi">
+			<tbody>'."\n";
+			while($arr = mysql_fetch_array($res_sosp)){
+				$output .= '
+	<tr>'."\n";
+				for($i=0;$i<$cols;$i++){
+					$output .= $this->swap_list_cell($arr,'sospeso');
+					if($i != ($cols-1)){
+						$arr = mysql_fetch_array($res_sosp);
+					}
+				}
+				$output .= '
+	</tr>';
+			}
+			$output .= '
+	</tbody>
+</table>
+';
+		}
+
+		if(!$output) return 1;
+
+		$tpl -> assign('tables',$output);
+		return 0;
+	}
+
 	function check_values($input_data){
 		$msg="";
 
