@@ -70,6 +70,7 @@
 				<td align="center" valign="top">
 					<div style="width:50%">	{messages} 	{navbar}	</div>
 					{tables}
+					{barra_booking}
 
 					<br>
 					{riepilogo}

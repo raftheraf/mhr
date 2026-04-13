@@ -45,6 +45,7 @@
 			{navbar}
 
 			{tables}
+			{barra_booking}
 			<br>
 				{riepilogo}
 			{generating_time}<br>
