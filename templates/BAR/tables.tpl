@@ -81,6 +81,7 @@
 		<br>
 	</center>
 
+	<script type="text/javascript" src="../javascript/diavoletto_alert.js"></script>
 </body>
 
 </html>

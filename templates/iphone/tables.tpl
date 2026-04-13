@@ -57,6 +57,7 @@
 		</center>
 	</div>
 
+	<script type="text/javascript" src="../javascript/diavoletto_alert.js"></script>
 </body>
 
 </html>
