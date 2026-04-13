@@ -30,6 +30,8 @@ if(!access_allowed(USER_BIT_WAITER) && !access_allowed(USER_BIT_CASHIER)) {
 if($user->level[USER_BIT_CASHIER])
 	//tables_list_all(5,1) primo numero all'interno delle parentesi indica il numero di colonne
 	$tpl -> append ('tables',tables_list_all(5,1));
+if($user->level[USER_BIT_CASHIER])
+	$tpl -> append ('tables',tables_list_all(5,2));
 if($user->level[USER_BIT_WAITER])
 	$tpl -> append ('tables',tables_list_all(1,2));
 
