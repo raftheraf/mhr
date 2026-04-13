@@ -530,9 +530,20 @@ class table extends object {
 	function swap_list_cell($arr,$tipo){
 		$link = 'orders.php?command=swap&amp;data[id]='.$arr['id'];
 		$color = $arr['tablehtmlcolor'];
-		$msg = ($tipo === 'sospeso') ? ucfirst(phr('SUSPENDED')) : ucfirst(phr('BUSY'));
-		// fallback se la chiave non è tradotta
-		if(ctype_digit($msg)) $msg = ($tipo === 'sospeso') ? 'Sospeso' : 'Occupato';
+
+		// messaggio stato: nome cameriere per i tavoli occupati, "Sospeso" per i sospesi
+		if($tipo === 'sospeso'){
+			$msg = 'Sospeso';
+		} elseif($arr['userid']){
+			$owner = new user((int)$arr['userid']);
+			$msg = isset($owner->data['name']) ? $owner->data['name'] : 'Occupato';
+		} else {
+			$msg = 'Occupato';
+		}
+
+		$takeaway_surname = isset($arr['takeaway_surname']) ? $arr['takeaway_surname'] : '';
+		$ora_prenotazione = isset($arr['ora_prenotazione']) ? $arr['ora_prenotazione'] : '';
+		$coperti = totale_coperti_per_tavolo((int)$arr['id']);
 
 		if($arr['id']){
 			$output = '
@@ -543,6 +554,11 @@ class table extends object {
 				<div class="SingoloTavolo">
 					<div class="tablenum">'.$arr['name'].'</div>
 					<div class="tavoli_msg">'.$msg.'</div>
+					<div class="nome_cliente">'.trim($takeaway_surname.' '.$ora_prenotazione).'</div>';
+			if($coperti){
+				$output .= '<div class="tabella_tavoli"> Cop.'.$coperti.'</div>';
+			}
+			$output .= '
 				</div>
 		</td>
 		'."\n";
