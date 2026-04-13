@@ -705,7 +705,7 @@ class order {
 		// price cell
 		$user = new user($_SESSION['userid']);
 
-		if($generic && ($user->level[USER_BIT_CASHIER] OR access_allowed(USER_BIT_CONFIG) ) && $arr['printed'] && !$deleted) {
+		if($generic && access_allowed(USER_BIT_MONEY) && $arr['printed'] && !$deleted) {
 			$link = 'orders.php?command=price_modify&amp;data[id]='.$arr['id'];
 			$output .= '
 		<td align="right" class="mhr-price-edit" data-id="'.$arr['id'].'" data-price="'.$arr['price'].'">

@@ -283,6 +283,11 @@ function order_fast_dishid_form () {
 function order_price_modify($id) {
 	global $tpl;
 
+	if(!access_allowed(USER_BIT_MONEY)) {
+		access_denied_waiter();
+		return;
+	}
+
 	$tpl -> set_waiter_template_file ('question');
 
 	$tmp = navbar_form('form1','orders.php');

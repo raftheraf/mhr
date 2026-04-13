@@ -72,7 +72,7 @@ switch ($command) {
         break;
 
     case 'update_price':
-        if (!access_allowed(USER_BIT_CASHIER) && !access_allowed(USER_BIT_CONFIG)) {
+        if (!access_allowed(USER_BIT_MONEY)) {
             ajax_out(array('success' => false, 'error' => 'access_denied'));
         }
 
