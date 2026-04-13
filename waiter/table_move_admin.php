@@ -8,6 +8,8 @@ $dont_redirect_to_menu = true;
 require_once(ROOTDIR."/includes.php");
 require_once(ROOTDIR."/waiter/waiter_start.php");
 
+$GLOBALS['end_require_time'] = microtime();
+
 $tpl->set_waiter_template_file('tables');
 
 $user = new user($_SESSION['userid']);
@@ -33,7 +35,7 @@ function build_table_label($arr) {
 	} elseif ($arr['userid'] != '0') {
 		$owner = new user((int)$arr['userid']);
 		$owner_name = (isset($owner->data['name']) && $owner->data['name'] != '') ? $owner->data['name'] : 'Occupato';
-		$coperti = totale_coperti_per_tavolo((int)$arr['id']);
+		$coperti = (int)totale_coperti_per_tavolo((int)$arr['id']);
 		$label .= ' — ' . $owner_name;
 		if ($coperti) $label .= ' (' . $coperti . ' cop.)';
 	} else {
@@ -98,6 +100,8 @@ if (!$res_a || !$res_b) {
 	$tpl->append('tables', '<p>Errore nel caricamento dei tavoli.</p>');
 } elseif (!mysql_num_rows($res_a)) {
 	$tpl->append('tables', '<p>Nessun tavolo occupato o sospeso da cui spostarsi.</p>');
+} elseif (!mysql_num_rows($res_b)) {
+	$tpl->append('tables', '<p>Nessun tavolo disponibile come destinazione.</p>');
 } else {
 	// Costruisce opzioni select A
 	$opts_a = '';
