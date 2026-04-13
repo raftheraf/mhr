@@ -40,6 +40,15 @@ else $cols=get_conf(__FILE__,__LINE__,'menu_tables_per_row_waiter');
 
 $tpl -> append ('tables',tables_list_all($cols,0,false));
 $tpl -> append ('barra_booking',barra_booking());
+
+if ($user->level[USER_BIT_CASHIER] OR access_allowed(USER_BIT_CONFIG)) {
+	$tpl -> append ('barra_booking','
+		<form action="table_move_admin.php" method="get">
+		<input type="submit" value="GESTISCI SPOSTAMENTO TAVOLI" class="button_big">
+		</form>
+	');
+}
+
 $tpl -> append ('prenotazioni',prenotazioni());
 $tpl -> append ('giorno',date("d.m.y"));
 $tpl -> append ('sono_le_ore',date("H:i"));
