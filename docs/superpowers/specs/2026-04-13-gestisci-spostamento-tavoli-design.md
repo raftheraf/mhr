@@ -13,11 +13,11 @@ Ridurre la confusione del cameriere offrendo un'interfaccia unificata dove si sc
 
 ## Entry Point
 
-In `waiter/tables.php`, aggiungere un pulsante visibile solo a cassiere (`USER_BIT_CASHIER`) e admin (`USER_BIT_CONFIG`):
+In `waiter/tables.php`, aggiungere un pulsante visibile solo a cassiere (`USER_BIT_CASHIER`) e admin (`USER_BIT_CONFIG`), posizionato subito dopo la `barra_booking` (la riga con `<<--Tavoli` e `Prenotazioni-->>`):
 
 ```php
 if ($user->level[USER_BIT_CASHIER] OR access_allowed(USER_BIT_CONFIG)) {
-    $tpl->append('tables', '
+    $tpl->append('barra_booking', '
         <form action="table_move_admin.php" method="get">
         <input type="submit" value="GESTISCI SPOSTAMENTO TAVOLI" class="button_big">
         </form>
@@ -25,7 +25,7 @@ if ($user->level[USER_BIT_CASHIER] OR access_allowed(USER_BIT_CONFIG)) {
 }
 ```
 
-Posizionato in fondo alla pagina, dopo tutti i blocchi `tables_list_all`.
+Si appende a `{barra_booking}` (non a `{tables}`) così il pulsante appare visivamente sotto la riga `<<--Tavoli | Prenotazioni-->>`.
 
 ---
 
