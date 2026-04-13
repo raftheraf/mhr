@@ -1,4 +1,32 @@
 (function () {
+    var _alertInterval = null;
+    var _audioCtx = null;
+
+    function avviaBeep() {
+        if (_alertInterval) return;
+        try {
+            _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) { return; }
+        _alertInterval = setInterval(function () {
+            var osc = _audioCtx.createOscillator();
+            osc.connect(_audioCtx.destination);
+            osc.frequency.value = 880;
+            osc.start();
+            osc.stop(_audioCtx.currentTime + 0.3);
+        }, 1000);
+    }
+
+    function fermaBeep() {
+        if (_alertInterval) {
+            clearInterval(_alertInterval);
+            _alertInterval = null;
+        }
+        if (_audioCtx) {
+            try { _audioCtx.close(); } catch (e) {}
+            _audioCtx = null;
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof miei_diavoletti === 'undefined' || miei_diavoletti.length === 0) {
             return;
@@ -41,6 +69,7 @@
     }
 
     function mostraListaDiavoletti(lista) {
+        avviaBeep();
         var overlay = creaOverlay();
         var box = creaBox();
 
@@ -95,6 +124,7 @@
         ].join(';');
         btnIgnora.textContent = 'Ignora Avviso';
         btnIgnora.onclick = function () {
+            fermaBeep();
             var ov = document.getElementById('diavoletto-overlay');
             ov.parentNode.removeChild(ov);
         };
@@ -153,6 +183,7 @@
         ].join(';');
         btnApri.textContent = 'APRI';
         btnApri.onclick = function () {
+            fermaBeep();
             window.location.href = item.link;
         };
 
