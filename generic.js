@@ -157,10 +157,18 @@ function redir(url) {
   //aumenta il tempo di rendirizzamento
   //setTimeout(function(){document.location.href=url},100);
 
+  // Se è un'istruzione javascript: eseguila direttamente senza modificare l'URL
+  if (url && url.toLowerCase().indexOf("javascript:") === 0) {
+    var code = url.substring("javascript:".length);
+    /*jshint evil:true */
+    eval(code);
+    return false;
+  }
+
   if (url && url.toLowerCase().indexOf(".phpmhr_tab_id=") !== -1) {
     url = url.replace(/\.phpmhr_tab_id=/ig, ".php?mhr_tab_id=");
   }
-  
+
   // Aggiungi mhr_tab_id se disponibile (per celle della tabella, ecc.)
   if (window.sessionStorage) {
     var tabId = sessionStorage.getItem("mhr_tab_id");
@@ -173,7 +181,7 @@ function redir(url) {
       }
     }
   }
-  
+
   document.location.href=url;
   myFunction();
 	return false;
