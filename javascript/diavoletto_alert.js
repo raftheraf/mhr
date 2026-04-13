@@ -79,6 +79,27 @@
             })(lista[i]);
         }
 
+        var btnIgnora = document.createElement('button');
+        btnIgnora.style.cssText = [
+            'display:block',
+            'width:100%',
+            'padding:12px',
+            'margin-top:15px',
+            'background:#555555',
+            'color:white',
+            'border:none',
+            'border-radius:5px',
+            'font-size:16px',
+            'cursor:pointer',
+            'min-height:44px'
+        ].join(';');
+        btnIgnora.textContent = 'Ignora Avviso';
+        btnIgnora.onclick = function () {
+            var ov = document.getElementById('diavoletto-overlay');
+            ov.parentNode.removeChild(ov);
+        };
+        box.appendChild(btnIgnora);
+
         overlay.appendChild(box);
         document.body.appendChild(overlay);
     }
