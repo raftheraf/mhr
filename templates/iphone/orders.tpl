@@ -52,7 +52,7 @@
 		{commands}
 		{logout}
 		{generating_time}
-		<br><br>
+		<br><br><br><br><br>
 		</center>
 
 		</body>
