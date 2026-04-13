@@ -983,9 +983,25 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 		<table class="tavoli" '.$idTabella.'>
 		<tbody>'."\n";
 
+	$lista_diavoletti = array();
+
 		while ($arr = mysql_fetch_array ($res)) {
 		$output .= '	<tr>'."\n";
 		for ($i=0;$i<$cols;$i++){
+
+			if ($show == 2 && $arr) {
+				$sid = (int)$arr['id'];
+				if (!table_is_closed($sid)
+					&& ci_sono_ordini_nel_tavolo($sid)
+					&& !controlla_tempo_massimo_tavolo_fermo($sid)
+					&& !controlla_tempo_massimo_ordine_fermo($sid)) {
+					$lista_diavoletti[] = array(
+						'nome'     => $arr['name'],
+						'sourceid' => $sid,
+						'link'     => 'orders.php?data[sourceid]='.$sid
+					);
+				}
+			}
 
 			$output .= tables_list_cell($arr);
 			if($i != ($cols - 1)) {
@@ -997,6 +1013,11 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 	$output .= '	</tbody>
 				</table>
 			';
+
+	if ($show == 2) {
+		$output .= '<script>var miei_diavoletti = '.json_encode($lista_diavoletti).';</script>';
+	}
+
 	return $output;
 }
 //Riepilogo Totale Tavoli aperti
