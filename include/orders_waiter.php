@@ -1180,6 +1180,13 @@ function orders_list() {
 		</form>
 		';
 		$tpl -> append ('commands',$tmp);
+
+		$tmp = '
+		<FORM ACTION="orders.php?command=ask_swap" METHOD=POST>
+		<INPUT TYPE="submit" value="SCAMBIA TAVOLO" class="button_big">
+		</form>
+		';
+		$tpl -> append ('commands',$tmp);
 	}
 	if (access_allowed(USER_BIT_CONFIG)) {
 	$tmp = '
