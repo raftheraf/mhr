@@ -255,55 +255,92 @@ class table extends object {
 
 		$output = '';
 
-		$query = "SELECT * FROM `#prefix#sources` WHERE `userid`='0'";
-		$query .= " AND `toclose` = '0'";
-		$query .= " AND `discount` = '0.00'";
-		$query .= " AND `scontrinato` = '0'";
-		$query .= " AND `paid` = '0'";
-		$query .= " AND `catprinted` = ''";
-		$query .= " AND `catprinted_time` = '0000-00-00 00:00:00'";
-		$query .= " AND `takeaway` = '0'";
-		$query .= " AND `takeaway_surname` = ''";
-		$query .= " AND `prefix_telefono` = '39'";
-		$query .= " AND `telefono` = ''";
-		$query .= " AND `ora_prenotazione` = ''";
-		$query .= " AND `customer` = '0'";
-		$query .= " AND `nota_tavolo` = ''";
-		$query .= " AND `visible` = '1'";
-		$query .= " ORDER by `ordernum` ASC, `id` ASC";
-		$res=common_query ($query,__FILE__,__LINE__);
-		if(!$res) return mysql_errno();
+		$base_conditions  = " AND `toclose` = '0'";
+		$base_conditions .= " AND `discount` = '0.00'";
+		$base_conditions .= " AND `scontrinato` = '0'";
+		$base_conditions .= " AND `paid` = '0'";
+		$base_conditions .= " AND `catprinted` = ''";
+		$base_conditions .= " AND `catprinted_time` = '0000-00-00 00:00:00'";
+		$base_conditions .= " AND `takeaway` = '0'";
+		$base_conditions .= " AND `takeaway_surname` = ''";
+		$base_conditions .= " AND `prefix_telefono` = '39'";
+		$base_conditions .= " AND `telefono` = ''";
+		$base_conditions .= " AND `ora_prenotazione` = ''";
+		$base_conditions .= " AND `customer` = '0'";
+		$base_conditions .= " AND `nota_tavolo` = ''";
+		$base_conditions .= " AND `visible` = '1'";
+		$base_conditions .= " ORDER BY `ordernum` ASC, `name` ASC";
 
-		if(!mysql_num_rows($res)) return 1;
+		// --- Tavoli liberi normali (sospeso = 0) ---
+		$query = "SELECT * FROM `#prefix#sources` WHERE `userid`='0' AND `sospeso`='0'".$base_conditions;
+		$res = common_query($query, __FILE__, __LINE__);
+		if (!$res) return mysql_errno();
 
 		$output .= '<h2>ELENCO DEI TAVOLI LIBERI</h2>';
 
-		$output .= '
+		if (mysql_num_rows($res)) {
+			$output .= '
 			<table class="tavoli" id="tabella_tutti_i_tavoli" >
 				<tbody>'."\n";
 
-		while ($arr = mysql_fetch_array ($res)) {
-			$output .= '
+			while ($arr = mysql_fetch_array($res)) {
+				$output .= '
 	<tr>'."\n";
-			for ($i=0;$i<$cols;$i++){
+				for ($i = 0; $i < $cols; $i++) {
+					if (!$tmp = $this->move_list_cell($arr)) {
+						$i--;
+					} else $output .= $tmp;
 
-				if(!$tmp = $this->move_list_cell ($arr)) {
-					$i--;
-				} else $output .= $tmp;
-
-				if($i != ($cols - 1)) {
-					$arr = mysql_fetch_array ($res);
+					if ($i != ($cols - 1)) {
+						$arr = mysql_fetch_array($res);
+					}
 				}
-			}
-		$output .= '
+				$output .= '
 	</tr>';
-		}
+			}
 
-		$output .= '
+			$output .= '
 	</tbody>
 </table>
 ';
-	$tpl -> assign ('tables',$output);
+		}
+
+		// --- Tavoli sospesi liberi (sospeso = 1) ---
+		$query_sosp = "SELECT * FROM `#prefix#sources` WHERE `sospeso`='1'".$base_conditions;
+		$res_sosp = common_query($query_sosp, __FILE__, __LINE__);
+		if (!$res_sosp) return mysql_errno();
+
+		if (mysql_num_rows($res_sosp)) {
+			$output .= '<a id="Tuttiisospesi">Tavoli sospesi</a>';
+			$output .= '
+			<table class="tavoli" id="tabella_tutti_i_sospesi" >
+				<tbody>'."\n";
+
+			while ($arr = mysql_fetch_array($res_sosp)) {
+				$output .= '
+	<tr>'."\n";
+				for ($i = 0; $i < $cols; $i++) {
+					if (!$tmp = $this->move_list_cell($arr)) {
+						$i--;
+					} else $output .= $tmp;
+
+					if ($i != ($cols - 1)) {
+						$arr = mysql_fetch_array($res_sosp);
+					}
+				}
+				$output .= '
+	</tr>';
+			}
+
+			$output .= '
+	</tbody>
+</table>
+';
+		}
+
+		if (!$output) return 1;
+
+		$tpl -> assign ('tables',$output);
 
 	return 0;
 	}
@@ -422,6 +459,67 @@ class table extends object {
 		`customer` = '0',
 		`nota_tavolo` = ''
 		WHERE `id` = '".$this->id."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		return 0;
+	}
+
+	function swap($destination){
+
+		$fields_to_skip = array('id','name','ordernum','takeaway','sospeso',
+			'utente_abilitato','tablehtmlcolor','last_access_time');
+
+		// legge lo stato del tavolo A (corrente)
+		$query="SELECT * FROM `#prefix#sources` WHERE `id`='".$this->id."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+		$arr_a = mysql_fetch_array($res,MYSQL_ASSOC);
+
+		// legge lo stato del tavolo B (destinazione)
+		$query="SELECT * FROM `#prefix#sources` WHERE `id`='".$destination."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+		$arr_b = mysql_fetch_array($res,MYSQL_ASSOC);
+
+		// rimuove i campi fissi che non si scambiano
+		foreach($fields_to_skip as $f){
+			unset($arr_a[$f]);
+			unset($arr_b[$f]);
+		}
+
+		// sposta ordini A → sourceid temporaneo (0 non è mai un ID tavolo reale)
+		$query="UPDATE `#prefix#orders` SET `sourceid`='0' WHERE `sourceid`='".$this->id."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		// sposta ordini B → A
+		$query="UPDATE `#prefix#orders` SET `sourceid`='".$this->id."' WHERE `sourceid`='".$destination."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		// sposta ordini temporanei (ex-A) → B
+		$query="UPDATE `#prefix#orders` SET `sourceid`='".$destination."' WHERE `sourceid`='0'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		// copia lo stato di B su A
+		$query="UPDATE `#prefix#sources` SET ";
+		foreach($arr_b as $key => $value){
+			$query.="`".$key."`='".addslashes($value)."',";
+		}
+		$query = substr($query,0,strlen($query)-1);
+		$query.=" WHERE `id`='".$this->id."'";
+		$res=common_query ($query,__FILE__,__LINE__);
+		if(!$res) return mysql_errno();
+
+		// copia lo stato di A su B
+		$query="UPDATE `#prefix#sources` SET ";
+		foreach($arr_a as $key => $value){
+			$query.="`".$key."`='".addslashes($value)."',";
+		}
+		$query = substr($query,0,strlen($query)-1);
+		$query.=" WHERE `id`='".$destination."'";
 		$res=common_query ($query,__FILE__,__LINE__);
 		if(!$res) return mysql_errno();
 
