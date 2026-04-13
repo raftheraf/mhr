@@ -564,6 +564,7 @@ class table extends object {
 		$query  = "SELECT * FROM `#prefix#sources`";
 		$query .= " WHERE `userid` != '0'";
 		$query .= " AND `sospeso` = '0'";
+		$query .= " AND `takeaway` = '0'";
 		$query .= " AND `visible` = '1'";
 		$query .= " AND `id` != '".$current_id."'";
 		$query .= $order;
