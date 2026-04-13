@@ -1015,7 +1015,7 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 			';
 
 	if ($show == 2) {
-		$output .= '<script>var miei_diavoletti = '.json_encode($lista_diavoletti).';</script>';
+		$output .= '<script>var miei_diavoletti = '.json_encode($lista_diavoletti, JSON_HEX_TAG).';</script>';
 	}
 
 	return $output;
