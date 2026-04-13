@@ -481,6 +481,7 @@ class table extends object {
 		$res=common_query ($query,__FILE__,__LINE__);
 		if(!$res) return mysql_errno();
 		$arr_b = mysql_fetch_array($res,MYSQL_ASSOC);
+		if(!$arr_b) return 'cerca errore 7422';
 
 		// rimuove i campi fissi che non si scambiano
 		foreach($fields_to_skip as $f){
