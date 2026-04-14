@@ -66,14 +66,20 @@ class country extends object {
 function country_conf_currency ($html=false) {
 	$id = get_conf(__FILE__,__LINE__,'country');
 	$country = new country ($id);
-	
+
 	$curr_lett = $country -> data['currency_letter'];
 	if(!$html) return $curr_lett;
-	
+
 	$curr_html = $country -> data['currency_html'];
 	if (empty($curr_html)) return $curr_lett;
-	
+
 	return $curr_html;
+}
+
+// Formatta un prezzo per la visualizzazione HTML con separatore delle migliaia
+// NON usare per output di stampa fisica o documenti fiscali
+function format_price_html($value) {
+	return number_format((float)$value, 2, ',', '.');
 }
 
 ?>

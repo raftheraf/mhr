@@ -836,7 +836,7 @@ function bill_print_row($key,$value,$destid){
 		$output_page .= '</td>
 		<td bgcolor="'.$class.'">'.$name.'</td>
 		<td bgcolor="'.$class.'">';
-		$output_page .= sprintf("%0.2f",$_SESSION['separated'][$key]['finalprice']);
+		$output_page .= format_price_html($_SESSION['separated'][$key]['finalprice']);
 		$output_page .= '</td></tr>';
 
 		if($mods) {
@@ -1024,7 +1024,7 @@ function bill_print_discount($receipt_id,$destid) {
 	<tr bgcolor="'.$class.'">
 	<td></td>
 	<td>'.ucfirst(phr('DISCOUNT')).' '.$discount_label.'</td>
-	<td>'.sprintf("%0.2f",$discount_number).'</td>
+	<td>'.format_price_html($discount_number).'</td>
 	</tr>'."<br>\n";
 
 	return $msg;
@@ -1726,7 +1726,7 @@ function bill_show_list(){
 		<td bgcolor="'.$class.'" align="right">
 		';
 		if(!$_SESSION['separated'][$key]['special']){
-			$output .= sprintf("%0.2f",$_SESSION['separated'][$key]['finalprice']);
+			$output .= format_price_html($_SESSION['separated'][$key]['finalprice']);
 		}
 		$output .= '
 		</td>
@@ -2277,7 +2277,7 @@ function bill_total(){
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'" align="right"><b>TOTALE</b></td>
 		<td bgcolor="'.$class.'"></td>
-		<td bgcolor="'.$class.'" align="right"><b>'.sprintf("%0.2f",$total).'</b></td>
+		<td bgcolor="'.$class.'" align="right"><b>'.format_price_html($total).'</b></td>
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'"></td>
 		</tr>
@@ -2305,7 +2305,7 @@ function bill_total(){
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'" align="right">Sconto '.$discount_label.'</td>
 		<td bgcolor="'.$class.'"></td>
-		<td bgcolor="'.$class.'" align="right">-'.sprintf("%0.2f",$discount_number).'</td>
+		<td bgcolor="'.$class.'" align="right">-'.format_price_html($discount_number).'</td>
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'"></td>
 		</tr>
@@ -2313,7 +2313,7 @@ function bill_total(){
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'" align="right"><b>TOTALE SCONTATO</b></td>
 		<td bgcolor="'.$class.'"></td>
-		<td bgcolor="'.$class.'" align="right"><b><u>'.sprintf("%0.2f",$total_discounted).'</u></b></td>
+		<td bgcolor="'.$class.'" align="right"><b><u>'.format_price_html($total_discounted).'</u></b></td>
 		<td bgcolor="'.$class.'"></td>
 		<td bgcolor="'.$class.'"></td>
 		</tr>
@@ -2428,7 +2428,7 @@ function totale_a_persona($sourceid = null) {
 
 	if ($totale_coperti > 0) {
 		$totale_a_persona = $totale_tavolo / $totale_coperti;
-		return ' <tr bgcolor="white"><td colspan="6">Costo a persona Euro '.sprintf("%0.2f",$totale_a_persona).'</td></tr>';
+		return ' <tr bgcolor="white"><td colspan="6">Costo a persona Euro '.format_price_html($totale_a_persona).'</td></tr>';
 	}
 
 	return '';
