@@ -204,6 +204,16 @@
 
 			$user = new user ($_SESSION['userid']);
 
+			$lock_owner_name = '';
+			$res_lock=common_query("SELECT `last_access_userid` FROM `#prefix#sources` WHERE `id`='".$_SESSION['sourceid']."'",__FILE__,__LINE__);
+			if($res_lock) {
+				$arr_lock=mysql_fetch_array($res_lock);
+				if($arr_lock && $arr_lock['last_access_userid']) {
+					$lock_owner = new user($arr_lock['last_access_userid']);
+					$lock_owner_name = $lock_owner->data['name'];
+				}
+			}
+
 			if($remaining_time==0) $remaining_time = 1;
 			$error_msg = common_header('Tavolo occupato');
 			$error_msg .= '
@@ -265,6 +275,11 @@
 	display: inline-block;
 	font-family: Arial, Helvetica, sans-serif;
 }
+.lock-owner {
+	font-size: 20px;
+	color: #555;
+	margin: 0 0 16px 0;
+}
 .lock-btn-back   { background: #95a5a6; color: #fff; }
 .lock-btn-retry  { background: #27ae60; color: #fff; }
 .lock-btn-unlock { background: #e67e22; color: #fff; width: 100%; margin-top: 16px; }
@@ -277,6 +292,7 @@
 <div class="lock-container">
 	<h2 class="lock-title">Tavolo occupato</h2>
 	<p class="lock-msg">Un altro cameriere sta lavorando su questo tavolo.</p>
+	<p class="lock-owner">Bloccato da: <strong>'.(isset($lock_owner_name) && $lock_owner_name ? htmlspecialchars($lock_owner_name) : 'cameriere sconosciuto').'</strong></p>
 	<div class="lock-countdown" id="lock-timer">'.$remaining_time.'</div>
 	<div class="lock-countdown-label">secondi al prossimo tentativo automatico</div>
 	<div class="lock-buttons">
