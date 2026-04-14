@@ -83,7 +83,8 @@ switch ($_REQUEST['command']){
 			echo '<body bgcolor='.COLOR_BACK_OK.'>';
 			if($_POST['reset']==1){
 				$table=$GLOBALS['table_prefix'].'orders';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 
 				echo "$msg_reset_orders_ok<br>";
 			}
@@ -107,7 +108,8 @@ switch ($_REQUEST['command']){
 	case 'reset_orders1':
 			if($_POST['reset']==1){
 				$table=$GLOBALS['table_prefix'].'orders';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 				echo '<body bgcolor='.COLOR_BACK_OK.'>';
 
 				echo "$msg_reset_orders_ok<br><br>";
@@ -128,7 +130,8 @@ switch ($_REQUEST['command']){
 	case 'reset_sources1':
 			if($_POST['reset']==1){
 				$table=$GLOBALS['table_prefix'].'orders';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 
 				$table=$GLOBALS['table_prefix'].'sources';
 				$query="UPDATE $table SET
@@ -147,7 +150,7 @@ switch ($_REQUEST['command']){
 				,`takeaway_time`='0'
 				,`customer`='0'
 				,`nota_tavolo`=''";
-				$res = mysql_db_query($db_common,$query);
+				$res = common_query($query,__FILE__,__LINE__);
 
 				if($errno=mysql_errno()) {
 					echo '<body bgcolor='.COLOR_BACK_ERROR.'>';
@@ -174,15 +177,18 @@ switch ($_REQUEST['command']){
 	case 'reset_all1':
 			if($_POST['reset']==1){
 				$table=$GLOBALS['table_prefix'].'customers';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 				$table=$GLOBALS['table_prefix'].'orders';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 				$table=$GLOBALS['table_prefix'].'last_orders';
-				$res = mysql_db_query($db_common,"TRUNCATE $table");
+				$query="TRUNCATE $table";
+				$res = common_query($query,__FILE__,__LINE__);
 
 				$table=$GLOBALS['table_prefix'].'accounting_dbs';
 				$query="SELECT * FROM `$table`";
-				$res = mysql_db_query ($_SESSION['common_db'],$query);
+				$res = common_query($query,__FILE__,__LINE__);
 				if($errno=mysql_errno()) {
 					$msg="Error in ".__FUNCTION__." array - ";
 					$msg.='mysql: '.mysql_errno().' '.mysql_error();
@@ -204,10 +210,10 @@ switch ($_REQUEST['command']){
 					for (reset ($truncate); list ($key, $value) = each ($truncate); ) {
 						$table_local=$GLOBALS['table_prefix'].$value;
 						$query="SELECT * FROM `$table_local`";
-						$res_local = mysql_db_query ($arr['db'],$query);
+						$res_local = database_query($query,__FILE__,__LINE__,$arr['db']);
 						if(mysql_num_rows($res_local)) {
 							$query_local='TRUNCATE TABLE `'.$table_local.'`';
-							$res3 = mysql_db_query($arr['db'],$query_local);
+							$res3 = database_query($query_local,__FILE__,__LINE__,$arr['db']);
 							if($errno=mysql_errno()) {
 								$msg="Error in ".__FUNCTION__." - ";
 								$msg.='mysql: '.mysql_errno().' '.mysql_error()."\n";
@@ -238,7 +244,7 @@ switch ($_REQUEST['command']){
 				,`takeaway_time`='0'
 				,`customer`='0'
 				,`nota_tavolo`=''";
-				$res = mysql_db_query($db_common,$query);
+				$res = common_query($query,__FILE__,__LINE__);
 
 				if($errno=mysql_errno()) {
 					echo '<body bgcolor='.COLOR_BACK_ERROR.'>';
@@ -267,7 +273,7 @@ switch ($_REQUEST['command']){
 
 				$table=$GLOBALS['table_prefix'].'sources';
 				$query="UPDATE $table SET `last_access_time`='0'";
-				$res = mysql_db_query($db_common,$query);
+				$res = common_query($query,__FILE__,__LINE__);
 
 				if($errno=mysql_errno()) {
 					echo '<body bgcolor='.COLOR_BACK_ERROR.'>';
