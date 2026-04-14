@@ -37,6 +37,9 @@ require("./conf/config.inc.php");
 require("./conf/config.constants.inc.php");
 require("./funs_common.php");
 require("./include/cache_class.php");
+require_once("./include/object_class_admin.php");
+require_once("./include/user_class.php");
+require_once("./include/access_control.php");
 
 echo common_header('Administration');
 
@@ -50,6 +53,14 @@ else $conf_language=get_conf(__FILE__,__LINE__,"default_language");
 require("./lang/lang_".$conf_language.".php");
 
 unset_source_vars();
+
+if(!access_allowed(USER_BIT_CONFIG)) {
+    echo '<p style="color:red;font-weight:bold;">Accesso negato. Permesso CONFIG richiesto.</p>';
+    echo "<a href=\"waiter/tables.php\">".ucfirst(lang_get($_SESSION['language'],'BACK_TO_TABLES'))."</a><br>\n";
+    echo generating_time($inizio);
+    echo '</center></body></html>';
+    exit;
+}
 
 switch ($_REQUEST['command']){
 	case 'halt0':
