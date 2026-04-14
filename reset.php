@@ -97,7 +97,11 @@ switch ($_REQUEST['command']){
 			} else {
 				$out=system("/sbin/shutdown -h now",$outerr);
 			}
-			echo "$msg_halt_ok<br>";
+			if($outerr !== 0) {
+				echo '<p style="color:red;">Errore spegnimento (exit code: '.(int)$outerr.'). Verificare i permessi.</p>';
+			} else {
+				echo "$msg_halt_ok<br>";
+			}
 		}
 		break;
 	case 'reset_orders0':
