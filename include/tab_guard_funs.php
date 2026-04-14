@@ -59,6 +59,15 @@ function mhr_tab_guard_validate_request($tab_id) {
 	return mhr_tab_guard_claim($tab_id);
 }
 
+function mhr_tab_guard_force_claim($tab_id) {
+	$tab_id = trim((string) $tab_id);
+	if ($tab_id === '') {
+		return false;
+	}
+	mhr_tab_guard_set_state($tab_id);
+	return true;
+}
+
 function mhr_tab_guard_release($tab_id = '') {
 	$tab_id = trim((string) $tab_id);
 	if (!isset($_SESSION['mhr_tab_guard']) || !is_array($_SESSION['mhr_tab_guard'])) {

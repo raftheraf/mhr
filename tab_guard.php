@@ -32,6 +32,14 @@ switch ($action) {
 		));
 		break;
 
+	case 'force_claim':
+		$allowed = mhr_tab_guard_force_claim($tab_id);
+		mhr_tab_guard_json_response(array(
+			'ok' => 1,
+			'allowed' => $allowed ? 1 : 0
+		));
+		break;
+
 	case 'release':
 		mhr_tab_guard_release($tab_id);
 		mhr_tab_guard_json_response(array('ok' => 1, 'released' => 1));
