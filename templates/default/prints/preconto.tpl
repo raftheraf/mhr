@@ -5,8 +5,9 @@
 {align_right}
 {orders}{doubdashes_row}
 {discount}{height_double}
-{total}{size_normal}
-
+{total}
+{size_normal}
+{cost_pp}
 {dashes_row}
 {align_center}CAMBIARE ALLA CASSA CON LO SCONTRINO
 

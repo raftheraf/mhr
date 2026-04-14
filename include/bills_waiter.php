@@ -348,14 +348,12 @@ other - mysql error number
 	ksort($_SESSION['separated']);
 
 	// the next for prints the list and the chosen dishes
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
-
+	foreach ($_SESSION['separated'] as $key => $value) {
 		//modifiche per stampare sulla PrintF inserito if else
-		if ($_SESSION['type'] == 7){
-			$output['orders'] .= bill_print_row_printf($key,$value,$destid);
-			}
-			else {
-		$output['orders'] .= bill_print_row($key,$value,$destid);
+		if ($_SESSION['type'] == 7) {
+			$output['orders'] .= bill_print_row_printf($key, $value, $destid);
+		} else {
+			$output['orders'] .= bill_print_row($key, $value, $destid);
 		}
 	}
 	$tpl_print -> assign("orders", $output['orders']);
@@ -381,7 +379,9 @@ other - mysql error number
 //perchè non vogliamo inserire nulla nel database contabilità con i preconti
  if ($_SESSION['type'] < 3)  {
  	$output['total'] = bill_total_preconto();
-	$output['discount']=bill_print_discount_preconto();
+	$output['discount'] = bill_print_discount_preconto();
+	$output['cost_pp'] = bill_total_a_persona_preconto();
+	$tpl_print->assign("cost_pp", $output['cost_pp']);
  } else {
 //rtr
 	if (isset($receipt_id)) {
@@ -505,7 +505,7 @@ if (isset($receipt_id)) {
 
 	// sets the log
 	if (isset($receipt_id)) {
-		for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+		foreach ($_SESSION['separated'] as $key => $value) {
 			if($err_logger=bill_logger($key,$receipt_id)){
 				debug_msg(__FILE__,__LINE__,__FUNCTION__.' - receipt_id: '.$receipt_id.' - logger return code: '.$err_logger);
 			} else {
@@ -1158,9 +1158,9 @@ global $output_page;
 $total = 0;
 $msg = '';
 
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+	foreach ($_SESSION['separated'] as $key => $value) {
 		if (isset($_SESSION['separated'][$key]['finalprice'])) {
-			$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
+			$total += $_SESSION['separated'][$key]['finalprice'];
 		}
 	}
 	if(!isset($_SESSION['discount']) || !isset($_SESSION['discount']['type']) || empty($_SESSION['discount']['type'])){
@@ -1190,9 +1190,9 @@ $total = 0;
 	$msg="";
 //	$class=COLOR_ORDER_PRINTED;
 
-	for (reset ($_SESSION['separated']); list ($key, $value) = each ($_SESSION['separated']); ) {
+	foreach ($_SESSION['separated'] as $key => $value) {
 		if (isset($_SESSION['separated'][$key]['finalprice'])) {
-			$total += isset($_SESSION['separated'][$key]['finalprice']) ? $_SESSION['separated'][$key]['finalprice'] : 0;
+			$total += $_SESSION['separated'][$key]['finalprice'];
 		}
 	}
 
@@ -1234,6 +1234,48 @@ $total = 0;
 	//$msg.="\t".ucfirst(lang_get($dest_language,'PRINTS_DISCOUNT'))." ".$discount_label;
 	$msg.=" ".country_conf_currency()." ".sprintf("%7.2f","-".$discount_number);
 	return $msg;
+}
+
+function bill_total_a_persona_preconto() {
+	// Non mostrare durante i conti separati
+	$separated = isset($_SESSION['separated']) && is_array($_SESSION['separated']) ? $_SESSION['separated'] : array();
+	foreach ($separated as $item) {
+		if (empty($item['special']) && $item['topay'] < $item['max_quantity']) return '';
+	}
+
+	// Calcola totale lordo da sessione
+	$total = 0;
+	foreach ($separated as $key => $value) {
+		if (isset($separated[$key]['finalprice'])) {
+			$total += $separated[$key]['finalprice'];
+		}
+	}
+
+	// Applica sconto
+	$totale_tavolo = $total;
+	if (isset($_SESSION['discount']['type']) && $_SESSION['discount']['type'] !== '') {
+		if ($_SESSION['discount']['type'] == 'amount' && isset($_SESSION['discount']['amount'])) {
+			$totale_tavolo = $total + $_SESSION['discount']['amount'];
+		} elseif ($_SESSION['discount']['type'] == 'percent' && isset($_SESSION['discount']['percent'])) {
+			$totale_tavolo = $total - $total / 100 * $_SESSION['discount']['percent'];
+		}
+	}
+
+	// Conta coperti non ancora pagati
+	$sourceid = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : 0;
+	$query = "
+	SELECT SUM(quantity - paid) as numero_coperti FROM `#prefix#orders`
+	WHERE `dishid`='".SERVICE_ID."'
+	AND `sourceid` = '$sourceid'
+	";
+	$res = common_query($query, __FILE__, __LINE__);
+	if (!$res) return '';
+	$totale_coperti = 0;
+	if ($arr = mysql_fetch_array($res)) $totale_coperti = (int)$arr['numero_coperti'];
+	if ($totale_coperti <= 0) return '';
+
+	$costo_a_persona = round($totale_tavolo / $totale_coperti, 2);
+	return "Costo a persona ".country_conf_currency()." ".sprintf("%7.2f", $costo_a_persona);
 }
 
 //rtr
@@ -2348,11 +2390,18 @@ function bill_reset($sourceid) {
 }
 // calcola il totale a persona
 function totale_a_persona($sourceid = null) {
+	// Non mostrare il costo a persona durante i conti separati:
+	// si verifica quando almeno un piatto ha topay < max_quantity
+	$separated_check = isset($_SESSION['separated']) && is_array($_SESSION['separated']) ? $_SESSION['separated'] : array();
+	foreach ($separated_check as $item) {
+		if (empty($item['special']) && $item['topay'] < $item['max_quantity']) return '';
+	}
+
 	$sourceid = isset($_SESSION['sourceid']) ? $_SESSION['sourceid'] : $sourceid;
 	$separated = isset($_SESSION['separated']) && is_array($_SESSION['separated']) ? $_SESSION['separated'] : array();
 
 	$total = 0;
-	for (reset($separated); list($key, $value) = each($separated); ) {
+	foreach ($separated as $key => $value) {
 		if (isset($separated[$key]['finalprice'])) {
 			$total += $separated[$key]['finalprice'];
 		}
@@ -2368,7 +2417,7 @@ function totale_a_persona($sourceid = null) {
 	}
 
 	$query = "
-	SELECT SUM(quantity) as numero_coperti  FROM `#prefix#orders` 
+	SELECT SUM(quantity - paid) as numero_coperti FROM `#prefix#orders`
 	WHERE `dishid`='".SERVICE_ID."'
 	AND  `sourceid` = '$sourceid'
 	";
@@ -2379,12 +2428,9 @@ function totale_a_persona($sourceid = null) {
 
 	if ($totale_coperti > 0) {
 		$totale_a_persona = $totale_tavolo / $totale_coperti;
-	} else {
-		$totale_a_persona = 0;
+		return ' <tr bgcolor="white"><td colspan="6">Costo a persona Euro '.sprintf("%0.2f",$totale_a_persona).'</td></tr>';
 	}
 
-	$output = '';
-	$output .= ' <tr bgcolor="white"><td colspan="6">Costo a persona Euro '.sprintf("%0.2f",$totale_a_persona).'</td></tr>';
-	return $output;
+	return '';
 }
 ?>
