@@ -298,7 +298,7 @@ function orders_list_ajax() {
 
 	$associated_waiter = table_is_associated ();
 	if (get_conf(__FILE__,__LINE__,"disassociation_allow")
-		&& $associated_waiter && ($associated_waiter == $_SESSION ['userid'] || $user->level[USER_BIT_CASHIER] )
+		&& $associated_waiter && ($associated_waiter == $_SESSION ['userid'] || ($user->level[USER_BIT_CASHIER] && $user->level[USER_BIT_MONEY]) )
 		) {
 		$tmp = '
 		<FORM ACTION="orders.php?command=dissociate" METHOD=POST>
