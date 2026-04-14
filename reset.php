@@ -298,7 +298,7 @@ switch ($_REQUEST['command']){
 		</FORM>
 		";
 		break;
-	case 'unset_all_1':
+	case 'unset_all1':
 			if($_POST['reset']==1){
 				unset($_SESSION);
 				echo '<body bgcolor='.COLOR_BACK_OK.'>';
