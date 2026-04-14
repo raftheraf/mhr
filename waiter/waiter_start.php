@@ -189,22 +189,131 @@
 	if the elapsed time from the last update is > than the config lock_time
 	*/
 	if (isset($_SESSION['sourceid']) && $_SESSION['sourceid']){
+
+		// BLOCCO TAVOLO - sblocco forzato (solo cassiere + denaro)
+		if(isset($_POST['force_unlock']) && $_POST['force_unlock']=='1') {
+			if(access_allowed(USER_BIT_CASHIER) && access_allowed(USER_BIT_MONEY)) {
+				$query="UPDATE `#prefix#sources` SET `last_access_time` = NULL, `last_access_userid` = '".$_SESSION['userid']."' WHERE `id` = '".$_SESSION['sourceid']."' LIMIT 1";
+				common_query($query, __FILE__, __LINE__);
+			}
+		}
+
+		// BLOCCO TAVOLO
 		if(table_lock_check($_SESSION['sourceid'])) {
 			$remaining_time=table_lock_remaining_time($_SESSION['sourceid']);
 
 			$user = new user ($_SESSION['userid']);
 
 			if($remaining_time==0) $remaining_time = 1;
-			$error_msg = common_header('Table in use');
-			$error_msg .=  navbar_lock_retry('');
-			$error_msg .=  '<center>';
-			$error_msg .=  '<br><br>';
-			$error_msg .=  '';
-			$error_msg .= '<h2>Un altro cameriere<br>sta lavorando sul tavolo</h2>';
-			$error_msg .= '<h3>Riprova tra '.$remaining_time.' '.ucfirst(phr('SECONDS')).'.</h3><br><br>'."\n";
-			$error_msg .=  '<br><br>';
-			$error_msg .= 'Se non sei <b>'.$user->data['name'].'</b><br> ti devi disconnettere<br>'."\n";
-			$error_msg .=  '</center>';
+			$error_msg = common_header('Tavolo occupato');
+			$error_msg .= '
+<!-- BLOCCO TAVOLO -->
+<style>
+.lock-container {
+	max-width: 480px;
+	margin: 60px auto;
+	background: #ffffff;
+	border-radius: 6px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+	padding: 36px 28px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.lock-title {
+	color: #c0392b;
+	font-size: 26px;
+	margin: 0 0 14px 0;
+}
+.lock-msg {
+	font-size: 18px;
+	color: #333;
+	margin: 0 0 8px 0;
+}
+.lock-user {
+	font-size: 15px;
+	color: #777;
+	margin: 16px 0 24px 0;
+	border-top: 1px solid #eee;
+	padding-top: 16px;
+}
+.lock-countdown {
+	font-size: 56px;
+	font-weight: bold;
+	color: #e74c3c;
+	line-height: 1;
+	margin: 8px 0 4px 0;
+}
+.lock-countdown-label {
+	font-size: 14px;
+	color: #999;
+	margin-bottom: 24px;
+}
+.lock-buttons {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-top: 8px;
+}
+.lock-btn {
+	padding: 14px 28px;
+	border: none;
+	border-radius: 4px;
+	font-size: 20px;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-block;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.lock-btn-back   { background: #95a5a6; color: #fff; }
+.lock-btn-retry  { background: #27ae60; color: #fff; }
+.lock-btn-unlock { background: #e67e22; color: #fff; width: 100%; margin-top: 16px; }
+.lock-unlock-section {
+	margin-top: 20px;
+	padding-top: 16px;
+	border-top: 1px solid #eee;
+}
+</style>
+<div class="lock-container">
+	<h2 class="lock-title">Tavolo occupato</h2>
+	<p class="lock-msg">Un altro cameriere sta lavorando su questo tavolo.</p>
+	<div class="lock-countdown" id="lock-timer">'.$remaining_time.'</div>
+	<div class="lock-countdown-label">secondi al prossimo tentativo automatico</div>
+	<div class="lock-buttons">
+		<a href="javascript:void(0)" onclick="redir(\'tables.php\')" class="lock-btn lock-btn-back">&#8592; Tavoli</a>
+		<a href="javascript:void(0)" onclick="redir(\'orders.php\')" class="lock-btn lock-btn-retry">Riprova ora</a>
+	</div>
+	<p class="lock-user">Se non sei <strong>'.$user->data['name'].'</strong> devi disconnetterti.</p>';
+
+			// Pulsante sblocco forzato: solo cassiere + denaro
+			if(access_allowed(USER_BIT_CASHIER) && access_allowed(USER_BIT_MONEY)) {
+				$error_msg .= '
+	<div class="lock-unlock-section">
+		<form method="post" action="orders.php" onsubmit="return confirm(\'Sbloccare il tavolo e prenderne il controllo?\')">
+			<input type="hidden" name="force_unlock" value="1">
+			<button type="submit" class="lock-btn lock-btn-unlock">Sblocca tavolo</button>
+		</form>
+	</div>';
+			}
+
+			$error_msg .= '
+</div>
+<script>
+(function(){
+	var t = '.$remaining_time.';
+	var el = document.getElementById("lock-timer");
+	var iv = setInterval(function(){
+		t--;
+		if(t <= 0){
+			clearInterval(iv);
+			redir("orders.php");
+		} else {
+			el.innerHTML = t;
+		}
+	}, 1000);
+})();
+</script>
+';
 			$error_msg .= common_bottom();
 			die($error_msg);
 		}

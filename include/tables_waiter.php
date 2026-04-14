@@ -805,24 +805,23 @@ function table_people_number ($sourceid) {
 * @return integer Remaining time in seconds
 */
 function table_lock_remaining_time($sourceid) {
-	$timestamp_now=date("YmdHis",time());
-	$lock_time=get_conf(__FILE__,__LINE__,"lock_time");
-
-	$query="SELECT `last_access_time` FROM `#prefix#sources` WHERE `id`='".$sourceid."'";
+	$query="SELECT `last_access_time`, `toclose` FROM `#prefix#sources` WHERE `id`='".$sourceid."'";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return 0;
 
 	$arr=mysql_fetch_array($res);
+	if(!$arr) return 0;
 
-	$last_access_time=$arr['last_access_time'];
+	// tavolo chiuso: usa refresh_automatic_to_menu come durata del lock
+	// se refresh_automatic_to_menu è 0 (disabilitato), fallback su lock_time
+	if($arr['toclose']) {
+		$lock_time=get_conf(__FILE__,__LINE__,"refresh_automatic_to_menu");
+		if(!$lock_time) $lock_time=get_conf(__FILE__,__LINE__,"lock_time");
+	} else {
+		$lock_time=get_conf(__FILE__,__LINE__,"lock_time");
+	}
 
-	//RTR START elimina il problema delle conversioni date in php 5.2
-	$datetime=$last_access_time;
-	$datetime_php = strtotime($datetime);
-	$last_access_time_converted = date( 'YmdHis', $datetime_php );
-	//RTR END
-
-	$elapsed_time=$timestamp_now-$last_access_time_converted;
+	$elapsed_time=time()-strtotime($arr['last_access_time']);
 
 	$remaining_time=$lock_time-$elapsed_time;
 
@@ -844,51 +843,40 @@ function table_lock_remaining_time($sourceid) {
 */
 function table_lock_check($sourceid) {
 
-	$timestamp_now=date("YmdHis",time());
-	$lock_time=get_conf(__FILE__,__LINE__,"lock_time");
-
-	$query="SELECT * FROM `#prefix#sources` WHERE `id`='".$sourceid."'";
+	$query="SELECT `last_access_time`, `last_access_userid`, `toclose` FROM `#prefix#sources` WHERE `id`='".$sourceid."'";
 	$res=common_query($query,__FILE__,__LINE__);
 	if(!$res) return ERR_MYSQL;
 
 	$arr=mysql_fetch_array($res);
 
-	$last_access_time=$arr['last_access_time'];
+	// tavolo chiuso: usa refresh_automatic_to_menu come durata del lock
+	// se refresh_automatic_to_menu è 0 (disabilitato), fallback su lock_time
+	if($arr['toclose']) {
+		$lock_time=get_conf(__FILE__,__LINE__,"refresh_automatic_to_menu");
+		if(!$lock_time) $lock_time=get_conf(__FILE__,__LINE__,"lock_time");
+	} else {
+		$lock_time=get_conf(__FILE__,__LINE__,"lock_time");
+	}
+
 	$last_access_userid=$arr['last_access_userid'];
+	$elapsed_time=time()-strtotime($arr['last_access_time']);
 
-	//RTR START elimina il problema delle conversioni date in php 5.2
-	$datetime=$last_access_time;
-	$datetime_php = strtotime($datetime);
-	$last_access_time_converted = date( 'YmdHis', $datetime_php );
-	//RTR END
-
-	$elapsed_time=$timestamp_now-$last_access_time_converted;
-
-	if($elapsed_time<0){
-		// The signed time is in the future, we correct it by setting it as if lock time has expired.
+	if($elapsed_time<0 || $elapsed_time>$lock_time){
+		// timestamp nel futuro (anomalia) oppure lock scaduto: prendiamo possesso del tavolo
 
 		$query="UPDATE `#prefix#sources` SET `last_access_time` = NULL , `last_access_userid` = '".$_SESSION['userid']."' WHERE `id` = '".$sourceid."' LIMIT 1";
 		$res=common_query($query,__FILE__,__LINE__);
 		if(!$res) return ERR_MYSQL;
 
-	} elseif($elapsed_time>$lock_time){
-		//lock time has expired, we just sign the table as ours.
-
-		$query="UPDATE `#prefix#sources` SET `last_access_time` = NULL , `last_access_userid` = '".$_SESSION['userid']."' WHERE `id` = '".$sourceid."' LIMIT 1";
-		$res=common_query($query,__FILE__,__LINE__);
-		if(!$res) return ERR_MYSQL;
-
-	} elseif($elapsed_time<=$lock_time && $last_access_userid==$_SESSION['userid']){
-		// lock time has not yet expired, but the waiter is the owner of the table,
-		// so we just update the lock_time.
+	} elseif($last_access_userid==$_SESSION['userid']){
+		// lock attivo, siamo i proprietari del tavolo: rinnoviamo il lock
 
 		$query="UPDATE `#prefix#sources` SET `last_access_time` = NULL WHERE `id` = '".$sourceid."' LIMIT 1";
 		$res=common_query($query,__FILE__,__LINE__);
 		if(!$res) return ERR_MYSQL;
 
-	} elseif($elapsed_time<=$lock_time && $last_access_userid!=$_SESSION['userid']){
-		// lock time has not yet expired, and the waiter is not the owner.
-		// we return ERR_TABLE_IS_LOCKED, to say that there was an errror.
+	} else {
+		// lock attivo, proprietario diverso: tavolo bloccato
 
 		return ERR_TABLE_IS_LOCKED;
 	}

@@ -1406,10 +1406,12 @@ window.history.replaceState({}, document.title, updated);
 	//$tmp .= '<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>';
 	$tpl -> append("scripts", $tmp);
 	
-	$time_for_countdown=get_conf(__FILE__,__LINE__,'refresh_automatic_to_menu');
+	if(!isset($dont_show_progress_bar)) {
+		$time_for_countdown=get_conf(__FILE__,__LINE__,'refresh_automatic_to_menu');
 
-	//Inserisce una barra verde con countdown {progress-bar}
-	$tpl -> append ('progress-bar',"<div class=\"progress-container\" data-duration=\"$time_for_countdown\"><div id=\"progress-bar\"></div></div>");
+		//Inserisce una barra verde con countdown {progress-bar}
+		$tpl -> append ('progress-bar',"<div class=\"progress-container\" data-duration=\"$time_for_countdown\"><div id=\"progress-bar\"></div></div>");
+	}
 
 	return $output;
 }

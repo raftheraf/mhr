@@ -7,6 +7,7 @@ session_start();
 define('ROOTDIR','..');
 $dont_get_session_sourceid=true;
 $dont_redirect_to_menu=true;
+$dont_show_progress_bar=true;
 require_once(ROOTDIR."/includes.php");
 require_once(ROOTDIR."/waiter/waiter_start.php");
 
