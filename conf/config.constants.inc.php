@@ -188,36 +188,36 @@ $unit_types_mass = array ('oz','lb','mg','cg','dg','g','dag','hg','kg');
 //define('CONF_HTTP_ROOT_DIR','http://192.168.0.50/handyrestaurant/demo/');
 define('CONF_HTTP_ROOT_DIR',ROOTDIR.'/');
 
-define('CONF_JS_URL',         CONF_HTTP_ROOT_DIR."generic.js");
-define('CONF_CSS_URL',        CONF_HTTP_ROOT_DIR."styles.css");
+define('CONF_JS_URL',         CONF_HTTP_ROOT_DIR.'generic.js');
+define('CONF_CSS_URL',        CONF_HTTP_ROOT_DIR.'styles.css');
 
-define('CONF_JS_URL_CONFIG',  "./generic.js");
-define('CONF_CSS_URL_CONFIG', "./styles.css");
+define('CONF_JS_URL_CONFIG',  './generic.js');
+define('CONF_CSS_URL_CONFIG', './styles.css');
 
 //CONF_HTTP_ROOT_DIR='http://'.$_SERVER['SERVER_NAME'].'/handyrestaurant/';
 // images used
 
-define('IMAGE_CUSTOMER_KNOWN', CONF_HTTP_ROOT_DIR."images/personal.png");
-define('IMAGE_MENU',           CONF_HTTP_ROOT_DIR."images/gohome.png");
-define('IMAGE_NO',             CONF_HTTP_ROOT_DIR."images/agt_action_fail.png");
-define('IMAGE_OK',             CONF_HTTP_ROOT_DIR."images/agt_action_success.png");
-define('IMAGE_PRINT',          CONF_HTTP_ROOT_DIR."images/print.png");
-define('IMAGE_RICERCA_VELOCE', CONF_HTTP_ROOT_DIR."images/ricerca_veloce.png");
+define('IMAGE_CUSTOMER_KNOWN', CONF_HTTP_ROOT_DIR.'images/personal.png');
+define('IMAGE_MENU',           CONF_HTTP_ROOT_DIR.'images/gohome.png');
+define('IMAGE_NO',             CONF_HTTP_ROOT_DIR.'images/agt_action_fail.png');
+define('IMAGE_OK',             CONF_HTTP_ROOT_DIR.'images/agt_action_success.png');
+define('IMAGE_PRINT',          CONF_HTTP_ROOT_DIR.'images/print.png');
+define('IMAGE_RICERCA_VELOCE', CONF_HTTP_ROOT_DIR.'images/ricerca_veloce.png');
 //RTR
-define('IMAGE_PRINT_FAST',     CONF_HTTP_ROOT_DIR."images/print_fast.png");
-define('IMAGE_SOURCE',         CONF_HTTP_ROOT_DIR."images/source.png");
-define('IMAGE_TRASH',          CONF_HTTP_ROOT_DIR."images/trash.png");
-define('IMAGE_LITTLE_TRASH',   CONF_HTTP_ROOT_DIR."images/little_trash.png");
-define('IMAGE_YES',            CONF_HTTP_ROOT_DIR."images/agt_action_success.png");
-define('IMAGE_BACK',           CONF_HTTP_ROOT_DIR."images/back.jpg");
-define('IMAGE_CLOSE',          CONF_HTTP_ROOT_DIR."images/newclose.png");
-define('IMAGE_MINUS',          CONF_HTTP_ROOT_DIR."images/down.png");
-define('IMAGE_PLUS',           CONF_HTTP_ROOT_DIR."images/up.png");
-define('IMAGE_FIND',           CONF_HTTP_ROOT_DIR."images/find.png");
-define('IMAGE_NEW',            CONF_HTTP_ROOT_DIR."images/new.png");
-define('IMAGE_TOPLIST',        CONF_HTTP_ROOT_DIR."images/top_list.gif");
-define('IMAGE_EDITDISH',       CONF_HTTP_ROOT_DIR."images/edit_dish.jpg");
-define('IMAGE_BLANK',       	 CONF_HTTP_ROOT_DIR."images/cm_fill.gif");
+define('IMAGE_PRINT_FAST',     CONF_HTTP_ROOT_DIR.'images/print_fast.png');
+define('IMAGE_SOURCE',         CONF_HTTP_ROOT_DIR.'images/source.png');
+define('IMAGE_TRASH',          CONF_HTTP_ROOT_DIR.'images/trash.png');
+define('IMAGE_LITTLE_TRASH',   CONF_HTTP_ROOT_DIR.'images/little_trash.png');
+define('IMAGE_YES',            CONF_HTTP_ROOT_DIR.'images/agt_action_success.png');
+define('IMAGE_BACK',           CONF_HTTP_ROOT_DIR.'images/back.jpg');
+define('IMAGE_CLOSE',          CONF_HTTP_ROOT_DIR.'images/newclose.png');
+define('IMAGE_MINUS',          CONF_HTTP_ROOT_DIR.'images/down.png');
+define('IMAGE_PLUS',           CONF_HTTP_ROOT_DIR.'images/up.png');
+define('IMAGE_FIND',           CONF_HTTP_ROOT_DIR.'images/find.png');
+define('IMAGE_NEW',            CONF_HTTP_ROOT_DIR.'images/new.png');
+define('IMAGE_TOPLIST',        CONF_HTTP_ROOT_DIR.'images/top_list.gif');
+define('IMAGE_EDITDISH',       CONF_HTTP_ROOT_DIR.'images/edit_dish.jpg');
+define('IMAGE_BLANK',       	 CONF_HTTP_ROOT_DIR.'images/cm_fill.gif');
 
 
 // all the colors used in background and tables
@@ -252,13 +252,13 @@ define('COLOR_ORDER_PRIORITY_3',       '#ef4e6e');
 define('COLOR_ORDER_PRIORITY_4',       '#ff00ff');
 
 define('MGMT_COLOR_BACKGROUND', 		'#feefac');
-$mgmt_color_background=					"#feefac";
+$mgmt_color_background=					'#feefac';
 define('MGMT_COLOR_TABLEBG',    		'#ffca68');
-$mgmt_color_tablebg=					"#ffca68";
+$mgmt_color_tablebg=					'#ffca68';
 define('MGMT_COLOR_CELLBG0',    		'#ffe9b7');
-$mgmt_color_cellbg0=					"#ffe9b7";
+$mgmt_color_cellbg0=					'#ffe9b7';
 define('MGMT_COLOR_CELLBG1',    		'#faff97');
-$mgmt_color_cellbg1=					"#faff97";
+$mgmt_color_cellbg1=					'#faff97';
 
 //RTR
 define('TEMPO_MASSIMO_ORDINI',              '300');	    //Dopo quanto tempo in sec compare ICONA_ORDINE_DA_STAMPARE
