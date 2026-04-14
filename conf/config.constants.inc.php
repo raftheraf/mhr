@@ -251,14 +251,14 @@ define('COLOR_ORDER_PRIORITY_2',       '#00ffff');
 define('COLOR_ORDER_PRIORITY_3',       '#ef4e6e');
 define('COLOR_ORDER_PRIORITY_4',       '#ff00ff');
 
-define('MGMT_COLOR_BACKGROUND', '#feefac');
+define('MGMT_COLOR_BACKGROUND', 		'#feefac');
 $mgmt_color_background=					"#feefac";
-define('MGMT_COLOR_TABLEBG',    '#ffca68');
-$mgmt_color_tablebg=						"#ffca68";
-define('MGMT_COLOR_CELLBG0',    '#ffe9b7');
-$mgmt_color_cellbg0=						"#ffe9b7";
-define('MGMT_COLOR_CELLBG1',    '#faff97');
-$mgmt_color_cellbg1=						"#faff97";
+define('MGMT_COLOR_TABLEBG',    		'#ffca68');
+$mgmt_color_tablebg=					"#ffca68";
+define('MGMT_COLOR_CELLBG0',    		'#ffe9b7');
+$mgmt_color_cellbg0=					"#ffe9b7";
+define('MGMT_COLOR_CELLBG1',    		'#faff97');
+$mgmt_color_cellbg1=					"#faff97";
 
 //RTR
 define('TEMPO_MASSIMO_ORDINI',              '300');	    //Dopo quanto tempo in sec compare ICONA_ORDINE_DA_STAMPARE
