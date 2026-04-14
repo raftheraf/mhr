@@ -233,10 +233,6 @@ switch ($_REQUEST['command']){
 					}
 				}
 
-				$table=$GLOBALS['table_prefix'].'dishes';
-				$query="UPDATE $table SET `stock` = '0'";
-				//$res = mysql_db_query($db_common,$query);
-
 				$table=$GLOBALS['table_prefix'].'sources';
 				$query="UPDATE $table SET
 				`userid` = '0'
