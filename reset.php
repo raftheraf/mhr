@@ -72,7 +72,7 @@ switch ($_REQUEST['command']){
 		<INPUT TYPE=\"checkbox\" name=\"halt\" value=\"1\">$msg_halt<br><br>
 		<br><br>
 		$msg_admin_confirmreset
-		<br><INPUT TYPE=\"checkbox\" name=\"reset\" value=\"1\">$msg_resetorders<br><br>
+		<br><INPUT TYPE=\"checkbox\" name=\"reset\" value=\"1\">Azzera anche gli ordini prima di spegnere<br><br>
 
 		<INPUT TYPE=\"submit\" value=\"$but_halt\"><br><br><br>
 		</FORM>
