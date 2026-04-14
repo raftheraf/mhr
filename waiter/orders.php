@@ -395,8 +395,12 @@ switch ($command){
 
 				status_report('MOVEMENT',$err);
 
-				if (!$err) $_SESSION['sourceid'] = $newtable;
-				orders_list ();
+				if (!$err) {
+					$_SESSION['sourceid'] = $newtable;
+					$tpl -> append('scripts', redirect_waiter('tables.php'));
+				} else {
+					orders_list();
+				}
 
 				break;
 	case 'ask_swap':
@@ -425,7 +429,12 @@ switch ($command){
 
 				status_report('MOVEMENT',$err);
 
-				orders_list();
+				if (!$err) {
+					$tpl -> append('scripts', redirect_waiter('tables.php'));
+				} else {
+					orders_list();
+				}
+
 				break;
 	case 'service_fee':
 				orders_service_fee_questions ();
