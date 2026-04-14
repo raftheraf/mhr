@@ -102,14 +102,23 @@ switch ($command) {
         break;
 
     case 'delete':
+        // Cattura dati PRIMA della cancellazione (orders_delete azzera qty e price nel DB)
+        $ord_before = new order($id);
+        $arr_before = $ord_before->data;
+        $arr_before['deleted'] = 1;
+        $last_order_html = ($ord_before->id && $arr_before)
+            ? $ord_before->table_row($arr_before)
+            : '';
+
         $err      = orders_delete(array('id' => $id));
         $sourceid = isset($_SESSION['sourceid']) ? (int)$_SESSION['sourceid'] : 0;
         $tbl      = new table($sourceid);
         $total    = $tbl->total();
         ajax_out(array(
-            'success'   => ($err == 0),
-            'new_total' => $total,
-            'deleted'   => true,
+            'success'         => ($err == 0),
+            'new_total'       => $total,
+            'deleted'         => true,
+            'last_order_html' => $last_order_html,
         ));
         break;
 

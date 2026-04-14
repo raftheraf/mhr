@@ -155,7 +155,8 @@ $(document).ready(function () {
         ajaxUpdate(
             { command: 'delete', id: id },
             function (resp) {
-                $('[data-id="' + id + '"]').closest('tr').remove();
+                $('#tabellalistaordini [data-id="' + id + '"]').closest('tr').remove();
+                updateLastOrderTable(resp.last_order_html);
                 updateTotal(resp.new_total);
             },
             function () { window.location.href = fallback; }
