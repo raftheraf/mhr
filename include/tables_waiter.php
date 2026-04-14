@@ -119,7 +119,7 @@ function table_closed_interface() {
 		'.ucfirst(phr('TABLE_TOTAL_DISCOUNTED')).': <b>'.country_conf_currency(true).' '.$total.'</b>
 	';
 	if($discount!=0) {
-		$discount=sprintf("%01.2f",abs($discount));
+		$discount=format_price_html(abs($discount));
 		$tmp .= '
 		 ('.ucfirst(phr('DISCOUNT')).': '.country_conf_currency(true).' '.$discount.')';
 	}
@@ -912,7 +912,7 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 			break;
 		case 1:
 			$query = "SELECT `#prefix#sources`.`id`, `name`, `userid`, `toclose`, `tablehtmlcolor`, `customer`, `utente_abilitato`, `takeaway_surname`, `ora_prenotazione`,`#prefix#sources`.`scontrinato`,`#prefix#sources`.`paid`, `#prefix#orders`.`id` AS `order` FROM `#prefix#sources` LEFT JOIN `#prefix#orders` ON `sourceid`=`#prefix#sources`.`id` WHERE `takeaway` = '1'";
-			$query .= " AND `utente_abilitato` = '".$_SESSION['userid']."' ";
+			$query .= " AND FIND_IN_SET('".$_SESSION['userid']."', `utente_abilitato`) ";
 			$query .= " AND `visible` = '1' ";
 			$query .= " AND `sospeso` = '0' ";
 			$query .= " GROUP BY `#prefix#sources`.`id` ASC";
@@ -921,6 +921,7 @@ function tables_list_all($cols=1,$show=0,$quiet=true){
 		case 2:
 			$query="SELECT `#prefix#sources`.`id`, `name`, `userid`, `toclose`, `tablehtmlcolor`, `customer`, `takeaway_surname`, `ora_prenotazione`, `#prefix#sources`.`scontrinato`,`#prefix#sources`.`paid`, `#prefix#orders`.`id` AS `order` FROM `#prefix#sources` LEFT JOIN `#prefix#orders` ON `sourceid`=`#prefix#sources`.`id` WHERE `userid`='".$_SESSION['userid']."'";
 			$query .= " AND `visible` = '1'";
+			$query .= " AND `unito` = '0'";
 			$query .= " GROUP BY `#prefix#sources`.`id` ASC";
 			$query .= " ORDER BY `#prefix#sources`.`ordernum`,`name` ASC";
 			break;

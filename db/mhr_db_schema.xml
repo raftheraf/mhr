@@ -1637,7 +1637,7 @@
   `ordernum` int(11) NOT NULL DEFAULT '0',
   `visible` tinyint(4) NOT NULL DEFAULT '1',
   `userid` mediumint(9) NOT NULL DEFAULT '0',
-  `utente_abilitato` mediumint(9) NOT NULL DEFAULT '0',
+  `utente_abilitato` varchar(255) NOT NULL DEFAULT '',
   `toclose` tinyint(4) NOT NULL DEFAULT '0',
   `discount` decimal(10,2) NOT NULL DEFAULT '0.00',
   `scontrinato` tinyint(5) NOT NULL DEFAULT '0',
@@ -1701,10 +1701,10 @@
 				</field>
 				<field name="utente_abilitato">
 					<name> utente_abilitato </name>
-					<type> mediumint(9) </type>
+					<type> varchar(255) </type>
 					<null> NO </null>
 					<key>  </key>
-					<default> 0 </default>
+					<default>  </default>
 					<extra>  </extra>
 				</field>
 				<field name="toclose">

@@ -674,6 +674,17 @@ class table extends object {
 		if(!isset($input_data['takeaway']) || !$input_data['takeaway'])
 			$input_data['takeaway']=0;
 
+		if(!isset($input_data['utente_abilitato']) || !is_array($input_data['utente_abilitato'])) {
+			$input_data['utente_abilitato'] = '';
+		} else {
+			$ids = array();
+			foreach ($input_data['utente_abilitato'] as $uid) {
+				$uid = (int)$uid;
+				if ($uid > 0) $ids[] = $uid;
+			}
+			$input_data['utente_abilitato'] = implode(',', $ids);
+		}
+
 		return $input_data;
 	}
 
@@ -748,11 +759,31 @@ class table extends object {
 		</tr>
 
 		<tr>
-			<td>
-			'.ucphr('Utente Abilitato per Tavolo Asporto, indicare ID utente').':
+			<td valign="top">
+			'.ucphr('Utente Abilitato per Tavolo Asporto').':
 			</td>
-			<td>
-			<input type="text" name="data[utente_abilitato]" value="'.$arr_utente_abilitato.'">
+			<td>';
+
+	$selected_ids = array();
+	if ($arr_utente_abilitato !== '') {
+		foreach (explode(',', $arr_utente_abilitato) as $uid) {
+			$uid = trim($uid);
+			if ($uid !== '') $selected_ids[] = $uid;
+		}
+	}
+
+	$q_users = common_query("SELECT `id`, `name` FROM `#prefix#users` WHERE `disabled`='0' AND `deleted`='0' ORDER BY `name` ASC", __FILE__, __LINE__);
+	$output .= '<select name="data[utente_abilitato][]" multiple="multiple" size="5">';
+	if ($q_users) {
+		while ($u = mysql_fetch_array($q_users)) {
+			$sel = in_array($u['id'], $selected_ids) ? ' selected="selected"' : '';
+			$output .= '<option value="'.htmlentities($u['id']).'"'.$sel.'>'.htmlentities($u['name']).'</option>';
+		}
+	}
+	$output .= '</select>';
+	$output .= '<br><small>Tieni premuto Ctrl per selezionare pi&ugrave; utenti</small>';
+
+	$output .= '
 			</td>
 			<td>&nbsp;</td>
 		</tr>
@@ -896,7 +927,7 @@ function html_color_row ($bit) {
 }
 
 function html_color_table () {
-	$output = '<table>'."\n";
+	$output = '<table width="100%">'."\n";
 	for ($i=1;$i<15;$i++) {
 		$output .= '<tr>'."\n";
 		$output .= html_color_row($i);

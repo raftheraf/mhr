@@ -193,6 +193,10 @@ class menu {
 		$this -> links[$i]['name']=ucphr('SYSTEM').': '.ucphr('UPGRADE');
 		$this -> links[$i]['link']=ROOTDIR.'/admin/upgrade.php?command=none';
 		$i++;
+		$this -> output.="\t\toM.makeMenu('m".$i."','m".$start_idx."','Migrazioni DB','".ROOTDIR."/admin/migrations.php');\n";
+		$this -> links[$i]['name']=ucphr('SYSTEM').': Migrazioni DB';
+		$this -> links[$i]['link']=ROOTDIR.'/admin/migrations.php';
+		$i++;
 		$this -> output.="\t\toM.makeMenu('m".$i."','m".$start_idx."','".ucphr('DATABASE')."','".ROOTDIR."/admin/export_db.php?command=none');\n";
 		$this -> links[$i]['name']=ucphr('SYSTEM').': '.ucphr('DATABASE');
 		$this -> links[$i]['link']=ROOTDIR.'/admin/export_db.php?command=none';
