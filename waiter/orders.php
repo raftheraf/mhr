@@ -393,12 +393,17 @@ switch ($command){
 				$table = new table($_SESSION['sourceid']);
 				$err = $table -> move($newtable);
 
-				status_report('MOVEMENT',$err);
-
 				if (!$err) {
 					$_SESSION['sourceid'] = $newtable;
-					$tpl -> append('scripts', redirect_waiter('tables.php'));
+					$tpl -> append('messages', '
+						<div style="margin:40px auto;padding:30px 40px;background:#e8f5e9;border:3px solid #4caf50;border-radius:12px;display:inline-block;text-align:center;">
+							<div style="font-size:48px;">&#10003;</div>
+							<div style="font-size:22px;font-weight:bold;color:#2e7d32;margin-top:8px;">Movimento ok</div>
+						</div>
+					');
+					$tpl -> append('scripts', redirect_timed('tables.php', 500));
 				} else {
+					status_report('MOVEMENT', $err);
 					orders_list();
 				}
 
@@ -427,11 +432,16 @@ switch ($command){
 				$table = new table($_SESSION['sourceid']);
 				$err = $table -> swap($newtable);
 
-				status_report('MOVEMENT',$err);
-
 				if (!$err) {
-					$tpl -> append('scripts', redirect_waiter('tables.php'));
+					$tpl -> append('messages', '
+						<div style="margin:40px auto;padding:30px 40px;background:#e8f5e9;border:3px solid #4caf50;border-radius:12px;display:inline-block;text-align:center;">
+							<div style="font-size:48px;">&#10003;</div>
+							<div style="font-size:22px;font-weight:bold;color:#2e7d32;margin-top:8px;">Scambio ok</div>
+						</div>
+					');
+					$tpl -> append('scripts', redirect_timed('tables.php', 500));
 				} else {
+					status_report('MOVEMENT', $err);
 					orders_list();
 				}
 
