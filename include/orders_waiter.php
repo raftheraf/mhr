@@ -1185,7 +1185,8 @@ function orders_list() {
 		</form>
 		';
 		$tpl -> append ('commands',$tmp);
-
+	}
+	if ( $user->level[USER_BIT_CASHIER] AND $user->level[USER_BIT_MONEY] ) {
 		$tmp = '
 		<FORM ACTION="orders.php?command=ask_swap" METHOD=POST>
 		<INPUT TYPE="submit" value="SCAMBIA TAVOLO" class="button_big">
