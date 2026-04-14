@@ -207,7 +207,7 @@ switch ($_REQUEST['command']){
 					'account_receipts',
 					'account_stock_log'
 					);
-					for (reset ($truncate); list ($key, $value) = each ($truncate); ) {
+					foreach ($truncate as $value) {
 						$table_local=$GLOBALS['table_prefix'].$value;
 						$query="SELECT * FROM `$table_local`";
 						$res_local = database_query($query,__FILE__,__LINE__,$arr['db']);
