@@ -102,7 +102,8 @@
                 ].join(';');
                 btn.innerHTML = '&#128520; ' + item.nome;
                 btn.onclick = function () {
-                    mostraConferma(item, lista);
+                    fermaBeep();
+                    window.location.href = item.link;
                 };
                 box.appendChild(btn);
             })(lista[i]);
@@ -134,64 +135,5 @@
         document.body.appendChild(overlay);
     }
 
-    function mostraConferma(item, lista) {
-        var box = document.getElementById('diavoletto-box');
-        box.innerHTML = '';
 
-        var titolo = document.createElement('h2');
-        titolo.style.cssText = 'color:white;font-size:28px;margin:0 0 10px 0;';
-        titolo.innerHTML = '&#128520; ' + item.nome;
-
-        var domanda = document.createElement('p');
-        domanda.style.cssText = 'color:white;font-size:18px;margin:0 0 30px 0;';
-        domanda.textContent = 'Vuoi aprire questo tavolo?';
-
-        var btnRow = document.createElement('div');
-        btnRow.style.cssText = 'width:100%;';
-
-        var btnIndietro = document.createElement('button');
-        btnIndietro.style.cssText = [
-            'width:48%',
-            'margin-right:4%',
-            'padding:15px',
-            'background:#555555',
-            'color:white',
-            'border:none',
-            'border-radius:5px',
-            'font-size:18px',
-            'cursor:pointer',
-            'min-height:50px'
-        ].join(';');
-        btnIndietro.textContent = 'INDIETRO';
-        btnIndietro.onclick = function () {
-            var overlay = document.getElementById('diavoletto-overlay');
-            overlay.parentNode.removeChild(overlay);
-            mostraListaDiavoletti(lista);
-        };
-
-        var btnApri = document.createElement('button');
-        btnApri.style.cssText = [
-            'width:48%',
-            'padding:15px',
-            'background:#FF6600',
-            'color:white',
-            'border:none',
-            'border-radius:5px',
-            'font-size:18px',
-            'cursor:pointer',
-            'min-height:50px'
-        ].join(';');
-        btnApri.textContent = 'APRI';
-        btnApri.onclick = function () {
-            fermaBeep();
-            window.location.href = item.link;
-        };
-
-        btnRow.appendChild(btnIndietro);
-        btnRow.appendChild(btnApri);
-
-        box.appendChild(titolo);
-        box.appendChild(domanda);
-        box.appendChild(btnRow);
-    }
 })();
