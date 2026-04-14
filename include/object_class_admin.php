@@ -539,15 +539,16 @@ class object {
 	function list_buttons () {
 		$tmp = '';
 		if(!$this->disable_mass_delete && $this->count_records()) {
-			$link = $this->file.'?class='.get_class($this).'&command=delete&delete=all';
-
 			$tmp .= '<table width="100%"><tr>'."\n";
 			$tmp .= '<td align="left">'."\n";
 			$tmp .= '<input type="hidden" name="command" value="delete">'."\n";
 			$tmp .= '<input type="hidden" name="class" value="'.get_class($this).'">'."\n";
 			$tmp .= '<a href="#" onClick="list_form_'.get_class($this).'.submit();return false;">'.ucphr('DELETE_SELECTED').'</a>'."\n";
 			$tmp .= '</td><td align="right">'."\n";
-			$tmp .= '<a href="'.$link.'">'.ucphr('DELETE_ALL').'</a>'."\n";
+			if (access_allowed(USER_BIT_CONFIG)) {
+				$link = $this->file.'?class='.get_class($this).'&command=delete&delete=all';
+				$tmp .= '<a href="'.$link.'">'.ucphr('DELETE_ALL').'</a>'."\n";
+			}
 			$tmp .= '</tr></table>'."\n";
 		}
 		return $tmp;

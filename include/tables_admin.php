@@ -57,6 +57,26 @@ class table extends object {
 		return $query;
 	}
 
+	function admin_list_page ($class) {
+		global $tpl;
+		$tpl->append('head', '
+<style>
+@media (max-width: 768px) {
+	.admin_table th:nth-child(4),
+	.admin_table td:nth-child(4),
+	.admin_table th:nth-child(5),
+	.admin_table td:nth-child(5),
+	.admin_table th:nth-child(6),
+	.admin_table td:nth-child(6),
+	.admin_table th:nth-child(8),
+	.admin_table td:nth-child(8),
+	.admin_table th:nth-child(9),
+	.admin_table td:nth-child(9) { display: none; }
+}
+</style>');
+		parent::admin_list_page($class);
+	}
+
 	function list_rows ($arr,$row) {
 		global $tpl;
 		global $display;
@@ -87,6 +107,9 @@ class table extends object {
 				$checked = $is_yes ? ' checked="checked"' : '';
 				$checkbox = '<input type="checkbox" class="table-visible-flag"'.$checked.' onclick="redir(\''.$link.'\'); return false;">';
 				$display->rows[$row][$col] = '<div style="text-align:center;">'.$checkbox.'</div>';
+			// Colonna "Utente abilitato": mostra i nomi al posto degli ID
+			} elseif ($field == 'utente_abilitato') {
+				$display->rows[$row][$col] = $this->utente_abilitato_names($value);
 			// Colonna "Colore": usa il codice esadecimale come sfondo della cella e mostra il valore
 			} elseif ($field == 'tablehtmlcolor') {
 				$color = trim($value);
@@ -648,6 +671,24 @@ class table extends object {
 
 		$tpl -> assign('tables',$output);
 		return 0;
+	}
+
+	function utente_abilitato_names($csv) {
+		if (trim($csv) === '' || $csv === '0') return '';
+		$ids = array();
+		foreach (explode(',', $csv) as $id) {
+			$id = (int)trim($id);
+			if ($id > 0) $ids[] = $id;
+		}
+		if (empty($ids)) return '';
+		$in = implode(',', $ids);
+		$res = common_query("SELECT `name` FROM `#prefix#users` WHERE `id` IN (".$in.") AND `deleted`='0' ORDER BY `name` ASC", __FILE__, __LINE__);
+		if (!$res) return $csv;
+		$names = array();
+		while ($u = mysql_fetch_array($res)) {
+			$names[] = htmlentities($u['name']);
+		}
+		return implode(', ', $names);
 	}
 
 	function check_values($input_data){
