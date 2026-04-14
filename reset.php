@@ -79,6 +79,10 @@ switch ($_REQUEST['command']){
 		";
 		break;
 	case 'halt1':
+		if(!access_allowed(USER_BIT_CONFIG)) {
+			echo '<p style="color:red;">Accesso negato.</p>';
+			break;
+		}
 		if($_POST['halt']==1){
 			echo '<body bgcolor='.COLOR_BACK_OK.'>';
 			if($_POST['reset']==1){
@@ -88,8 +92,11 @@ switch ($_REQUEST['command']){
 
 				echo "$msg_reset_orders_ok<br>";
 			}
-			$out=system("/sbin/shutdown -h now",$outerr);
-
+			if(PHP_OS_FAMILY === 'Windows') {
+				$out=system("shutdown /s /t 0",$outerr);
+			} else {
+				$out=system("/sbin/shutdown -h now",$outerr);
+			}
 			echo "$msg_halt_ok<br>";
 		}
 		break;
